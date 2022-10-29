@@ -34,15 +34,29 @@
   <link href="assets/css/style.css" rel="stylesheet">
 
 
+
 </head>
 
 <body>
-
-  <!-- ======= Header ======= -->
   <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <header id="header">
-    <div class="container">
+  <script src="assets/js/particles.min.js"></script>
+  <script>
+    window.onload = function() {
+      Particles.init({
+        selector: '.background',
+        maxParticles: 150,
+        speed:0.5,
+        connectParticles: false,
+        color: ['#00ff00', '#ff0000', '#DBEDF3'],
+    })
+    };
+    </script>
+  <!-- ======= Header ======= -->
 
+  <header id="header">
+    <div class="container" class=".background">
+      <script src="assets/js/particles.min.js"></script>
+      <canvas class="background"></canvas>
       <h1><a href="index.html">Sarvesh Huddedar</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a> -->

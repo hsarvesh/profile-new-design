@@ -21,6 +21,14 @@ body::before {
   z-index: -1;
 }
 
+.background {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
 @media (min-width: 1024px) {
   body::before {
     background-attachment: fixed;
