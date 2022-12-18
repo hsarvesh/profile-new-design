@@ -930,6 +930,7 @@ url("./fonts/bootstrap-icons.woff?8bd4575acf83c7696dc7a14a966660a3") format("wof
 .bi-mic-mute-fill::before { content: "\f48e"; }
 .bi-mic-mute::before { content: "\f48f"; }
 .bi-mic::before { content: "\f490"; }
+.bi-microsoft-teams::before {content: "\f801"};
 .bi-minecart-loaded::before { content: "\f491"; }
 .bi-minecart::before { content: "\f492"; }
 .bi-moisture::before { content: "\f493"; }
