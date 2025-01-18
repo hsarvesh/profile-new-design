@@ -1164,3 +1164,28 @@ section .container {
 .credits a:hover {
   color: #fff;
 }
+
+.blog .blog-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Adjust the gap between blog posts as needed */
+}
+
+.blog .info-box {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: ease-in-out 0.3s;
+}
+
+.blog .info-box i {
+  font-size: 32px;
+  margin-right: 15px;
+}
+
+.blog .info-box h3 {
+  font-size: 24px;
+  margin: 0;
+}
+
