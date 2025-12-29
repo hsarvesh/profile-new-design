@@ -1189,3 +1189,30 @@ section .container {
   margin: 0;
 }
 
+/* Version badge - small visible indicator */
+.version-badge, #version-badge {
+  position: fixed;
+  right: 12px;
+  bottom: 60px; /* above credits area */
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 1px solid rgba(24,210,110,0.15);
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  z-index: 999999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  cursor: default;
+  user-select: none;
+}
+
+@media (max-width: 576px) {
+  .version-badge, #version-badge {
+    right: 8px;
+    bottom: 80px;
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+}
+

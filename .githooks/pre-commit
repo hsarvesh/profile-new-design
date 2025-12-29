@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Run the version bump script before commit so each commit increases the minor version.
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HOOK_SCRIPT="$REPO_ROOT/scripts/bump_version.sh"
+
+if [ -x "$HOOK_SCRIPT" ]; then
+  "$HOOK_SCRIPT" || true
+else
+  # Try to run with bash even if not executable
+  bash "$HOOK_SCRIPT" || true
+fi
+
+exit 0

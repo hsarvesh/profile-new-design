@@ -245,4 +245,40 @@
     }
   });
 
+  /**
+   * Load version from version.json and update the #version-badge element.
+   * Falls back to leaving the default text if fetch fails (e.g., file://).
+   */
+  const updateVersionBadge = async () => {
+    try {
+      const res = await fetch('/version.json', {cache: 'no-store'});
+      if (!res.ok) throw new Error('failed to fetch version.json: ' + res.status);
+      const data = await res.json();
+      const el = document.getElementById('version-badge');
+      if (el && data && data.version) {
+        el.textContent = 'v' + data.version;
+      }
+    } catch (err) {
+      // Try relative path if absolute failed (useful for some static hosts)
+      try {
+        const res2 = await fetch('version.json', {cache: 'no-store'});
+        if (res2.ok) {
+          const data2 = await res2.json();
+          const el2 = document.getElementById('version-badge');
+          if (el2 && data2 && data2.version) el2.textContent = 'v' + data2.version;
+        }
+      } catch (err2) {
+        // ignore; keep default badge text
+        // console.debug('version badge load failed', err, err2)
+      }
+    }
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateVersionBadge);
+  } else {
+    updateVersionBadge();
+  }
+
 })()
