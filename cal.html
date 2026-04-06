@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── Primary SEO ── -->
+  <title>AI ROI Calculator for Enterprise | Free AI Strategy ROI Tool | Sarvesh Huddedar</title>
+  <meta name="description" content="Free browser-based AI ROI Calculator. Instantly calculate ROI, payback period, and efficiency gains from enterprise AI & automation investments. Built by Sarvesh Huddedar, Global AI Advisor with 20+ years of experience.">
+  <meta name="keywords" content="AI ROI calculator, enterprise AI ROI, AI investment return calculator, AI implementation ROI, generative AI ROI, AI business case calculator, AI efficiency gains, AI strategy ROI tool, AI payback period calculator, enterprise AI savings calculator, AI automation ROI, LLM ROI calculator, AI digital transformation ROI">
+  <meta name="author" content="Sarvesh Huddedar">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="3 days">
+  <link rel="canonical" href="https://sarvesh.site/cal.html">
+
+  <!-- ── Open Graph / Facebook ── -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sarvesh.site/cal.html">
+  <meta property="og:title" content="Free AI ROI Calculator for Enterprise | Sarvesh Huddedar">
+  <meta property="og:description" content="Quantify your AI investment returns instantly. Calculate ROI, payback period & efficiency gains from enterprise AI implementation. 100% free, no signup.">
+  <meta property="og:image" content="https://sarvesh.site/assets/img/og-image.png">
+  <meta property="og:site_name" content="Sarvesh Huddedar – Global AI Advisor">
+
+  <!-- ── Twitter / X ── -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@hsarvesh">
+  <meta name="twitter:creator" content="@hsarvesh">
+  <meta name="twitter:url" content="https://sarvesh.site/cal.html">
+  <meta name="twitter:title" content="Free AI ROI Calculator for Enterprise | Sarvesh Huddedar">
+  <meta name="twitter:description" content="Quantify your AI investment returns instantly. Calculate ROI, payback period & efficiency gains from enterprise AI implementation. 100% free, no signup.">
+  <meta name="twitter:image" content="https://sarvesh.site/assets/img/og-image.png">
+
+  <!-- ── JSON-LD Structured Data ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "AI Strategy ROI Calculator",
+    "url": "https://sarvesh.site/cal.html",
+    "description": "Free browser-based calculator to quantify ROI, payback period, and efficiency gains from enterprise AI and automation investments.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": {
+      "@type": "Person",
+      "name": "Sarvesh Huddedar",
+      "url": "https://sarvesh.site",
+      "jobTitle": "Global AI Advisor & Transformation Architect",
+      "sameAs": ["https://www.linkedin.com/in/hsarvesh/", "https://twitter.com/hsarvesh"]
+    }
+  }
+  </script>
+
+  <link rel="icon" href="assets/img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:    #0a0a1a;
+      --bg-card:    rgba(255,255,255,0.04);
+      --bg-card2:   rgba(255,255,255,0.07);
+      --border:     rgba(255,255,255,0.10);
+      --accent1:    #667eea;
+      --accent2:    #764ba2;
+      --accent3:    #43e97b;
+      --accent4:    #4facfe;
+      --gold:       #feca57;
+      --danger:     #fa709a;
+      --text-main:  #f0f0ff;
+      --text-muted: rgba(240,240,255,0.55);
+      --radius:     16px;
+      --shadow:     0 8px 40px rgba(0,0,0,0.45);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% -5%, rgba(102,126,234,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(67,233,123,0.10) 0%, transparent 60%);
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      background: rgba(10,10,26,0.75);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-brand .logo-dot {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .nav-brand span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--text-muted);
+      font-size: 0.875rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent1); }
+    .nav-back svg { width: 16px; height: 16px; }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(102,126,234,0.15);
+      border: 1px solid rgba(102,126,234,0.3);
+      border-radius: 99px; padding: 6px 18px;
+      font-size: 0.8rem; font-weight: 600; color: var(--accent1);
+      margin-bottom: 24px; letter-spacing: 0.04em;
+    }
+    .hero-badge::before { content: '⚡'; }
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 20%, var(--accent1) 60%, var(--accent3) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      color: var(--text-muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto 12px;
+      line-height: 1.6;
+    }
+
+    /* ─── LAYOUT ─── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .card-title { font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .card-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ─── FORM ─── */
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
+    label span.label-hint { text-transform: none; letter-spacing: 0; font-weight: 400; color: rgba(240,240,255,0.35); font-size: 0.78rem; }
+
+    input[type="number"], select {
+      width: 100%; padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; color: var(--text-main);
+      font-family: 'Inter', sans-serif; font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none; -webkit-appearance: none;
+    }
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent1);
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.18);
+    }
+    select option { background: #1a1a30; color: var(--text-main); }
+
+    /* ─── RANGE SLIDER ─── */
+    .range-wrap { position: relative; }
+    .range-value {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff; font-size: 0.75rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 99px;
+      margin-bottom: 10px;
+    }
+    input[type="range"] {
+      width: 100%; height: 6px;
+      -webkit-appearance: none; appearance: none;
+      background: rgba(255,255,255,0.12);
+      border-radius: 99px; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border: 3px solid var(--bg-deep);
+      box-shadow: 0 2px 8px rgba(102,126,234,0.5);
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .range-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ─── BUTTONS ─── */
+    .btn-calc {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border: none; border-radius: 12px;
+      color: #fff; font-family: 'Outfit', sans-serif;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+      margin-top: 8px;
+    }
+    .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(102,126,234,0.55); }
+    .btn-calc:active { transform: translateY(0); }
+
+    .btn-reset {
+      width: 100%; padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-muted); font-family: 'Inter', sans-serif;
+      font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      margin-top: 10px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover { border-color: var(--accent1); color: var(--accent1); }
+
+    /* ─── RESULTS PANEL ─── */
+    .results-panel { display: none; }
+    .results-panel.show { display: block; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .kpi-card.green::before  { background: linear-gradient(90deg, var(--accent3), #00f2fe); }
+    .kpi-card.blue::before   { background: linear-gradient(90deg, var(--accent4), var(--accent1)); }
+    .kpi-card.gold::before   { background: linear-gradient(90deg, var(--gold), #ff9f43); }
+    .kpi-card.purple::before { background: linear-gradient(90deg, var(--accent2), var(--danger)); }
+
+    .kpi-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+    .kpi-value { font-family: 'Outfit', sans-serif; font-size: 1.7rem; font-weight: 800; line-height: 1; }
+    .kpi-value.green  { color: var(--accent3); }
+    .kpi-value.blue   { color: var(--accent4); }
+    .kpi-value.gold   { color: var(--gold); }
+    .kpi-value.purple { color: #c77dff; }
+    .kpi-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; }
+
+    /* ─── BREAKDOWN TABLE ─── */
+    .breakdown-title {
+      font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700;
+      color: var(--text-main); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .breakdown-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .breakdown-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; border-radius: 10px; margin-bottom: 6px;
+      background: rgba(255,255,255,0.03);
+      font-size: 0.88rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.15s;
+    }
+    .breakdown-row:hover { background: rgba(102,126,234,0.08); }
+    .breakdown-row .bd-label { color: var(--text-muted); }
+    .breakdown-row .bd-value { font-weight: 700; }
+    .breakdown-row .bd-value.pos { color: var(--accent3); }
+    .breakdown-row .bd-value.neg { color: var(--danger); }
+    .breakdown-row .bd-value.neu { color: var(--accent4); }
+
+    /* ─── GAUGE BAR ─── */
+    .gauge-wrap { margin: 20px 0; }
+    .gauge-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.82rem; }
+    .gauge-track {
+      height: 10px; border-radius: 99px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+    }
+    .gauge-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent3));
+      transition: width 1s cubic-bezier(0.22,1,0.36,1);
+      width: 0%;
+    }
+
+    /* ─── PAYBACK TIMELINE ─── */
+    .timeline-strip {
+      display: flex; gap: 4px; margin: 18px 0 6px;
+    }
+    .tl-month {
+      flex: 1; height: 36px; border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--text-muted); font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+    .tl-month.active {
+      background: linear-gradient(135deg, rgba(102,126,234,0.4), rgba(67,233,123,0.25));
+      color: var(--text-main);
+    }
+    .tl-month.payback {
+      background: linear-gradient(135deg, var(--accent3), #00f2fe);
+      color: #0a1a0a;
+    }
+    .tl-label { text-align: center; font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ─── ASSUMPTIONS BOX ─── */
+    .assumptions {
+      margin-top: 20px;
+      background: rgba(102,126,234,0.08);
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .assumptions strong { color: var(--accent1); }
+
+    /* ─── EXPORT AREA ─── */
+    .export-row { display: flex; gap: 10px; margin-top: 18px; }
+    .btn-export {
+      flex: 1; padding: 11px 0;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      font-family: 'Inter', sans-serif; font-size: 0.82rem;
+      font-weight: 600; cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-export:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(67,233,123,0.07); }
+
+    /* ─── FLOATING BADGE ─── */
+    .author-badge {
+      position: fixed; bottom: 24px; right: 24px;
+      background: rgba(10,10,26,0.85); backdrop-filter: blur(10px);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 16px; font-size: 0.78rem; color: var(--text-muted);
+      text-decoration: none; transition: border-color 0.2s, color 0.2s;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 200;
+    }
+    .author-badge:hover { border-color: var(--accent1); color: var(--text-main); }
+    .author-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center; padding: 48px 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .empty-icon { font-size: 3.5rem; opacity: 0.3; }
+    .empty-text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; max-width: 260px; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fade-up 0.5s ease forwards; }
+
+    /* ─── RIGHT COLUMN sticky ─── */
+    .right-col { position: sticky; top: 80px; align-self: start; }
+    @media (max-width: 900px) { .right-col { position: static; } }
+
+    /* ─── Tooltip ─── */
+    [data-tip] { position: relative; cursor: help; border-bottom: 1px dashed rgba(255,255,255,0.3); }
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 130%; left: 50%;
+      transform: translateX(-50%);
+      background: #1e1e3a; border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 12px;
+      font-size: 0.75rem; white-space: nowrap; color: var(--text-main);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      z-index: 300; font-weight: 400; line-height: 1;
+    }
+    [data-tip]:hover::after { opacity: 1; }
+
+    /* ─── Scenario badges ─── */
+    .scenario-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .scenario-pill {
+      padding: 6px 14px; border-radius: 99px; font-size: 0.78rem;
+      font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+      color: var(--text-muted); transition: all 0.2s;
+      background: transparent;
+    }
+    .scenario-pill:hover, .scenario-pill.active {
+      border-color: var(--accent1); color: var(--accent1);
+      background: rgba(102,126,234,0.12);
+    }
+
+    /* ─── Section divider ─── */
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 22px 0;
+    }
+
+    /* ══════════════════════════════════════
+       MODAL OVERLAY – 3-step flow
+    ══════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(5,5,18,0.82);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1; pointer-events: all;
+    }
+    .modal-box {
+      background: #111128;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      width: 100%; max-width: 620px;
+      max-height: 88vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+      transform: translateY(24px);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-inner { padding: 32px; }
+
+    /* step indicator */
+    .step-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 28px;
+    }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800;
+      border: 2px solid rgba(255,255,255,0.15);
+      color: var(--text-muted); background: rgba(255,255,255,0.05);
+      flex-shrink: 0; position: relative; z-index: 1;
+      transition: all 0.3s;
+    }
+    .step-dot.done  { background: var(--accent3); border-color: var(--accent3); color: #0a1a0a; }
+    .step-dot.active{ background: linear-gradient(135deg,var(--accent1),var(--accent2)); border-color: var(--accent1); color: #fff; }
+    .step-line {
+      flex: 1; height: 2px;
+      background: rgba(255,255,255,0.08);
+      transition: background 0.5s;
+    }
+    .step-line.done { background: var(--accent3); }
+    .step-label {
+      font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+      margin-top: 6px; text-align: center; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .step-col { display: flex; flex-direction: column; align-items: center; }
+
+    /* modal section heading */
+    .modal-head {
+      display: flex; align-items: flex-start; gap: 14px; margin-bottom: 22px;
+    }
+    .modal-head-icon {
+      width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .modal-head-title {
+      font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800;
+      line-height: 1.2; margin-bottom: 4px;
+    }
+    .modal-head-sub { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* assumption / risk cards */
+    .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .item-card {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 14px 16px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .item-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); }
+    .item-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .item-text { display: block; }
+    .item-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
+    .item-desc  { font-size: 0.79rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* accept banner */
+    .accept-banner {
+      border-radius: 14px; padding: 16px 18px; margin-bottom: 20px;
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 0.82rem; line-height: 1.6;
+    }
+    .accept-banner.blue {
+      background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.25);
+      color: var(--text-muted);
+    }
+    .accept-banner.amber {
+      background: rgba(254,202,87,0.08); border: 1px solid rgba(254,202,87,0.25);
+      color: rgba(254,202,87,0.85);
+    }
+    .accept-banner strong { color: inherit; display: block; margin-bottom: 4px; font-size: 0.85rem; }
+    .accept-banner .ban-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    /* checkbox row */
+    .check-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-top: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+    }
+    .check-box {
+      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-size: 13px;
+    }
+    .check-box.checked { background: var(--accent3); border-color: var(--accent3); color: #0a1a0a; }
+    .check-text { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+
+    /* modal footer buttons */
+    .modal-footer { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-modal-primary {
+      flex: 1; padding: 14px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border: none; border-radius: 12px; color: #fff;
+      font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+    }
+    .btn-modal-primary:disabled {
+      opacity: 0.35; cursor: not-allowed; transform: none !important;
+    }
+    .btn-modal-primary:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(102,126,234,0.55); }
+    .btn-modal-secondary {
+      padding: 14px 18px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text-muted);
+      font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-modal-secondary:hover { border-color: var(--accent1); color: var(--accent1); }
+
+    /* step panels visibility */
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+
+    /* risk severity badge */
+    .sev {
+      display: inline-block; font-size: 0.65rem; font-weight: 800;
+      padding: 2px 8px; border-radius: 99px; letter-spacing: 0.06em;
+      margin-left: 6px; vertical-align: middle;
+    }
+    .sev.high   { background: rgba(250,112,154,0.18); color: #fa709a; border: 1px solid rgba(250,112,154,0.3); }
+    .sev.medium { background: rgba(254,202,87,0.15);  color: #feca57; border: 1px solid rgba(254,202,87,0.3);  }
+    .sev.low    { background: rgba(67,233,123,0.12);  color: #43e97b; border: 1px solid rgba(67,233,123,0.25); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     THREE-STEP MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-inner">
+
+      <!-- Step progress bar -->
+      <div style="margin-bottom:8px">
+        <div class="step-bar">
+          <div class="step-col">
+            <div class="step-dot active" id="sd1">1</div>
+            <div class="step-label">Assumptions</div>
+          </div>
+          <div class="step-line" id="sl1"></div>
+          <div class="step-col">
+            <div class="step-dot" id="sd2">2</div>
+            <div class="step-label">Risks</div>
+          </div>
+          <div class="step-line" id="sl2"></div>
+          <div class="step-col">
+            <div class="step-dot" id="sd3">3</div>
+            <div class="step-label">Results</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── STEP 1: ASSUMPTIONS ─── -->
+      <div class="modal-step active" id="step1">
+        <div class="modal-head">
+          <div class="modal-head-icon" style="background:linear-gradient(135deg,#667eea,#764ba2)">📋</div>
+          <div>
+            <div class="modal-head-title">Calculation Assumptions</div>
+            <div class="modal-head-sub">This calculator uses the following assumptions to model your AI ROI. Please review them carefully before proceeding.</div>
+          </div>
+        </div>
+
+        <div class="accept-banner blue">
+          <span class="ban-icon">ℹ️</span>
+          <div><strong>Why this matters</strong>Every financial model rests on assumptions. Understanding these helps you interpret the results in the right context and adjust inputs for a more accurate estimate.</div>
+        </div>
+
+        <div class="item-list">
+          <div class="item-card"><span class="item-icon">👥</span><div class="item-text"><div class="item-title">Uniform Productivity Distribution</div><div class="item-desc">Productivity gains are applied uniformly across all impacted employees. Individual variation in adoption speed or skill levels is not modelled.</div></div></div>
+          <div class="item-card"><span class="item-icon">🤖</span><div class="item-text"><div class="item-title">20% Labour Cost is Automation-Addressable</div><div class="item-desc">A conservative 20% of total labour cost is treated as candidates for full automation. This reflects industry benchmarks for knowledge-work automation.</div></div></div>
+          <div class="item-card"><span class="item-icon">📅</span><div class="item-text"><div class="item-title">Benefits Are Prorated in Year 1</div><div class="item-desc">Only the months remaining after the stated go-live date in Year 1 generate benefits. Pre-deployment phases contribute zero return.</div></div></div>
+          <div class="item-card"><span class="item-icon">🏢</span><div class="item-text"><div class="item-title">Stable Headcount Over Projection Period</div><div class="item-desc">Employee headcount remains constant throughout the selected projection horizon. Neither growth nor attrition is factored into benefit scaling.</div></div></div>
+          <div class="item-card"><span class="item-icon">💵</span><div class="item-text"><div class="item-title">Costs Incurred As Planned – No Overruns</div><div class="item-desc">Implementation and licensing costs match your inputs exactly. Budget overruns, contract renegotiations, or hidden costs are not included.</div></div></div>
+          <div class="item-card"><span class="item-icon">🌍</span><div class="item-text"><div class="item-title">Industry Multiplier Applied Uniformly</div><div class="item-desc">The selected industry vertical applies a single multiplier derived from published sector AI-ROI benchmarks. Sub-sector variances are not captured.</div></div></div>
+          <div class="item-card"><span class="item-icon">📉</span><div class="item-text"><div class="item-title">Error Reduction Is Linear</div><div class="item-desc">The error/rework reduction percentage is applied directly and linearly to your declared annual rework cost baseline with no diminishing returns.</div></div></div>
+          <div class="item-card"><span class="item-icon">💱</span><div class="item-text"><div class="item-title">All Values in USD – No FX Adjustment</div><div class="item-desc">Calculations assume USD throughout. Multi-currency organisations should convert all values to USD equivalents before entering inputs.</div></div></div>
+        </div>
+
+        <div class="check-row" id="checkRow1" onclick="toggleCheck('check1','btn-step1')">
+          <div class="check-box" id="check1"></div>
+          <span class="check-text">I have read and understand all stated assumptions</span>
+        </div>
+
+        <div class="modal-footer" style="margin-top:16px">
+          <button class="btn-modal-secondary" onclick="closeModal()">✕ Cancel</button>
+          <button class="btn-modal-primary" id="btn-step1" disabled onclick="goStep(2)">Next: Review Risks →</button>
+        </div>
+      </div>
+
+      <!-- ─── STEP 2: RISKS ─── -->
+      <div class="modal-step" id="step2">
+        <div class="modal-head">
+          <div class="modal-head-icon" style="background:linear-gradient(135deg,#fa709a,#fee140)">⚠️</div>
+          <div>
+            <div class="modal-head-title">Risks That May Impact Results</div>
+            <div class="modal-head-sub">These are real-world factors that could reduce your actual ROI below the projected figure. Accepting these risks means you acknowledge they exist.</div>
+          </div>
+        </div>
+
+        <div class="accept-banner amber">
+          <span class="ban-icon">⚡</span>
+          <div><strong>Important Disclaimer</strong>This tool provides indicative estimates only. Results are not a guarantee of financial returns. Engage a qualified AI advisor for a detailed business case.</div>
+        </div>
+
+        <div class="item-list">
+          <div class="item-card"><span class="item-icon">🧑‍🤝‍🧑</span><div class="item-text"><div class="item-title">Change Resistance <span class="sev high">HIGH</span></div><div class="item-desc">Employees resisting AI adoption is the #1 cause of failed deployments. Insufficient change management can reduce effective productivity gains by 40–60%.</div></div></div>
+          <div class="item-card"><span class="item-icon">🗃️</span><div class="item-text"><div class="item-title">Data Quality Issues <span class="sev high">HIGH</span></div><div class="item-desc">Poor, incomplete, or siloed data can delay go-live and significantly degrade AI model performance, reducing accuracy and automation coverage.</div></div></div>
+          <div class="item-card"><span class="item-icon">📈</span><div class="item-text"><div class="item-title">Implementation Cost Overruns <span class="sev high">HIGH</span></div><div class="item-desc">Enterprise AI projects frequently experience 20–40% cost overruns due to scope creep, integration complexity, and underestimated change management effort.</div></div></div>
+          <div class="item-card"><span class="item-icon">⚖️</span><div class="item-text"><div class="item-title">Regulatory & Compliance Changes <span class="sev medium">MEDIUM</span></div><div class="item-desc">Evolving AI regulations (EU AI Act, GDPR, sector-specific rules) may require costly redesign, re-auditing, or even suspension of AI initiatives.</div></div></div>
+          <div class="item-card"><span class="item-icon">🔒</span><div class="item-text"><div class="item-title">Vendor Lock-In & Price Escalation <span class="sev medium">MEDIUM</span></div><div class="item-desc">Platform licensing costs often increase at renewal. Switching costs may be high, reducing the flexibility to optimise spend over the projection period.</div></div></div>
+          <div class="item-card"><span class="item-icon">🔗</span><div class="item-text"><div class="item-title">Legacy System Integration Complexity <span class="sev medium">MEDIUM</span></div><div class="item-desc">Integrating AI with legacy applications typically extends time-to-value by 2–6 months, delaying the benefit realisation shown in Year 1 projections.</div></div></div>
+          <div class="item-card"><span class="item-icon">🧠</span><div class="item-text"><div class="item-title">AI Model Drift Over Time <span class="sev medium">MEDIUM</span></div><div class="item-desc">AI models degrade in accuracy as data distributions shift. Without continuous monitoring and retraining, efficiency gains can erode within 12–18 months.</div></div></div>
+          <div class="item-card"><span class="item-icon">🛡️</span><div class="item-text"><div class="item-title">Cybersecurity & Data Privacy Exposure <span class="sev medium">MEDIUM</span></div><div class="item-desc">AI systems introduce new attack surfaces. A breach or data-leak incident could trigger regulatory penalties and reputational costs not captured in this model.</div></div></div>
+          <div class="item-card"><span class="item-icon">⏳</span><div class="item-text"><div class="item-title">ROI Realisation Lag <span class="sev low">LOW–MED</span></div><div class="item-desc">Even after go-live, full operational benefits typically materialise 3–9 months later as teams build confidence and refine workflows.</div></div></div>
+          <div class="item-card"><span class="item-icon">👩‍💻</span><div class="item-text"><div class="item-title">AI Talent & Skills Gap <span class="sev low">LOW</span></div><div class="item-desc">Shortage of qualified AI/ML engineers and prompt engineers could slow deployment or require higher-than-budgeted external consulting spend.</div></div></div>
+        </div>
+
+        <div class="check-row" id="checkRow2" onclick="toggleCheck('check2','btn-step2')">
+          <div class="check-box" id="check2"></div>
+          <span class="check-text">I acknowledge these risks and understand results are indicative estimates only</span>
+        </div>
+
+        <div class="modal-footer" style="margin-top:16px">
+          <button class="btn-modal-secondary" onclick="goStep(1)">← Back</button>
+          <button class="btn-modal-primary" id="btn-step2" disabled onclick="showResults()">✅ Accept &amp; View My Results</button>
+        </div>
+      </div>
+
+    </div><!-- /modal-inner -->
+  </div><!-- /modal-box -->
+</div><!-- /modal-overlay -->
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="logo-dot">🧠</div>
+    <span>Sarvesh Huddedar</span>
+  </a>
+  <a class="nav-back" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to Profile
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">AI Strategy ROI Calculator</div>
+  <h1>Quantify Your<br>AI Investment Returns</h1>
+  <p class="hero-sub">Input your organization's parameters and instantly see projected ROI, payback period, and efficiency gains from enterprise AI implementation.</p>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- ─── LEFT: INPUT FORM ─── -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:linear-gradient(135deg,#667eea,#764ba2)">⚡</div>
+        <div>
+          <div class="card-title">Organization Parameters</div>
+          <div class="card-subtitle">Configure your enterprise inputs</div>
+        </div>
+      </div>
+
+      <!-- Quick-fill scenarios -->
+      <div class="scenario-pills">
+        <button class="scenario-pill" onclick="fillScenario('smb')">SMB</button>
+        <button class="scenario-pill" onclick="fillScenario('mid')">Mid-Market</button>
+        <button class="scenario-pill" onclick="fillScenario('enterprise')">Enterprise</button>
+        <button class="scenario-pill" onclick="fillScenario('banking')">BFSI</button>
+      </div>
+
+      <!-- Team -->
+      <div class="form-group">
+        <label for="teamSize">Total Employees Impacted <span class="label-hint">(headcount)</span></label>
+        <input type="number" id="teamSize" value="200" min="1" max="100000" placeholder="e.g. 200">
+      </div>
+
+      <div class="form-group">
+        <label for="avgSalary">Average Annual Salary (USD) <span class="label-hint">per employee</span></label>
+        <input type="number" id="avgSalary" value="60000" min="10000" max="500000" placeholder="e.g. 60000">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- AI Initiative -->
+      <div class="form-group">
+        <label for="aiInvestment">Total AI Implementation Cost (USD)</label>
+        <input type="number" id="aiInvestment" value="250000" min="0" placeholder="e.g. 250000">
+      </div>
+
+      <div class="form-group">
+        <label for="annualLicense">Annual AI Platform / Licensing Cost (USD)</label>
+        <input type="number" id="annualLicense" value="40000" min="0" placeholder="e.g. 40000">
+      </div>
+
+      <div class="form-group">
+        <label for="timeToValue">Time to Value <span class="label-hint">(months to go-live)</span></label>
+        <input type="number" id="timeToValue" value="6" min="1" max="36" placeholder="e.g. 6">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Efficiency -->
+      <div class="form-group">
+        <label>
+          Expected Productivity Gain
+          <span class="range-value" id="effLabel">30%</span>
+        </label>
+        <div class="range-wrap">
+          <input type="range" id="effGain" min="5" max="70" value="30"
+            oninput="document.getElementById('effLabel').textContent=this.value+'%'">
+          <div class="range-labels"><span>5%</span><span>Low Impact</span><span>High Impact</span><span>70%</span></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          Process Automation Coverage
+          <span class="range-value" id="autoLabel">40%</span>
+        </label>
+        <div class="range-wrap">
+          <input type="range" id="autoCoverage" min="5" max="90" value="40"
+            oninput="document.getElementById('autoLabel').textContent=this.value+'%'">
+          <div class="range-labels"><span>5%</span><span>Partial</span><span>Full</span><span>90%</span></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="errorReduction">
+          Error / Rework Reduction <span class="label-hint">(% of current cost)</span>
+          <span class="range-value" id="errLabel">25%</span>
+        </label>
+        <input type="range" id="errorReduction" min="0" max="80" value="25"
+          oninput="document.getElementById('errLabel').textContent=this.value+'%'">
+      </div>
+
+      <div class="form-group">
+        <label for="currentErrorCost">Current Annual Error / Rework Cost (USD)</label>
+        <input type="number" id="currentErrorCost" value="80000" min="0" placeholder="e.g. 80000">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="form-group">
+        <label for="industryType">Industry Vertical</label>
+        <select id="industryType">
+          <option value="1.0">General / Technology</option>
+          <option value="1.15">Banking, Financial Services & Insurance</option>
+          <option value="1.10">Healthcare & Life Sciences</option>
+          <option value="1.08">Manufacturing & Supply Chain</option>
+          <option value="1.05">Retail & E-Commerce</option>
+          <option value="0.95">Public Sector / Government</option>
+          <option value="1.12">Logistics & Transportation</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="projYears">Projection Horizon <span class="label-hint">(years)</span></label>
+        <select id="projYears">
+          <option value="1">1 Year</option>
+          <option value="2">2 Years</option>
+          <option value="3" selected>3 Years</option>
+          <option value="5">5 Years</option>
+        </select>
+      </div>
+
+      <button class="btn-calc" id="calcBtn" onclick="openModal()">
+        ⚡ Calculate ROI &amp; Projections
+      </button>
+      <button class="btn-reset" onclick="resetForm()">↺ Reset to Defaults</button>
+    </div>
+  </div>
+
+  <!-- ─── RIGHT: RESULTS ─── -->
+  <div class="right-col">
+    <!-- Empty state -->
+    <div class="card" id="emptyCard">
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <div class="card-title" style="text-align:center">Your ROI Analysis</div>
+        <div class="empty-text">Fill in your organization's parameters on the left and click <strong style="color:var(--accent1)">Calculate ROI</strong> to see instant projections.</div>
+      </div>
+    </div>
+
+    <!-- Results (hidden until calculated) -->
+    <div class="card results-panel" id="resultsCard">
+      <div class="card-header">
+        <div class="card-icon" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">📈</div>
+        <div>
+          <div class="card-title">ROI Projections</div>
+          <div class="card-subtitle" id="projSubtitle">3-Year Analysis</div>
+        </div>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card green">
+          <div class="kpi-label">Total ROI</div>
+          <div class="kpi-value green" id="kpiROI">0%</div>
+          <div class="kpi-sub" id="kpiROISub">3-year return</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Net Benefit</div>
+          <div class="kpi-value blue" id="kpiNet">$0</div>
+          <div class="kpi-sub">after all costs</div>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-label">Payback Period</div>
+          <div class="kpi-value gold" id="kpiPayback">0 mo</div>
+          <div class="kpi-sub">months to break-even</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Annual Savings</div>
+          <div class="kpi-value purple" id="kpiSavings">$0</div>
+          <div class="kpi-sub">Year 1 efficiency gains</div>
+        </div>
+      </div>
+
+      <!-- ROI gauge -->
+      <div class="breakdown-title">ROI Confidence Score</div>
+      <div class="gauge-wrap">
+        <div class="gauge-header">
+          <span style="font-size:0.8rem;color:var(--text-muted)">Conservative</span>
+          <span id="gaugeScore" style="font-size:0.8rem;font-weight:700;color:var(--accent3)">0%</span>
+          <span style="font-size:0.8rem;color:var(--text-muted)">Optimistic</span>
+        </div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeFill"></div></div>
+      </div>
+
+      <!-- Payback timeline -->
+      <div class="breakdown-title">Payback Timeline</div>
+      <div class="timeline-strip" id="timelineStrip"></div>
+      <div class="tl-label" id="timelineLabel"></div>
+
+      <div class="divider"></div>
+
+      <!-- Cost-Benefit Breakdown -->
+      <div class="breakdown-title">Cost &amp; Benefit Breakdown</div>
+
+      <div class="breakdown-row">
+        <span class="bd-label">👥 Labour Efficiency Gain</span>
+        <span class="bd-value pos" id="bLabour">$0</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bd-label">🤖 Automation Savings</span>
+        <span class="bd-value pos" id="bAuto">$0</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bd-label">🛠️ Error / Rework Reduction</span>
+        <span class="bd-value pos" id="bError">$0</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bd-label">⚙️ Implementation Cost</span>
+        <span class="bd-value neg" id="bImpl">$0</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bd-label">📋 Ongoing Platform Costs</span>
+        <span class="bd-value neg" id="bLicense">$0</span>
+      </div>
+      <div class="breakdown-row" style="border-color:rgba(102,126,234,0.25);background:rgba(102,126,234,0.07)">
+        <span class="bd-label" style="color:var(--text-main);font-weight:600">🏆 Net Value (Total Period)</span>
+        <span class="bd-value" id="bNet" style="font-size:1rem">$0</span>
+      </div>
+
+      <!-- Industry note -->
+      <div class="assumptions" id="assumptionsBox">
+        <strong>Methodology Note:</strong> Calculations use a conservative model.<br>
+        Labour efficiency gain = (Salary × Headcount × Efficiency%) × coverage × industry multiplier.<br>
+        Automation savings = 20% of qualified labour cost at automation coverage rate.<br>
+        Error reduction applied to your declared rework cost baseline.
+      </div>
+
+      <!-- Export -->
+      <div class="export-row">
+        <button class="btn-export" onclick="printReport()">🖨️ Print Report</button>
+        <button class="btn-export" onclick="copyResults()">📋 Copy Summary</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-grid -->
+
+<!-- Author badge -->
+<a href="index.html" class="author-badge">
+  <div class="dot"></div>
+  Tool by Sarvesh Huddedar · AI Advisor
+</a>
+
+<script>
+// ─── SCENARIOS ───
+const SCENARIOS = {
+  smb:        { teamSize:50,   avgSalary:45000, aiInvestment:60000,  annualLicense:12000, timeToValue:3,  effGain:20, autoCoverage:25, errorReduction:20, currentErrorCost:30000, projYears:'2', industryType:'1.0' },
+  mid:        { teamSize:500,  avgSalary:65000, aiInvestment:350000, annualLicense:60000, timeToValue:6,  effGain:30, autoCoverage:40, errorReduction:30, currentErrorCost:120000,projYears:'3', industryType:'1.0' },
+  enterprise: { teamSize:2000, avgSalary:85000, aiInvestment:1500000,annualLicense:250000,timeToValue:9,  effGain:40, autoCoverage:55, errorReduction:40, currentErrorCost:800000,projYears:'5', industryType:'1.0' },
+  banking:    { teamSize:800,  avgSalary:90000, aiInvestment:700000, annualLicense:120000,timeToValue:8,  effGain:35, autoCoverage:50, errorReduction:50, currentErrorCost:400000,projYears:'3', industryType:'1.15'},
+};
+
+function fillScenario(key) {
+  const s = SCENARIOS[key];
+  document.querySelectorAll('.scenario-pill').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  for (const [k,v] of Object.entries(s)) {
+    const el = document.getElementById(k);
+    if (!el) continue;
+    el.value = v;
+    if (el.type === 'range') el.dispatchEvent(new Event('input'));
+  }
+}
+
+// ─── FORMAT ───
+function fmt(n) {
+  if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(0) + 'K';
+  return n.toFixed(0);
+}
+function fmtDollar(n) { return (n<0?'-$':'$') + fmt(Math.abs(n)); }
+
+// ─── CALCULATE ───
+function calculate() {
+  const teamSize       = +document.getElementById('teamSize').value       || 200;
+  const avgSalary      = +document.getElementById('avgSalary').value      || 60000;
+  const aiInvestment   = +document.getElementById('aiInvestment').value   || 250000;
+  const annualLicense  = +document.getElementById('annualLicense').value  || 40000;
+  const timeToValue    = +document.getElementById('timeToValue').value    || 6;
+  const effGain        = +document.getElementById('effGain').value / 100;
+  const autoCoverage   = +document.getElementById('autoCoverage').value / 100;
+  const errorRedPct    = +document.getElementById('errorReduction').value / 100;
+  const currentErrCost = +document.getElementById('currentErrorCost').value || 80000;
+  const industryMult   = +document.getElementById('industryType').value;
+  const projYears      = +document.getElementById('projYears').value;
+
+  // ─── Annual Benefits ───
+  const totalLabourCost  = teamSize * avgSalary;
+  const labourGain       = totalLabourCost * effGain * autoCoverage * industryMult;
+  const autoSavings      = totalLabourCost * 0.20 * autoCoverage * industryMult;
+  const errorSavings     = currentErrCost * errorRedPct;
+  const totalAnnualBenefit = labourGain + autoSavings + errorSavings;
+
+  // ─── Costs ───
+  const totalCost = aiInvestment + annualLicense * projYears;
+
+  // ─── Prorate Year 1 (only count benefits after go-live) ───
+  const year1Fraction  = Math.max(0, (12 - timeToValue) / 12);
+  const year1Benefit   = totalAnnualBenefit * year1Fraction;
+  const totalBenefits  = year1Benefit + totalAnnualBenefit * (projYears - 1);
+  const netBenefit     = totalBenefits - totalCost;
+
+  // ─── ROI ───
+  const roi = totalCost > 0 ? (netBenefit / totalCost) * 100 : 0;
+
+  // ─── Payback (months) ───
+  const monthlyBenefit = totalAnnualBenefit / 12;
+  const paybackMonths  = monthlyBenefit > 0
+    ? Math.ceil((aiInvestment + annualLicense * (timeToValue/12)) / monthlyBenefit) + timeToValue
+    : 999;
+
+  // ─── Confidence score (heuristic) ───
+  const confidence = Math.min(100, Math.max(10,
+    30
+    + (effGain * 100 > 30 ? 15 : 5)
+    + (autoCoverage * 100 > 40 ? 15 : 5)
+    + (projYears >= 3 ? 20 : 10)
+    + (roi > 100 ? 20 : roi > 50 ? 10 : 0)
+  ));
+
+  // ─── Render ───
+  document.getElementById('emptyCard').style.display = 'none';
+  const rc = document.getElementById('resultsCard');
+  rc.classList.add('show');
+
+  document.getElementById('projSubtitle').textContent = projYears + '-Year Analysis';
+  document.getElementById('kpiROI').textContent     = roi.toFixed(0) + '%';
+  document.getElementById('kpiROISub').textContent  = projYears + '-year return';
+  document.getElementById('kpiNet').textContent     = fmtDollar(netBenefit);
+  document.getElementById('kpiSavings').textContent = fmtDollar(totalAnnualBenefit);
+  document.getElementById('kpiPayback').textContent = paybackMonths > 60 ? '60+ mo' : paybackMonths + ' mo';
+
+  document.getElementById('bLabour').textContent   = fmtDollar(labourGain * projYears);
+  document.getElementById('bAuto').textContent     = fmtDollar(autoSavings * projYears);
+  document.getElementById('bError').textContent    = fmtDollar(errorSavings * projYears);
+  document.getElementById('bImpl').textContent     = '-$' + fmt(aiInvestment);
+  document.getElementById('bLicense').textContent  = '-$' + fmt(annualLicense * projYears);
+  document.getElementById('bNet').textContent      = fmtDollar(netBenefit);
+  document.getElementById('bNet').className        = 'bd-value ' + (netBenefit >= 0 ? 'pos' : 'neg');
+
+  // Gauge
+  document.getElementById('gaugeScore').textContent = confidence + '%';
+  setTimeout(()=>{ document.getElementById('gaugeFill').style.width = confidence + '%'; }, 100);
+
+  // Timeline strip
+  const strip = document.getElementById('timelineStrip');
+  strip.innerHTML = '';
+  const totalMonths = Math.min(projYears * 12, 36);
+  const paybackClamp = Math.min(paybackMonths, totalMonths + 1);
+  for (let m = 1; m <= totalMonths; m++) {
+    const div = document.createElement('div');
+    div.className = 'tl-month';
+    if (m === paybackClamp) { div.classList.add('payback'); div.title = 'Break-even'; }
+    else if (m > timeToValue && m < paybackClamp) div.classList.add('active');
+    if (m % 3 === 0) div.textContent = 'M' + m;
+    strip.appendChild(div);
+  }
+  const lbl = paybackMonths > totalMonths
+    ? `Break-even projected beyond the ${projYears}-year window`
+    : `✅ Break-even at month ${paybackMonths} (${Math.ceil(paybackMonths/12*10)/10} yrs)`;
+  document.getElementById('timelineLabel').textContent = lbl;
+
+  // Scroll to results on mobile
+  if (window.innerWidth < 900) {
+    rc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Animate KPIs
+  rc.querySelectorAll('.kpi-card').forEach((el,i)=>{
+    el.style.opacity = 0;
+    setTimeout(()=>{ el.style.transition='opacity 0.4s'; el.style.opacity=1; }, i*80);
+  });
+}
+
+// ─── RESET ───
+function resetForm() {
+  document.querySelectorAll('.scenario-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('teamSize').value       = 200;
+  document.getElementById('avgSalary').value      = 60000;
+  document.getElementById('aiInvestment').value   = 250000;
+  document.getElementById('annualLicense').value  = 40000;
+  document.getElementById('timeToValue').value    = 6;
+  document.getElementById('effGain').value        = 30; document.getElementById('effLabel').textContent='30%';
+  document.getElementById('autoCoverage').value   = 40; document.getElementById('autoLabel').textContent='40%';
+  document.getElementById('errorReduction').value = 25; document.getElementById('errLabel').textContent='25%';
+  document.getElementById('currentErrorCost').value = 80000;
+  document.getElementById('industryType').value   = '1.0';
+  document.getElementById('projYears').value      = '3';
+  document.getElementById('emptyCard').style.display = '';
+  document.getElementById('resultsCard').classList.remove('show');
+  document.getElementById('gaugeFill').style.width = '0%';
+}
+
+// ─── PRINT ───
+function printReport() {
+  window.print();
+}
+
+// ─── COPY ───
+function copyResults() {
+  const roi  = document.getElementById('kpiROI').textContent;
+  const net  = document.getElementById('kpiNet').textContent;
+  const pay  = document.getElementById('kpiPayback').textContent;
+  const sav  = document.getElementById('kpiSavings').textContent;
+  const text = `AI Strategy ROI Report (by sarvesh.site)\n${'─'.repeat(38)}\nROI: ${roi}\nNet Benefit: ${net}\nPayback Period: ${pay}\nAnnual Savings (Yr 1): ${sav}\n`;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    btn.textContent = '✅ Copied!';
+    setTimeout(()=>{ btn.textContent = '📋 Copy Summary'; }, 2000);
+  });
+}
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  MODAL FLOW  –  openModal → goStep(2) → showResults
+// ══════════════════════════════════════════════════════
+
+function openModal() {
+  // Reset modal state each time
+  ['check1','check2'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('checked');
+    el.textContent = '';
+  });
+  document.getElementById('btn-step1').disabled = true;
+  document.getElementById('btn-step2').disabled = true;
+
+  // Reset to step 1
+  goStep(1, true);
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function goStep(n, silent) {
+  // Hide all steps
+  document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+
+  // Update step dots
+  const dots  = [document.getElementById('sd1'), document.getElementById('sd2'), document.getElementById('sd3')];
+  const lines = [document.getElementById('sl1'), document.getElementById('sl2')];
+
+  dots.forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i + 1 < n)  d.classList.add('done');
+    if (i + 1 === n) d.classList.add('active');
+  });
+  lines.forEach((l, i) => {
+    l.classList.toggle('done', i + 1 < n);
+  });
+
+  // Scroll modal to top
+  if (!silent) {
+    const box = document.querySelector('.modal-box');
+    if (box) box.scrollTop = 0;
+  }
+}
+
+function toggleCheck(checkId, btnId) {
+  const box = document.getElementById(checkId);
+  const btn = document.getElementById(btnId);
+  const isChecked = box.classList.toggle('checked');
+  box.textContent = isChecked ? '✓' : '';
+  btn.disabled = !isChecked;
+}
+
+function showResults() {
+  // Close modal, run the calculation, reveal results
+  closeModal();
+  calculate();
+}
+
+// Close overlay on backdrop click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ESC key closes modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
