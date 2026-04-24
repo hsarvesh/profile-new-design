@@ -41,7 +41,7 @@
     "description": "Free browser-based calculator to quantify ROI, payback period, and efficiency gains from enterprise AI and automation investments.",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
     "author": {
       "@type": "Person",
       "name": "Sarvesh Huddedar",
@@ -58,20 +58,20 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-deep:    #0a0a1a;
-      --bg-card:    rgba(255,255,255,0.04);
-      --bg-card2:   rgba(255,255,255,0.07);
-      --border:     rgba(255,255,255,0.10);
-      --accent1:    #667eea;
-      --accent2:    #764ba2;
-      --accent3:    #43e97b;
-      --accent4:    #4facfe;
-      --gold:       #feca57;
-      --danger:     #fa709a;
-      --text-main:  #f0f0ff;
-      --text-muted: rgba(240,240,255,0.55);
+      --bg-deep:    #f8fafc;
+      --bg-card:    rgba(255,255,255,0.85);
+      --bg-card2:   rgba(255,255,255,0.95);
+      --border:     rgba(0,0,0,0.05);
+      --accent1:    #4f46e5;
+      --accent2:    #0ea5e9;
+      --accent3:    #10b981;
+      --accent4:    #3b82f6;
+      --gold:       #f59e0b;
+      --danger:     #ef4444;
+      --text-main:  #0f172a;
+      --text-muted: #64748b;
       --radius:     16px;
-      --shadow:     0 8px 40px rgba(0,0,0,0.45);
+      --shadow:     0 8px 40px rgba(0,0,0,0.05);
     }
 
     html { scroll-behavior: smooth; }
@@ -81,9 +81,7 @@
       background: var(--bg-deep);
       color: var(--text-main);
       min-height: 100vh;
-      background-image:
-        radial-gradient(ellipse 80% 60% at 20% -5%, rgba(102,126,234,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(67,233,123,0.10) 0%, transparent 60%);
+      background-image: radial-gradient(at 0% 0%, rgba(224, 231, 255, 0.8) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(224, 242, 254, 0.8) 0, transparent 50%);
     }
 
     /* ─── NAV ─── */
@@ -94,7 +92,7 @@
       padding: 18px 40px;
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
-      background: rgba(10,10,26,0.75);
+      background: rgba(255,255,255,0.75);
       position: sticky; top: 0; z-index: 100;
     }
     .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
@@ -181,8 +179,8 @@
 
     input[type="number"], select {
       width: 100%; padding: 12px 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.1);
       border-radius: 10px; color: var(--text-main);
       font-family: 'Inter', sans-serif; font-size: 0.95rem;
       transition: border-color 0.2s, box-shadow 0.2s;
@@ -193,7 +191,7 @@
       border-color: var(--accent1);
       box-shadow: 0 0 0 3px rgba(102,126,234,0.18);
     }
-    select option { background: #1a1a30; color: var(--text-main); }
+    select option { background: #ffffff; color: var(--text-main); }
 
     /* ─── RANGE SLIDER ─── */
     .range-wrap { position: relative; }
@@ -207,7 +205,7 @@
     input[type="range"] {
       width: 100%; height: 6px;
       -webkit-appearance: none; appearance: none;
-      background: rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.1);
       border-radius: 99px; cursor: pointer;
     }
     input[type="range"]::-webkit-slider-thumb {
@@ -295,9 +293,9 @@
     .breakdown-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px 14px; border-radius: 10px; margin-bottom: 6px;
-      background: rgba(255,255,255,0.03);
+      background: rgba(0,0,0,0.02);
       font-size: 0.88rem;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
       transition: background 0.15s;
     }
     .breakdown-row:hover { background: rgba(102,126,234,0.08); }
@@ -312,7 +310,7 @@
     .gauge-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.82rem; }
     .gauge-track {
       height: 10px; border-radius: 99px;
-      background: rgba(255,255,255,0.08); overflow: hidden;
+      background: rgba(0,0,0,0.06); overflow: hidden;
     }
     .gauge-fill {
       height: 100%; border-radius: 99px;
@@ -327,7 +325,7 @@
     }
     .tl-month {
       flex: 1; height: 36px; border-radius: 6px;
-      background: rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.04);
       display: flex; align-items: center; justify-content: center;
       font-size: 0.6rem; color: var(--text-muted); font-weight: 600;
       transition: background 0.3s, color 0.3s;
@@ -372,7 +370,7 @@
     /* ─── FLOATING BADGE ─── */
     .author-badge {
       position: fixed; bottom: 24px; right: 24px;
-      background: rgba(10,10,26,0.85); backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
       border: 1px solid var(--border); border-radius: 12px;
       padding: 10px 16px; font-size: 0.78rem; color: var(--text-muted);
       text-decoration: none; transition: border-color 0.2s, color 0.2s;
@@ -403,12 +401,12 @@
     @media (max-width: 900px) { .right-col { position: static; } }
 
     /* ─── Tooltip ─── */
-    [data-tip] { position: relative; cursor: help; border-bottom: 1px dashed rgba(255,255,255,0.3); }
+    [data-tip] { position: relative; cursor: help; border-bottom: 1px dashed rgba(0,0,0,0.3); }
     [data-tip]::after {
       content: attr(data-tip);
       position: absolute; bottom: 130%; left: 50%;
       transform: translateX(-50%);
-      background: #1e1e3a; border: 1px solid var(--border);
+      background: #ffffff; border: 1px solid var(--border);
       border-radius: 8px; padding: 7px 12px;
       font-size: 0.75rem; white-space: nowrap; color: var(--text-main);
       opacity: 0; pointer-events: none; transition: opacity 0.2s;
@@ -440,7 +438,7 @@
     ══════════════════════════════════════ */
     .modal-overlay {
       position: fixed; inset: 0; z-index: 1000;
-      background: rgba(5,5,18,0.82);
+      background: rgba(255,255,255,0.6);
       backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: center;
       padding: 16px;
@@ -451,8 +449,8 @@
       opacity: 1; pointer-events: all;
     }
     .modal-box {
-      background: #111128;
-      border: 1px solid rgba(255,255,255,0.12);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.1);
       border-radius: 22px;
       width: 100%; max-width: 620px;
       max-height: 88vh; overflow-y: auto;
@@ -472,8 +470,8 @@
       width: 32px; height: 32px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 0.75rem; font-weight: 800;
-      border: 2px solid rgba(255,255,255,0.15);
-      color: var(--text-muted); background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(0,0,0,0.1);
+      color: var(--text-muted); background: rgba(0,0,0,0.03);
       flex-shrink: 0; position: relative; z-index: 1;
       transition: all 0.3s;
     }
@@ -481,7 +479,7 @@
     .step-dot.active{ background: linear-gradient(135deg,var(--accent1),var(--accent2)); border-color: var(--accent1); color: #fff; }
     .step-line {
       flex: 1; height: 2px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.06);
       transition: background 0.5s;
     }
     .step-line.done { background: var(--accent3); }
@@ -510,12 +508,12 @@
     .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
     .item-card {
       display: flex; align-items: flex-start; gap: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.05);
       border-radius: 12px; padding: 14px 16px;
       transition: border-color 0.2s, background 0.2s;
     }
-    .item-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.07); }
+    .item-card:hover { border-color: rgba(0,0,0,0.15); background: #ffffff; }
     .item-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
     .item-text { display: block; }
     .item-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 3px; }
@@ -546,8 +544,8 @@
     }
     .check-box {
       width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.02);
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; font-size: 13px;
     }
@@ -644,7 +642,7 @@
           <div class="item-card"><span class="item-icon">💵</span><div class="item-text"><div class="item-title">Costs Incurred As Planned – No Overruns</div><div class="item-desc">Implementation and licensing costs match your inputs exactly. Budget overruns, contract renegotiations, or hidden costs are not included.</div></div></div>
           <div class="item-card"><span class="item-icon">🌍</span><div class="item-text"><div class="item-title">Industry Multiplier Applied Uniformly</div><div class="item-desc">The selected industry vertical applies a single multiplier derived from published sector AI-ROI benchmarks. Sub-sector variances are not captured.</div></div></div>
           <div class="item-card"><span class="item-icon">📉</span><div class="item-text"><div class="item-title">Error Reduction Is Linear</div><div class="item-desc">The error/rework reduction percentage is applied directly and linearly to your declared annual rework cost baseline with no diminishing returns.</div></div></div>
-          <div class="item-card"><span class="item-icon">💱</span><div class="item-text"><div class="item-title">All Values in USD – No FX Adjustment</div><div class="item-desc">Calculations assume USD throughout. Multi-currency organisations should convert all values to USD equivalents before entering inputs.</div></div></div>
+          <div class="item-card"><span class="item-icon">💱</span><div class="item-text"><div class="item-title">All Values in INR (₹) – No FX Adjustment</div><div class="item-desc">Calculations assume Indian Rupees (₹) throughout. Multi-currency organisations should convert all values to INR equivalents before entering inputs.</div></div></div>
         </div>
 
         <div class="check-row" id="checkRow1" onclick="toggleCheck('check1','btn-step1')">
@@ -749,21 +747,21 @@
       </div>
 
       <div class="form-group">
-        <label for="avgSalary">Average Annual Salary (USD) <span class="label-hint">per employee</span></label>
-        <input type="number" id="avgSalary" value="60000" min="10000" max="500000" placeholder="e.g. 60000">
+        <label for="avgSalary">Average Annual Salary (₹) <span class="label-hint">per employee</span></label>
+        <input type="number" id="avgSalary" value="600000" min="100000" max="50000000" placeholder="e.g. 600000">
       </div>
 
       <div class="divider"></div>
 
       <!-- AI Initiative -->
       <div class="form-group">
-        <label for="aiInvestment">Total AI Implementation Cost (USD)</label>
-        <input type="number" id="aiInvestment" value="250000" min="0" placeholder="e.g. 250000">
+        <label for="aiInvestment">Total AI Implementation Cost (₹)</label>
+        <input type="number" id="aiInvestment" value="2000000" min="0" placeholder="e.g. 2000000">
       </div>
 
       <div class="form-group">
-        <label for="annualLicense">Annual AI Platform / Licensing Cost (USD)</label>
-        <input type="number" id="annualLicense" value="40000" min="0" placeholder="e.g. 40000">
+        <label for="annualLicense">Annual AI Platform / Licensing Cost (₹)</label>
+        <input type="number" id="annualLicense" value="350000" min="0" placeholder="e.g. 350000">
       </div>
 
       <div class="form-group">
@@ -808,8 +806,8 @@
       </div>
 
       <div class="form-group">
-        <label for="currentErrorCost">Current Annual Error / Rework Cost (USD)</label>
-        <input type="number" id="currentErrorCost" value="80000" min="0" placeholder="e.g. 80000">
+        <label for="currentErrorCost">Current Annual Error / Rework Cost (₹)</label>
+        <input type="number" id="currentErrorCost" value="700000" min="0" placeholder="e.g. 700000">
       </div>
 
       <div class="divider"></div>
@@ -962,10 +960,10 @@
 <script>
 // ─── SCENARIOS ───
 const SCENARIOS = {
-  smb:        { teamSize:50,   avgSalary:45000, aiInvestment:60000,  annualLicense:12000, timeToValue:3,  effGain:20, autoCoverage:25, errorReduction:20, currentErrorCost:30000, projYears:'2', industryType:'1.0' },
-  mid:        { teamSize:500,  avgSalary:65000, aiInvestment:350000, annualLicense:60000, timeToValue:6,  effGain:30, autoCoverage:40, errorReduction:30, currentErrorCost:120000,projYears:'3', industryType:'1.0' },
-  enterprise: { teamSize:2000, avgSalary:85000, aiInvestment:1500000,annualLicense:250000,timeToValue:9,  effGain:40, autoCoverage:55, errorReduction:40, currentErrorCost:800000,projYears:'5', industryType:'1.0' },
-  banking:    { teamSize:800,  avgSalary:90000, aiInvestment:700000, annualLicense:120000,timeToValue:8,  effGain:35, autoCoverage:50, errorReduction:50, currentErrorCost:400000,projYears:'3', industryType:'1.15'},
+  smb:        { teamSize:50,   avgSalary:400000,  aiInvestment:500000,   annualLicense:100000,  timeToValue:3,  effGain:20, autoCoverage:25, errorReduction:20, currentErrorCost:250000,  projYears:'2', industryType:'1.0' },
+  mid:        { teamSize:500,  avgSalary:550000,  aiInvestment:3000000,  annualLicense:500000,  timeToValue:6,  effGain:30, autoCoverage:40, errorReduction:30, currentErrorCost:1000000, projYears:'3', industryType:'1.0' },
+  enterprise: { teamSize:2000, avgSalary:700000,  aiInvestment:12500000, annualLicense:2000000, timeToValue:9,  effGain:40, autoCoverage:55, errorReduction:40, currentErrorCost:6500000, projYears:'5', industryType:'1.0' },
+  banking:    { teamSize:800,  avgSalary:750000,  aiInvestment:6000000,  annualLicense:1000000, timeToValue:8,  effGain:35, autoCoverage:50, errorReduction:50, currentErrorCost:3500000, projYears:'3', industryType:'1.15'},
 };
 
 function fillScenario(key) {
@@ -980,13 +978,14 @@ function fillScenario(key) {
   }
 }
 
-// ─── FORMAT ───
+// ─── FORMAT (Indian: L = Lakhs, Cr = Crores) ───
 function fmt(n) {
-  if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (Math.abs(n) >= 1e7) return (n/1e7).toFixed(1).replace(/\.0$/,'') + 'Cr';
+  if (Math.abs(n) >= 1e5) return (n/1e5).toFixed(1).replace(/\.0$/,'') + 'L';
   if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(0) + 'K';
   return n.toFixed(0);
 }
-function fmtDollar(n) { return (n<0?'-$':'$') + fmt(Math.abs(n)); }
+function fmtDollar(n) { return (n<0?'-₹':'₹') + fmt(Math.abs(n)); }
 
 // ─── CALCULATE ───
 function calculate() {
@@ -1051,8 +1050,8 @@ function calculate() {
   document.getElementById('bLabour').textContent   = fmtDollar(labourGain * projYears);
   document.getElementById('bAuto').textContent     = fmtDollar(autoSavings * projYears);
   document.getElementById('bError').textContent    = fmtDollar(errorSavings * projYears);
-  document.getElementById('bImpl').textContent     = '-$' + fmt(aiInvestment);
-  document.getElementById('bLicense').textContent  = '-$' + fmt(annualLicense * projYears);
+  document.getElementById('bImpl').textContent     = '-₹' + fmt(aiInvestment);
+  document.getElementById('bLicense').textContent  = '-₹' + fmt(annualLicense * projYears);
   document.getElementById('bNet').textContent      = fmtDollar(netBenefit);
   document.getElementById('bNet').className        = 'bd-value ' + (netBenefit >= 0 ? 'pos' : 'neg');
 
@@ -1094,14 +1093,14 @@ function calculate() {
 function resetForm() {
   document.querySelectorAll('.scenario-pill').forEach(p=>p.classList.remove('active'));
   document.getElementById('teamSize').value       = 200;
-  document.getElementById('avgSalary').value      = 60000;
-  document.getElementById('aiInvestment').value   = 250000;
-  document.getElementById('annualLicense').value  = 40000;
+  document.getElementById('avgSalary').value      = 600000;
+  document.getElementById('aiInvestment').value   = 2000000;
+  document.getElementById('annualLicense').value  = 350000;
   document.getElementById('timeToValue').value    = 6;
   document.getElementById('effGain').value        = 30; document.getElementById('effLabel').textContent='30%';
   document.getElementById('autoCoverage').value   = 40; document.getElementById('autoLabel').textContent='40%';
   document.getElementById('errorReduction').value = 25; document.getElementById('errLabel').textContent='25%';
-  document.getElementById('currentErrorCost').value = 80000;
+  document.getElementById('currentErrorCost').value = 700000;
   document.getElementById('industryType').value   = '1.0';
   document.getElementById('projYears').value      = '3';
   document.getElementById('emptyCard').style.display = '';
