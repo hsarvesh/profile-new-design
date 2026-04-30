@@ -348,11 +348,21 @@ section {
   z-index: 2;
 }
 
+/*--------------------------------------------------------------
+# Animations & Enhancements
+--------------------------------------------------------------*/
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 section.section-show {
-  top: 100px;
-  bottom: auto;
-  opacity: 1;
-  padding-bottom: 45px;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Enhancing Interactivity */
+.icon-box, .portfolio-wrap, .testimonial-item p {
+  will-change: transform, box-shadow;
 }
 
 section .container {
@@ -363,7 +373,14 @@ section .container {
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
+
+section.section-show .container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
 
 @media (max-width: 768px) {
   section {
