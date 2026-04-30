@@ -358,6 +358,8 @@ section {
 
 section.section-show {
   animation: fadeIn 0.6s ease-out forwards;
+  bottom: auto;
+  padding-bottom: 45px;
 }
 
 /* Enhancing Interactivity */
