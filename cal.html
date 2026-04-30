@@ -89,12 +89,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 40px;
+      padding: 14px 40px;
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
-      background: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.9);
       position: sticky; top: 0; z-index: 100;
+      gap: 16px;
     }
+    .nav-left { display: flex; align-items: center; gap: 12px; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .nav-brand .logo-dot {
       width: 36px; height: 36px; border-radius: 10px;
@@ -111,6 +114,31 @@
     }
     .nav-back:hover { color: var(--accent1); }
     .nav-back svg { width: 16px; height: 16px; }
+
+    /* ─── CURRENCY SELECTOR ─── */
+    .currency-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(79,70,229,0.07);
+      border: 1px solid rgba(79,70,229,0.18);
+      border-radius: 10px;
+      padding: 6px 12px;
+    }
+    .currency-wrap label {
+      font-size: 0.72rem; font-weight: 700; color: var(--accent1);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin: 0; white-space: nowrap;
+    }
+    #currencySelect {
+      width: auto; padding: 4px 8px;
+      background: transparent;
+      border: none;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      appearance: auto;
+    }
+    #currencySelect:focus { outline: none; box-shadow: none; border-color: transparent; }
 
     /* ─── HERO ─── */
     .hero {
@@ -130,7 +158,7 @@
       font-family: 'Outfit', sans-serif;
       font-size: clamp(2rem, 5vw, 3.2rem);
       font-weight: 800; line-height: 1.15;
-      background: linear-gradient(135deg, #fff 20%, var(--accent1) 60%, var(--accent3) 100%);
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--accent1) 50%, var(--accent3) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       margin-bottom: 16px;
     }
@@ -175,7 +203,7 @@
     /* ─── FORM ─── */
     .form-group { margin-bottom: 20px; }
     label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
-    label span.label-hint { text-transform: none; letter-spacing: 0; font-weight: 400; color: rgba(240,240,255,0.35); font-size: 0.78rem; }
+    label span.label-hint { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--text-muted); font-size: 0.78rem; opacity: 0.75; }
 
     input[type="number"], select {
       width: 100%; padding: 12px 16px;
@@ -642,7 +670,7 @@
           <div class="item-card"><span class="item-icon">💵</span><div class="item-text"><div class="item-title">Costs Incurred As Planned – No Overruns</div><div class="item-desc">Implementation and licensing costs match your inputs exactly. Budget overruns, contract renegotiations, or hidden costs are not included.</div></div></div>
           <div class="item-card"><span class="item-icon">🌍</span><div class="item-text"><div class="item-title">Industry Multiplier Applied Uniformly</div><div class="item-desc">The selected industry vertical applies a single multiplier derived from published sector AI-ROI benchmarks. Sub-sector variances are not captured.</div></div></div>
           <div class="item-card"><span class="item-icon">📉</span><div class="item-text"><div class="item-title">Error Reduction Is Linear</div><div class="item-desc">The error/rework reduction percentage is applied directly and linearly to your declared annual rework cost baseline with no diminishing returns.</div></div></div>
-          <div class="item-card"><span class="item-icon">💱</span><div class="item-text"><div class="item-title">All Values in INR (₹) – No FX Adjustment</div><div class="item-desc">Calculations assume Indian Rupees (₹) throughout. Multi-currency organisations should convert all values to INR equivalents before entering inputs.</div></div></div>
+          <div class="item-card"><span class="item-icon">💱</span><div class="item-text"><div class="item-title">All monetary values use the selected currency (<span class="lbl-sym assump-sym">₹ INR</span>)</div><div class="item-desc">Inputs and results are expressed in the currency chosen at the top of the page (<span class="lbl-sym assump-sym">₹ INR</span>). Exchange rates are indicative; for cross-currency organisations, convert all inputs to your chosen currency before entering values. Rates are not updated in real-time.</div></div></div>
         </div>
 
         <div class="check-row" id="checkRow1" onclick="toggleCheck('check1','btn-step1')">
@@ -701,14 +729,30 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-brand" href="index.html">
-    <div class="logo-dot">🧠</div>
-    <span>Sarvesh Huddedar</span>
-  </a>
-  <a class="nav-back" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-    Back to Profile
-  </a>
+  <div class="nav-left">
+    <a class="nav-brand" href="index.html">
+      <div class="logo-dot">🧠</div>
+      <span>Sarvesh Huddedar</span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <div class="currency-wrap">
+      <label for="currencySelect">💱 Currency</label>
+      <select id="currencySelect" onchange="updateCurrency()">
+        <option value="INR">₹ INR</option>
+        <option value="USD">$ USD</option>
+        <option value="EUR">€ EUR</option>
+        <option value="GBP">£ GBP</option>
+        <option value="AED">د.إ AED</option>
+        <option value="SGD">S$ SGD</option>
+        <option value="AUD">A$ AUD</option>
+      </select>
+    </div>
+    <a class="nav-back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Profile
+    </a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -747,7 +791,7 @@
       </div>
 
       <div class="form-group">
-        <label for="avgSalary">Average Annual Salary (₹) <span class="label-hint">per employee</span></label>
+        <label for="avgSalary">Average Annual Salary (<span class="lbl-sym">₹</span>) <span class="label-hint">per employee</span></label>
         <input type="number" id="avgSalary" value="600000" min="100000" max="50000000" placeholder="e.g. 600000">
       </div>
 
@@ -755,12 +799,12 @@
 
       <!-- AI Initiative -->
       <div class="form-group">
-        <label for="aiInvestment">Total AI Implementation Cost (₹)</label>
+        <label for="aiInvestment">Total AI Implementation Cost (<span class="lbl-sym">₹</span>)</label>
         <input type="number" id="aiInvestment" value="2000000" min="0" placeholder="e.g. 2000000">
       </div>
 
       <div class="form-group">
-        <label for="annualLicense">Annual AI Platform / Licensing Cost (₹)</label>
+        <label for="annualLicense">Annual AI Platform / Licensing Cost (<span class="lbl-sym">₹</span>)</label>
         <input type="number" id="annualLicense" value="350000" min="0" placeholder="e.g. 350000">
       </div>
 
@@ -806,7 +850,7 @@
       </div>
 
       <div class="form-group">
-        <label for="currentErrorCost">Current Annual Error / Rework Cost (₹)</label>
+        <label for="currentErrorCost">Current Annual Error / Rework Cost (<span class="lbl-sym">₹</span>)</label>
         <input type="number" id="currentErrorCost" value="700000" min="0" placeholder="e.g. 700000">
       </div>
 
@@ -958,7 +1002,79 @@
 </a>
 
 <script>
-// ─── SCENARIOS ───
+// ─── CURRENCY CONFIG ───
+const CURRENCIES = {
+  INR: { symbol: '₹', name: 'INR', rate: 1,        fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e7) return (n/1e7).toFixed(1).replace(/\.0$/,'') + 'Cr';
+    if (a >= 1e5) return (n/1e5).toFixed(1).replace(/\.0$/,'') + 'L';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  USD: { symbol: '$', name: 'USD', rate: 1/84,     fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e9) return (n/1e9).toFixed(2) + 'B';
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  EUR: { symbol: '€', name: 'EUR', rate: 1/91,     fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  GBP: { symbol: '£', name: 'GBP', rate: 1/107,   fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  AED: { symbol: 'د.إ', name: 'AED', rate: 1/23,  fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  SGD: { symbol: 'S$', name: 'SGD', rate: 1/62,   fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+  AUD: { symbol: 'A$', name: 'AUD', rate: 1/55,   fmt: (n) => {
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return (n/1e3).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }},
+};
+
+let activeCurrency = 'INR';
+
+function updateCurrency() {
+  activeCurrency = document.getElementById('currencySelect').value;
+  const cur = CURRENCIES[activeCurrency];
+  // Update all form currency symbol labels
+  document.querySelectorAll('.lbl-sym').forEach(el => el.textContent = cur.symbol);
+  // Update assumption modal currency references
+  document.querySelectorAll('.assump-sym').forEach(el => el.textContent = cur.symbol + ' ' + cur.name);
+  // Re-run calculate if results are already visible
+  if (document.getElementById('resultsCard').classList.contains('show')) {
+    calculate();
+  }
+}
+
+function getCur() { return CURRENCIES[activeCurrency]; }
+
+function fmtDollar(n_inr) {
+  const cur = getCur();
+  const n = n_inr * cur.rate;
+  const sym = cur.symbol;
+  return (n_inr < 0 ? '-' + sym : sym) + cur.fmt(Math.abs(n));
+}
+
+// ─── SCENARIOS (values in INR) ───
 const SCENARIOS = {
   smb:        { teamSize:50,   avgSalary:400000,  aiInvestment:500000,   annualLicense:100000,  timeToValue:3,  effGain:20, autoCoverage:25, errorReduction:20, currentErrorCost:250000,  projYears:'2', industryType:'1.0' },
   mid:        { teamSize:500,  avgSalary:550000,  aiInvestment:3000000,  annualLicense:500000,  timeToValue:6,  effGain:30, autoCoverage:40, errorReduction:30, currentErrorCost:1000000, projYears:'3', industryType:'1.0' },
@@ -977,15 +1093,6 @@ function fillScenario(key) {
     if (el.type === 'range') el.dispatchEvent(new Event('input'));
   }
 }
-
-// ─── FORMAT (Indian: L = Lakhs, Cr = Crores) ───
-function fmt(n) {
-  if (Math.abs(n) >= 1e7) return (n/1e7).toFixed(1).replace(/\.0$/,'') + 'Cr';
-  if (Math.abs(n) >= 1e5) return (n/1e5).toFixed(1).replace(/\.0$/,'') + 'L';
-  if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(0) + 'K';
-  return n.toFixed(0);
-}
-function fmtDollar(n) { return (n<0?'-₹':'₹') + fmt(Math.abs(n)); }
 
 // ─── CALCULATE ───
 function calculate() {
@@ -1050,8 +1157,9 @@ function calculate() {
   document.getElementById('bLabour').textContent   = fmtDollar(labourGain * projYears);
   document.getElementById('bAuto').textContent     = fmtDollar(autoSavings * projYears);
   document.getElementById('bError').textContent    = fmtDollar(errorSavings * projYears);
-  document.getElementById('bImpl').textContent     = '-₹' + fmt(aiInvestment);
-  document.getElementById('bLicense').textContent  = '-₹' + fmt(annualLicense * projYears);
+  const cur = getCur();
+  document.getElementById('bImpl').textContent     = '-' + cur.symbol + cur.fmt(Math.abs(aiInvestment * cur.rate));
+  document.getElementById('bLicense').textContent  = '-' + cur.symbol + cur.fmt(Math.abs(annualLicense * projYears * cur.rate));
   document.getElementById('bNet').textContent      = fmtDollar(netBenefit);
   document.getElementById('bNet').className        = 'bd-value ' + (netBenefit >= 0 ? 'pos' : 'neg');
 
@@ -1081,6 +1189,14 @@ function calculate() {
   if (window.innerWidth < 900) {
     rc.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  // Update methodology note with active currency
+  const curName = getCur().name;
+  document.getElementById('assumptionsBox').innerHTML =
+    `<strong>Methodology Note:</strong> All figures shown in <strong>${curName}</strong>. Conservative model used.<br>
+    Labour efficiency gain = (Salary × Headcount × Efficiency%) × coverage × industry multiplier.<br>
+    Automation savings = 20% of qualified labour cost at automation coverage rate.<br>
+    Error reduction applied to your declared rework cost baseline.`;
 
   // Animate KPIs
   rc.querySelectorAll('.kpi-card').forEach((el,i)=>{
@@ -1119,7 +1235,8 @@ function copyResults() {
   const net  = document.getElementById('kpiNet').textContent;
   const pay  = document.getElementById('kpiPayback').textContent;
   const sav  = document.getElementById('kpiSavings').textContent;
-  const text = `AI Strategy ROI Report (by sarvesh.site)\n${'─'.repeat(38)}\nROI: ${roi}\nNet Benefit: ${net}\nPayback Period: ${pay}\nAnnual Savings (Yr 1): ${sav}\n`;
+  const cur  = getCur();
+  const text = `AI Strategy ROI Report (by sarvesh.site)\n${'─'.repeat(38)}\nCurrency: ${cur.name}\nROI: ${roi}\nNet Benefit: ${net}\nPayback Period: ${pay}\nAnnual Savings (Yr 1): ${sav}\n`;
   navigator.clipboard.writeText(text).then(()=>{
     const btn = event.target;
     btn.textContent = '✅ Copied!';
