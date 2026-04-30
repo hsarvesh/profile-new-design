@@ -32,7 +32,8 @@ body::before {
   z-index: -1;
 }
 
-.background {
+/* .background is only for decorative bg elements, NOT for content containers */
+.bg-decoration {
   position: absolute;
   display: block;
   top: 0;
@@ -58,7 +59,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Raleway", sans-serif;
+  font-family: "Outfit", "Raleway", sans-serif;
 }
 
 /*--------------------------------------------------------------
@@ -140,6 +141,11 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 15px var(--primary-color);
 }
 
+#header .container {
+  position: relative;
+  z-index: 1;
+}
+
 @media (max-width: 992px) {
   #header h1 {
     font-size: 36px;
@@ -155,6 +161,10 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+  }
+  #header .navbar ul {
+    justify-content: center;
   }
 }
 
@@ -526,6 +536,8 @@ section .container {
   align-items: center;
   padding: 20px;
   background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  border: 1px solid transparent;
   transition: ease-in-out 0.3s;
 }
 
@@ -543,14 +555,13 @@ section .container {
   font-size: 16px;
   color: var(--text-main);
   transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 1px solid transparent;
 }
 
 .interests .icon-box:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(79, 70, 229, 0.06);
   transform: translateY(-5px);
   border-color: var(--primary-color);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.12);
 }
 
 /*--------------------------------------------------------------
@@ -1012,6 +1023,14 @@ section .container {
   padding: 20px;
   width: 100%;
   background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: ease-in-out 0.3s;
+}
+
+.contact .info-box:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.1);
 }
 
 .contact .info-box i.bi {
@@ -1206,25 +1225,44 @@ section .container {
 .blog .blog-posts {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Adjust the gap between blog posts as needed */
+  gap: 16px;
 }
 
 .blog .info-box {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 16px 20px;
   background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  border: 1px solid transparent;
   transition: ease-in-out 0.3s;
 }
 
+.blog .info-box:hover {
+  background: rgba(79, 70, 229, 0.05);
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+}
+
 .blog .info-box i {
-  font-size: 32px;
+  font-size: 28px;
   margin-right: 15px;
+  color: var(--primary-color);
 }
 
 .blog .info-box h3 {
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: 600;
   margin: 0;
+}
+
+.blog .info-box h3 a {
+  color: var(--text-main);
+  transition: color 0.3s;
+}
+
+.blog .info-box h3 a:hover {
+  color: var(--primary-color);
 }
 
 /* Version badge - small visible indicator */
@@ -1254,3 +1292,27 @@ section .container {
   }
 }
 
+/*--------------------------------------------------------------
+# Tools / Projects Section
+--------------------------------------------------------------*/
+.tools .info-box {
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: ease-in-out 0.3s;
+}
+
+.tools .info-box:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
+  transform: translateY(-4px);
+}
+
+.tools .info-box h3 a {
+  color: var(--text-main);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.tools .info-box h3 a:hover {
+  color: var(--primary-color);
+}
