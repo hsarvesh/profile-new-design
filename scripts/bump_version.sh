@@ -26,10 +26,10 @@ fi
 # typically run from the pre-commit hook, so increment by 1.
 next_count=$((count + 1))
 
-# Compose version as major.minor.patch where minor == next_count
-major=0
-minor=$next_count
-patch=0
+# Compose version as major.minor.patch where major == 1, minor == 18, and patch == next_count + 81
+major=1
+minor=18
+patch=$((next_count + 81))
 new_version="$major.$minor.$patch"
 
 printf '{"version":"%s"}\n' "$new_version" > "$VERSION_FILE"
