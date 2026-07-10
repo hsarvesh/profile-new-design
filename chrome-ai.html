@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── SEO Metadata ── -->
+  <title>Chrome Built-in On-Device AI Showcase | 6 Native APIs Playground | Sarvesh Huddedar</title>
+  <meta name="description" content="Explore Chrome's built-in, offline browser-based AI capabilities. Live interactive demo of 6 native APIs: Prompt (Gemini Nano), Summarizer, Translator, Language Detector, Writer, and Rewriter. Built by Sarvesh Huddedar.">
+  <meta name="keywords" content="Chrome Prompt API, Gemini Nano, on-device AI, built-in browser AI, Summarizer API, Translator API, Language Detector API, Writer API, Rewriter API, client-side AI, zero cost AI audits, web AI, Sarvesh Huddedar">
+  <meta name="author" content="Sarvesh Huddedar">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sarvesh.site/chrome-ai.html">
+  <meta property="og:title" content="Chrome Built-in On-Device AI Showcase | Sarvesh Huddedar">
+  <meta property="og:description" content="Explore on-device Gemini Nano. Interactive playground showcasing Prompt API, Summarizer, Translator, Language Detector, Writer, and Rewriter.">
+  <meta property="og:image" content="https://sarvesh.site/assets/img/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://sarvesh.site/chrome-ai.html">
+  <meta name="twitter:title" content="Chrome Built-in On-Device AI Showcase | Sarvesh Huddedar">
+  <meta name="twitter:description" content="Interactive browser playground for Chrome On-Device Gemini Nano AI APIs. Zero server costs, zero-latency inference.">
+  <meta name="twitter:image" content="https://sarvesh.site/assets/img/og-image.png">
+
+  <!-- Fonts -->
+  <link rel="icon" href="assets/img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:      #060813;
+      --bg-card:      rgba(15, 23, 42, 0.55);
+      --bg-card-glow: rgba(15, 23, 42, 0.85);
+      --border:       rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.4);
+      --accent-indigo:#6366f1;
+      --accent-cyan:  #06b6d4;
+      --accent-purple:#a855f7;
+      --accent-green: #10b981;
+      --gold:         #f59e0b;
+      --danger:       #ef4444;
+      --text-main:    #f3f4f6;
+      --text-muted:   #94a3b8;
+      --radius-sm:    8px;
+      --radius-md:    12px;
+      --radius-lg:    18px;
+      --shadow:       0 12px 40px rgba(0, 0, 0, 0.5);
+      --transition:   all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.12) 0, transparent 45%), 
+        radial-gradient(at 90% 80%, rgba(6, 182, 212, 0.12) 0, transparent 45%),
+        radial-gradient(at 50% 50%, rgba(168, 85, 247, 0.04) 0, transparent 50%);
+      background-attachment: fixed;
+      line-height: 1.6;
+    }
+
+    /* ─── NAVIGATION ─── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      background: rgba(6, 8, 19, 0.85);
+      position: sticky; top: 0; z-index: 100;
+      gap: 16px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-brand .logo-dot {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: bold; color: white;
+    }
+    .nav-brand span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.15rem; color: #ffffff; }
+    .nav-back {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-muted);
+      font-size: 0.875rem; font-weight: 600;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .nav-back:hover { color: #ffffff; background: rgba(99, 102, 241, 0.15); border-color: var(--accent-indigo); }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding: 56px 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .badge-premium {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      animation: pulseGlow 3s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.1); }
+      100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.25); }
+    }
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 30%, #a855f7 70%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ─── CONTAINER ─── */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ─── STATUS / DIAGNOSTICS CARD ─── */
+    .diag-section {
+      margin-bottom: 32px;
+    }
+    .card-diag {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .diag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .diag-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mode-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .mode-live {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .mode-sim {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--gold);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .api-status-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+    }
+    .api-status-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(-2px);
+    }
+    .api-icon {
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .status-ok { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+    .status-warning { background: rgba(245, 158, 11, 0.1); color: var(--gold); }
+    .status-error { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .api-details {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .api-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .api-availability {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ─── SETUP GUIDE PANEL ─── */
+    .setup-guide {
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(99, 102, 241, 0.04);
+      border: 1px dashed rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+    }
+    .setup-guide summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--accent-indigo);
+      outline: none;
+    }
+    .setup-guide summary:hover {
+      color: #818cf8;
+    }
+    .setup-steps {
+      margin-top: 12px;
+      padding-left: 20px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .code-snippet {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+    }
+
+    /* ─── PLAYGROUND LAYOUT ─── */
+    .playground-section {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .playground-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Tabs list on the left */
+    .tabs-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      text-align: left;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition);
+    }
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border-color: var(--accent-indigo);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+    }
+    .tab-btn i { font-size: 1.1rem; }
+
+    /* Playground Main Panel */
+    .panel-main {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      min-height: 580px;
+      position: relative;
+    }
+
+    .tab-content-pane {
+      display: none;
+    }
+    .tab-content-pane.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pane-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .pane-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* ─── FORM & INTERACTIVE CONTROLS ─── */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Preset prompt tags */
+    .presets-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .preset-tag {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-muted);
+    }
+    .preset-tag:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: var(--text-main);
+    }
+
+    /* Buttons */
+    .btn-ai {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      font-weight: 700;
+      padding: 14px 28px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+    }
+    .btn-ai:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+    .btn-ai:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      color: var(--text-muted);
+    }
+
+    /* Output Console */
+    .output-container {
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .output-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .output-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+    }
+    .output-box {
+      background: #02040a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      min-height: 150px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      position: relative;
+    }
+    .output-box.streaming::after {
+      content: '▋';
+      color: var(--accent-cyan);
+      animation: blink 0.8s infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    .placeholder-text {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* JSON Schema Toggle Panel */
+    .schema-toggle-wrap {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .toggle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .toggle-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .4s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px; width: 16px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--accent-indigo);
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    .schema-editor-pane {
+      margin-top: 14px;
+      display: none;
+    }
+    .schema-editor-pane.active {
+      display: block;
+    }
+
+    /* Detector Result Grid */
+    .detector-result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .detector-badge {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .detector-lang-code {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      font-family: 'Outfit', sans-serif;
+    }
+    .detector-lang-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .detector-confidence {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    /* ─── ZERO-COST AI AUDIT LAYOUT ─── */
+    .audit-flow {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+    @media (max-width: 800px) {
+      .audit-flow { grid-template-columns: 1fr; }
+    }
+    .audit-steps-log {
+      background: #02040a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      min-height: 260px;
+      max-height: 400px;
+      overflow-y: auto;
+      color: #cbd5e1;
+    }
+    .log-line {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .log-info { color: var(--accent-cyan); }
+    .log-success { color: var(--accent-green); }
+    .log-warning { color: var(--gold); }
+    .receipt-panel {
+      background: rgba(99, 102, 241, 0.03);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .receipt-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .receipt-saving-row {
+      border-top: 1px dashed rgba(255, 255, 255, 0.15);
+      padding-top: 12px;
+      margin-top: 4px;
+      font-weight: 700;
+      color: var(--accent-green);
+      font-size: 1rem;
+    }
+    .receipt-saving-badge {
+      background: rgba(16, 185, 129, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    .audit-result-block {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .audit-verdict {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 40px;
+    }
+    footer a { color: var(--accent-cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======= Navigation ======= -->
+  <nav>
+    <a href="index.html" class="nav-brand">
+      <div class="logo-dot">S</div>
+      <span>Sarvesh Huddedar</span>
+    </a>
+    <a href="index.html" class="nav-back">
+      <i class="bi bi-arrow-left"></i>
+      Back to Portfolio
+    </a>
+  </nav>
+
+  <!-- ======= Hero ======= -->
+  <div class="hero">
+    <div class="badge-premium">
+      <i class="bi bi-cpu"></i> 100% On-Device Inference
+    </div>
+    <h1>Chrome Offline Browser AI Showcase</h1>
+    <p>
+      Demonstrating Chrome's built-in offline Web AI APIs. Test Gemini Nano and Gemma expert variants running entirely on-device, offering zero server cost, absolute privacy, and zero latency.
+    </p>
+  </div>
+
+  <div class="main-container">
+
+    <!-- ======= Diagnostic & Status Section ======= -->
+    <div class="diag-section">
+      <div class="card-diag">
+        <div class="diag-header">
+          <div class="diag-title">
+            <i class="bi bi-shield-check" style="color: var(--accent-cyan);"></i>
+            Built-in Web AI Diagnostics (6 APIs)
+          </div>
+          <div id="modeIndicator" class="mode-indicator mode-sim">
+            <i class="bi bi-cpu-fill"></i> Simulation Mode Active
+          </div>
+        </div>
+
+        <div class="api-grid">
+          <!-- Prompt API -->
+          <div class="api-status-card">
+            <div id="promptIcon" class="api-icon status-error">
+              <i class="bi bi-chat-left-dots"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Prompt API</span>
+              <span id="promptStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+          <!-- Summarizer API -->
+          <div class="api-status-card">
+            <div id="sumIcon" class="api-icon status-error">
+              <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Summarizer</span>
+              <span id="sumStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+          <!-- Translator API -->
+          <div class="api-status-card">
+            <div id="transIcon" class="api-icon status-error">
+              <i class="bi bi-translate"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Translator</span>
+              <span id="transStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+          <!-- Language Detector API -->
+          <div class="api-status-card">
+            <div id="detectIcon" class="api-icon status-error">
+              <i class="bi bi-search"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Lang Detector</span>
+              <span id="detectStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+          <!-- Writer API -->
+          <div class="api-status-card">
+            <div id="writeIcon" class="api-icon status-error">
+              <i class="bi bi-pencil-square"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Writer API</span>
+              <span id="writeStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+          <!-- Rewriter API -->
+          <div class="api-status-card">
+            <div id="rewriteIcon" class="api-icon status-error">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">Rewriter API</span>
+              <span id="rewriteStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Setup instructions dropdown -->
+        <details class="setup-guide" id="setupGuideDetails">
+          <summary>How do I enable live On-Device AI in my browser?</summary>
+          <div class="setup-steps">
+            <p>To run these demos using the native models built into Google Chrome, configure these flags:</p>
+            <ol style="margin-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+              <li>Open Chrome and navigate to <span class="code-snippet">chrome://flags/#prompt-api-for-gemini-nano</span>. Set it to <strong>Enabled</strong>.</li>
+              <li>Navigate to <span class="code-snippet">chrome://flags/#optimization-guide-on-device-model</span>. Set it to <strong>Enabled BypassPerfRequirement</strong>.</li>
+              <li>Navigate to <span class="code-snippet">chrome://flags/#translation-api</span> (or writing-assistance APIs) if you want support for specialized translation, writing, and rewriting on-device models.</li>
+              <li>Restart Chrome. The browser will download the model in the background (check progress at <span class="code-snippet">chrome://components</span> under <strong>Optimization Guide On Device Model</strong>).</li>
+            </ol>
+            <p style="margin-top: 6px;"><em>Currently active in Simulation Mode: Playground will run fully simulated mocks so you can test the functionality right away.</em></p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- ======= Playground Tabs Section ======= -->
+    <div class="playground-section">
+      <!-- Tabs vertical selection list -->
+      <div class="tabs-vertical">
+        <button class="tab-btn active" onclick="switchTab(event, 'promptTab')">
+          <i class="bi bi-chat-right-text"></i>
+          Prompt API (Nano)
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'summarizerTab')">
+          <i class="bi bi-card-text"></i>
+          Summarizer API
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'translatorTab')">
+          <i class="bi bi-translate"></i>
+          Translator API
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'detectorTab')">
+          <i class="bi bi-search"></i>
+          Language Detector
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'writerTab')">
+          <i class="bi bi-pencil-square"></i>
+          Writer API
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'rewriterTab')">
+          <i class="bi bi-arrow-repeat"></i>
+          Rewriter API
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'auditTab')">
+          <i class="bi bi-piggy-bank"></i>
+          Zero-Cost AI Audit
+        </button>
+      </div>
+
+      <!-- Playground Panel Main -->
+      <div class="panel-main">
+
+        <!-- ─── Prompt API Playground ─── -->
+        <div id="promptTab" class="tab-content-pane active">
+          <h2 class="pane-title">Prompt API Playground</h2>
+          <p class="pane-desc">Run open-ended text prompting or generate structured responses using response constraint schemas directly in the browser.</p>
+
+          <div class="presets-container">
+            <span class="preset-tag" onclick="loadPromptPreset('Write a concise LinkedIn post summarizing why local models save cloud API costs.')">LinkedIn post on local AI</span>
+            <span class="preset-tag" onclick="loadPromptPreset('Analyze the code quality of: function fetchUserInfo(id) { return fetch(`/api/user/${id}`).then(res => res.json()); }')">JS Code Review</span>
+            <span class="preset-tag" onclick="loadPromptPreset('List three key differences between Gemini Nano and Gemini Pro.')">Nano vs Pro</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="promptSystem">System Prompt</label>
+            <input type="text" id="promptSystem" class="form-input" value="You are a helpful and extremely concise AI assistant." placeholder="Define assistant behavior...">
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="promptTemp">Temperature</label>
+              <input type="number" id="promptTemp" class="form-input" min="0" max="1" step="0.1" value="0.7">
+            </div>
+            <div>
+              <label class="form-label" for="promptTopK">Top K</label>
+              <input type="number" id="promptTopK" class="form-input" min="1" max="100" step="1" value="40">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="promptText">Prompt</label>
+            <textarea id="promptText" class="form-textarea" placeholder="Ask anything to the local model...">List three key differences between Gemini Nano and Gemini Pro.</textarea>
+          </div>
+
+          <!-- Structured Output Config -->
+          <div class="schema-toggle-wrap">
+            <div class="toggle-header" onclick="toggleSchemaEditor()">
+              <span class="toggle-label">
+                <i class="bi bi-braces" style="color: var(--accent-cyan);"></i>
+                Enable Response Constraint (JSON Schema Mode)
+              </span>
+              <label class="switch">
+                <input type="checkbox" id="schemaToggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="schema-editor-pane" id="schemaEditorPane">
+              <label class="form-label" for="schemaPreset">Choose Schema Preset</label>
+              <select id="schemaPreset" class="form-select" onchange="loadSchemaPreset()">
+                <option value="sentiment">Sentiment Classification (Label & Confidence)</option>
+                <option value="entities">Entity Extraction (List of entities)</option>
+                <option value="verdict">AI Citation Verdict (Pass/Fail & Reason)</option>
+              </select>
+              <label class="form-label" style="margin-top: 10px;" for="schemaText">Custom JSON Schema</label>
+              <textarea id="schemaText" class="form-textarea" style="font-family: monospace; font-size: 0.82rem; min-height: 100px;"></textarea>
+            </div>
+          </div>
+
+          <button id="btnPromptRun" class="btn-ai" onclick="runPromptDemo()">
+            <i class="bi bi-play-fill"></i> Execute Prompt
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Model Output</span>
+              <span class="output-meta" id="promptMeta">Idle</span>
+            </div>
+            <div class="output-box" id="promptOutput"><span class="placeholder-text">Execute prompt to view output...</span></div>
+          </div>
+        </div>
+
+        <!-- ─── Summarizer API Playground ─── -->
+        <div id="summarizerTab" class="tab-content-pane">
+          <h2 class="pane-title">Summarizer API Playground</h2>
+          <p class="pane-desc">Extract key insights, teasers, or TL;DRs from long articles using Chrome's specialized text summarization model.</p>
+
+          <div class="presets-container">
+            <span class="preset-tag" onclick="loadSummarizerPreset('blog')">Load 'AI Visibility' Blog Text</span>
+            <span class="preset-tag" onclick="loadSummarizerPreset('roi')">Load 'AI ROI Calculator' Text</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="summarizerText">Source Text</label>
+            <textarea id="summarizerText" class="form-textarea" style="min-height: 140px;" placeholder="Paste the long text block here...">We run citability.dev. It scans a site and tells you whether AI search engines can find, parse, and cite it. The free scan checks the infrastructure layer: robots.txt rules, structured data, heading hierarchy, Open Graph tags, sitemap presence. People assume that scan burns API tokens. It does not. Those checks are deterministic parsing, regex and DOM walks, so they already cost us $0 in model spend. The part that costs money is the judgment layer: asking a model "would you cite this page, and for what query." That runs about $0.60 per scan on the server. Chrome 148 shipped the Prompt API to web pages with Gemini Nano built in, and the honest question it raises is not "can the free scan be free" (it already is) but "can the $0.60 judgment layer move into the browser for $0." This post is the real math, with the numbers labeled. The cheap parts were never the expensive parts. A citability scan has two layers. The infrastructure layer is mechanical. Fetch robots.txt, parse it, check whether GPTBot and ClaudeBot and the other AI crawlers are allowed. None of that needs a language model. It is the same class of work a linter does. So it costs effectively nothing today. The judgment layer is different. To answer "does AI actually cite this site," you have to ask a model real questions and read what it says. That is the visibility test (does the model know the brand) and the citation test (does the model link to the page for a relevant query). Each of those runs about $0.60 in API spend on our server. The full four-section audit runs about $2. Those are the numbers that scale with users, and those are the numbers Chrome's Prompt API could in theory zero out.</textarea>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="sumType">Summary Type</label>
+              <select id="sumType" class="form-select">
+                <option value="key-points">Key Points</option>
+                <option value="tl;dr">TL;DR</option>
+                <option value="headline">Headline</option>
+                <option value="teaser">Teaser</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="sumLength">Length</label>
+              <select id="sumLength" class="form-select">
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btnSumRun" class="btn-ai" onclick="runSummarizerDemo()">
+            <i class="bi bi-file-earmark-ruled"></i> Summarize Text
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Summary Output</span>
+              <span class="output-meta" id="sumMeta">Idle</span>
+            </div>
+            <div class="output-box" id="summarizerOutput"><span class="placeholder-text">Provide text and run summarizer...</span></div>
+          </div>
+        </div>
+
+        <!-- ─── Translator API Playground ─── -->
+        <div id="translatorTab" class="tab-content-pane">
+          <h2 class="pane-title">Translator API Playground</h2>
+          <p class="pane-desc">Translate sentences dynamically using Chrome's offline translation engine, preserving security and privacy.</p>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="transSrc">Source Language</label>
+              <select id="transSrc" class="form-select">
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="ja">Japanese</option>
+                <option value="de">German</option>
+                <option value="hi">Hindi</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="transTgt">Target Language</label>
+              <select id="transTgt" class="form-select">
+                <option value="es">Spanish</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="ja">Japanese</option>
+                <option value="de">German</option>
+                <option value="hi">Hindi</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="translatorText">Input Text</label>
+            <textarea id="translatorText" class="form-textarea" placeholder="Enter text to translate...">AI-powered client-side tools execute with zero cloud footprint.</textarea>
+          </div>
+
+          <button id="btnTransRun" class="btn-ai" onclick="runTranslatorDemo()">
+            <i class="bi bi-translate"></i> Translate
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Translation Output</span>
+              <span class="output-meta" id="transMeta">Idle</span>
+            </div>
+            <div class="output-box" id="translatorOutput"><span class="placeholder-text">Input text and translate to view output...</span></div>
+          </div>
+        </div>
+
+        <!-- ─── Language Detector API Playground ─── -->
+        <div id="detectorTab" class="tab-content-pane">
+          <h2 class="pane-title">Language Detector API</h2>
+          <p class="pane-desc">Identify the language of a text block entirely client-side, with relative confidence scores using the expert language detector model.</p>
+
+          <div class="presets-container">
+            <span class="preset-tag" onclick="loadDetectorPreset('Bonjour tout le monde, comment allez-vous aujourd\'hui?')">French</span>
+            <span class="preset-tag" onclick="loadDetectorPreset('こんにちは、今日の調子はいかがですか？')">Japanese</span>
+            <span class="preset-tag" onclick="loadDetectorPreset('नमस्ते, आज आप कैसे हैं? आशा है कि सब ठीक होगा।')">Hindi</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="detectorText">Text to Analyze</label>
+            <textarea id="detectorText" class="form-textarea" placeholder="Paste some text here to detect the language...">Bonjour tout le monde, comment allez-vous aujourd'hui? J'espère que vous passez une excellente journée.</textarea>
+          </div>
+
+          <button id="btnDetectRun" class="btn-ai" onclick="runDetectorDemo()">
+            <i class="bi bi-search"></i> Detect Language
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Analysis Results</span>
+              <span class="output-meta" id="detectMeta">Idle</span>
+            </div>
+            <div class="output-box" id="detectorOutput" style="min-height: 120px;">
+              <span class="placeholder-text">Provide text to detect language...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Writer API Playground ─── -->
+        <div id="writerTab" class="tab-content-pane">
+          <h2 class="pane-title">Writer API Playground</h2>
+          <p class="pane-desc">Generate new content or drafts locally from scratch by supplying a prompt and context details to the native browser writer assistant.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="writerContext">Shared Context (Optional)</label>
+            <input type="text" id="writerContext" class="form-input" value="A corporate email to the development team." placeholder="Provide background context...">
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="writerTone">Tone</label>
+              <select id="writerTone" class="form-select">
+                <option value="formal">Formal / Professional</option>
+                <option value="casual">Casual</option>
+                <option value="funny">Humorous</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="writerFormat">Format</label>
+              <select id="writerFormat" class="form-select">
+                <option value="email">Email</option>
+                <option value="paragraph">Paragraph</option>
+                <option value="outline">Outline</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="writerText">What should the model write?</label>
+            <textarea id="writerText" class="form-textarea" placeholder="Explain the writing task...">Ask team members to review their personal access tokens and update repository keys before the deployment next Tuesday.</textarea>
+          </div>
+
+          <button id="btnWriterRun" class="btn-ai" onclick="runWriterDemo()">
+            <i class="bi bi-pencil-square"></i> Draft Content
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Generated Draft</span>
+              <span class="output-meta" id="writerMeta">Idle</span>
+            </div>
+            <div class="output-box" id="writerOutput"><span class="placeholder-text">Draft details will populate here...</span></div>
+          </div>
+        </div>
+
+        <!-- ─── Rewriter API Playground ─── -->
+        <div id="rewriterTab" class="tab-content-pane">
+          <h2 class="pane-title">Rewriter API Playground</h2>
+          <p class="pane-desc">Polish or rewrite your user-generated inputs by adapting the length, tone, or formatting natively using browser intelligence.</p>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="rewriteTone">Desired Tone</label>
+              <select id="rewriteTone" class="form-select">
+                <option value="more-formal">More Formal</option>
+                <option value="more-casual">More Casual</option>
+                <option value="enthusiastic">Enthusiastic</option>
+                <option value="neutral">Neutral</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="rewriteLength">Length</label>
+              <select id="rewriteLength" class="form-select">
+                <option value="shorter">Shorter (Summarize)</option>
+                <option value="longer">Longer (Expand)</option>
+                <option value="no-change">No Change</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="rewriterText">Source Text to Rewrite</label>
+            <textarea id="rewriterText" class="form-textarea" placeholder="Enter text to polish...">hey team, need u to quickly check the flags for on-device AI. we need this done ASAP otherwise the new features won't load for testing. thanks!</textarea>
+          </div>
+
+          <button id="btnRewriterRun" class="btn-ai" onclick="runRewriterDemo()">
+            <i class="bi bi-arrow-repeat"></i> Rewrite Text
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Polished Text Output</span>
+              <span class="output-meta" id="rewriterMeta">Idle</span>
+            </div>
+            <div class="output-box" id="rewriterOutput"><span class="placeholder-text">Rewritten output will populate here...</span></div>
+          </div>
+        </div>
+
+        <!-- ─── Zero-Cost AI Audit Showcase ─── -->
+        <div id="auditTab" class="tab-content-pane">
+          <h2 class="pane-title">Zero-Cost AI Audit Simulator</h2>
+          <p class="pane-desc">Based on chudi.dev's visibility methodology, see how moving the "judgment layer" to on-device models saves significant server model token costs.</p>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="auditUrl">Audit URL</label>
+              <input type="text" id="auditUrl" class="form-input" value="https://sarvesh.website/blog/ai-efficiency">
+            </div>
+            <div>
+              <label class="form-label" for="auditQuery">Search Intent Query</label>
+              <input type="text" id="auditQuery" class="form-input" value="enterprise AI ROI evaluation tool">
+            </div>
+          </div>
+
+          <div class="audit-flow">
+            <!-- Steps Log -->
+            <div>
+              <label class="form-label">Audit Process Log</label>
+              <div class="audit-steps-log" id="auditLog">
+                <div class="log-line"><span class="log-info">[INFO]</span> Ready to audit AI Visibility. Click 'Run Audit Simulator' below.</div>
+              </div>
+            </div>
+
+            <!-- Savings Receipt -->
+            <div>
+              <label class="form-label">Scan Cost Comparison</label>
+              <div class="receipt-panel">
+                <div class="receipt-title">Savings Invoice</div>
+                <div class="receipt-row">
+                  <span>Robots.txt Scan:</span>
+                  <span>$0.00 (deterministic)</span>
+                </div>
+                <div class="receipt-row">
+                  <span>Structured Data Scan:</span>
+                  <span>$0.00 (deterministic)</span>
+                </div>
+                <div class="receipt-row">
+                  <span>Traditional Server AI:</span>
+                  <span style="color: var(--danger);">$0.60 (cloud tokens)</span>
+                </div>
+                <div class="receipt-row" style="font-weight: 600;">
+                  <span>On-Device AI (Nano):</span>
+                  <span style="color: var(--accent-green);">$0.00 (local CPU/GPU)</span>
+                </div>
+                <div class="receipt-saving-row">
+                  <div class="receipt-row">
+                    <span>Direct Savings:</span>
+                    <span class="receipt-saving-badge">$0.60 Saved</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="audit-result-block" id="auditResult">
+            <div class="audit-verdict" id="auditVerdict">Verdict: PASS</div>
+            <div id="auditReason" style="font-size: 0.92rem; color: var(--text-muted);">Reason description...</div>
+          </div>
+
+          <button id="btnAuditRun" class="btn-ai" style="margin-top: 24px;" onclick="runAuditDemo()">
+            <i class="bi bi-shield-check"></i> Run Audit Simulator
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======= Footer ======= -->
+  <footer>
+    <p>© 2026 Sarvesh Huddedar. All rights reserved. Explored via <a href="https://chudi.dev/blog/chrome-prompt-api-zero-cost-ai-audits" target="_blank">chudi.dev Prompt API Architecture</a>.</p>
+  </footer>
+
+  <!-- ─── Core Script Logic ─── -->
+  <script>
+    // Global AI Presence Flags
+    let isLiveMode = false;
+    let liveAI = {
+      prompt: null,
+      summarizer: null,
+      translator: null,
+      detector: null,
+      writer: null,
+      rewriter: null
+    };
+
+    // Preset JSON Schemas
+    const schemas = {
+      sentiment: {
+        "type": "object",
+        "properties": {
+          "sentiment": { "type": "string", "enum": ["positive", "neutral", "negative"] },
+          "confidence": { "type": "number" },
+          "reason": { "type": "string" }
+        },
+        "required": ["sentiment", "confidence", "reason"]
+      },
+      entities: {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "topic": { "type": "string" }
+        },
+        "required": ["entities", "topic"]
+      },
+      verdict: {
+        "type": "object",
+        "properties": {
+          "citeEligible": { "type": "boolean" },
+          "reason": { "type": "string" },
+          "matchedConcepts": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["citeEligible", "reason", "matchedConcepts"]
+      }
+    };
+
+    // Load initial diagnostics on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      loadSchemaPreset();
+      await runDiagnostics();
+    });
+
+    // Run browser diagnostics for all 6 APIs
+    async function runDiagnostics() {
+      const promptStatusEl = document.getElementById('promptStatus');
+      const promptIconEl = document.getElementById('promptIcon');
+      const sumStatusEl = document.getElementById('sumStatus');
+      const sumIconEl = document.getElementById('sumIcon');
+      const transStatusEl = document.getElementById('transStatus');
+      const transIconEl = document.getElementById('transIcon');
+      const detectStatusEl = document.getElementById('detectStatus');
+      const detectIconEl = document.getElementById('detectIcon');
+      const writeStatusEl = document.getElementById('writeStatus');
+      const writeIconEl = document.getElementById('writeIcon');
+      const rewriteStatusEl = document.getElementById('rewriteStatus');
+      const rewriteIconEl = document.getElementById('rewriteIcon');
+      
+      const modeIndicatorEl = document.getElementById('modeIndicator');
+      const setupGuideDetails = document.getElementById('setupGuideDetails');
+
+      const hasAI = typeof ai !== 'undefined';
+
+      // 1. Check Prompt API
+      const promptAPI = hasAI ? (ai.languageModel || ai.assistant) : null;
+      if (promptAPI) {
+        try {
+          let isAvailable = 'no';
+          if (typeof promptAPI.availability === 'function') {
+            isAvailable = await promptAPI.availability();
+          } else if (typeof promptAPI.capabilities === 'function') {
+            const caps = await promptAPI.capabilities();
+            isAvailable = caps.available;
+          }
+          liveAI.prompt = promptAPI;
+
+          if (isAvailable === 'readily') {
+            promptStatusEl.innerText = 'Readily Available';
+            promptIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            promptStatusEl.innerText = 'Download Required';
+            promptIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            promptStatusEl.innerText = 'Unavailable (' + isAvailable + ')';
+            promptIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          promptStatusEl.innerText = 'Error: ' + e.message;
+          promptIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        promptStatusEl.innerText = 'Not Supported';
+        promptIconEl.className = 'api-icon status-error';
+      }
+
+      // 2. Check Summarizer API
+      const summarizerAPI = (hasAI && ai.summarizer) || (typeof Summarizer !== 'undefined' ? Summarizer : null);
+      if (summarizerAPI) {
+        try {
+          let isAvailable = 'readily';
+          if (typeof summarizerAPI.availability === 'function') {
+            isAvailable = await summarizerAPI.availability();
+          } else if (typeof summarizerAPI.capabilities === 'function') {
+            const caps = await summarizerAPI.capabilities();
+            isAvailable = caps.available;
+          }
+          liveAI.summarizer = summarizerAPI;
+
+          if (isAvailable === 'readily') {
+            sumStatusEl.innerText = 'Readily Available';
+            sumIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            sumStatusEl.innerText = 'Download Required';
+            sumIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            sumStatusEl.innerText = 'Unavailable (' + isAvailable + ')';
+            sumIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          sumStatusEl.innerText = 'Supported (Error)';
+          sumIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        sumStatusEl.innerText = 'Not Supported';
+        sumIconEl.className = 'api-icon status-error';
+      }
+
+      // 3. Check Translator API
+      const translatorAPI = (hasAI && ai.translator) || (typeof translation !== 'undefined' ? translation : null);
+      if (translatorAPI) {
+        try {
+          let isAvailable = 'readily';
+          if (typeof translatorAPI.availability === 'function') {
+            isAvailable = await translatorAPI.availability();
+          } else if (typeof translatorAPI.capabilities === 'function') {
+            const caps = await translatorAPI.capabilities();
+            isAvailable = caps.available;
+          } else if (typeof translatorAPI.canTranslate === 'function') {
+            isAvailable = 'readily';
+          }
+          liveAI.translator = translatorAPI;
+
+          if (isAvailable === 'readily') {
+            transStatusEl.innerText = 'Readily Available';
+            transIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            transStatusEl.innerText = 'Download Required';
+            transIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            transStatusEl.innerText = 'Unavailable';
+            transIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          transStatusEl.innerText = 'Supported (Error)';
+          transIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        transStatusEl.innerText = 'Not Supported';
+        transIconEl.className = 'api-icon status-error';
+      }
+
+      // 4. Check Language Detector API
+      const detectorAPI = (hasAI && ai.languageDetector) || (typeof languageDetector !== 'undefined' ? languageDetector : null);
+      if (detectorAPI) {
+        try {
+          let isAvailable = 'readily';
+          if (typeof detectorAPI.availability === 'function') {
+            isAvailable = await detectorAPI.availability();
+          } else if (typeof detectorAPI.capabilities === 'function') {
+            const caps = await detectorAPI.capabilities();
+            isAvailable = caps.available;
+          } else if (typeof detectorAPI.canDetect === 'function') {
+            const status = await detectorAPI.canDetect();
+            isAvailable = status;
+          }
+          liveAI.detector = detectorAPI;
+
+          if (isAvailable === 'readily') {
+            detectStatusEl.innerText = 'Readily Available';
+            detectIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            detectStatusEl.innerText = 'Download Required';
+            detectIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            detectStatusEl.innerText = 'Unavailable';
+            detectIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          detectStatusEl.innerText = 'Supported (Error)';
+          detectIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        detectStatusEl.innerText = 'Not Supported';
+        detectIconEl.className = 'api-icon status-error';
+      }
+
+      // 5. Check Writer API
+      const writerAPI = (hasAI && ai.writer) || null;
+      if (writerAPI) {
+        try {
+          let isAvailable = 'readily';
+          if (typeof writerAPI.availability === 'function') {
+            isAvailable = await writerAPI.availability();
+          } else if (typeof writerAPI.capabilities === 'function') {
+            const caps = await writerAPI.capabilities();
+            isAvailable = caps.available;
+          }
+          liveAI.writer = writerAPI;
+
+          if (isAvailable === 'readily') {
+            writeStatusEl.innerText = 'Readily Available';
+            writeIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            writeStatusEl.innerText = 'Download Required';
+            writeIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            writeStatusEl.innerText = 'Unavailable';
+            writeIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          writeStatusEl.innerText = 'Supported (Error)';
+          writeIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        writeStatusEl.innerText = 'Not Supported';
+        writeIconEl.className = 'api-icon status-error';
+      }
+
+      // 6. Check Rewriter API
+      const rewriterAPI = (hasAI && ai.rewriter) || null;
+      if (rewriterAPI) {
+        try {
+          let isAvailable = 'readily';
+          if (typeof rewriterAPI.availability === 'function') {
+            isAvailable = await rewriterAPI.availability();
+          } else if (typeof rewriterAPI.capabilities === 'function') {
+            const caps = await rewriterAPI.capabilities();
+            isAvailable = caps.available;
+          }
+          liveAI.rewriter = rewriterAPI;
+
+          if (isAvailable === 'readily') {
+            rewriteStatusEl.innerText = 'Readily Available';
+            rewriteIconEl.className = 'api-icon status-ok';
+            isLiveMode = true;
+          } else if (isAvailable === 'after-download') {
+            rewriteStatusEl.innerText = 'Download Required';
+            rewriteIconEl.className = 'api-icon status-warning';
+            isLiveMode = true;
+          } else {
+            rewriteStatusEl.innerText = 'Unavailable';
+            rewriteIconEl.className = 'api-icon status-warning';
+          }
+        } catch (e) {
+          rewriteStatusEl.innerText = 'Supported (Error)';
+          rewriteIconEl.className = 'api-icon status-warning';
+        }
+      } else {
+        rewriteStatusEl.innerText = 'Not Supported';
+        rewriteIconEl.className = 'api-icon status-error';
+      }
+
+      // Update Live / Simulation Mode badge
+      if (isLiveMode) {
+        modeIndicatorEl.className = 'mode-indicator mode-live';
+        modeIndicatorEl.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> Live Browser AI Active';
+      } else {
+        modeIndicatorEl.className = 'mode-indicator mode-sim';
+        modeIndicatorEl.innerHTML = '<i class="bi bi-cpu-fill"></i> Simulation Mode Active';
+        setupGuideDetails.open = true; // Auto open setup guide if simulation mode
+      }
+    }
+
+    // Toggle schema editor visibility
+    function toggleSchemaEditor() {
+      const toggle = document.getElementById('schemaToggle');
+      const pane = document.getElementById('schemaEditorPane');
+      if (toggle.checked) {
+        pane.classList.add('active');
+      } else {
+        pane.classList.remove('active');
+      }
+    }
+
+    // Load schema preset
+    function loadSchemaPreset() {
+      const preset = document.getElementById('schemaPreset').value;
+      const schema = schemas[preset];
+      document.getElementById('schemaText').value = JSON.stringify(schema, null, 2);
+    }
+
+    // Load custom text presets for Prompt API
+    function loadPromptPreset(promptText) {
+      document.getElementById('promptText').value = promptText;
+    }
+
+    // Load language detector presets
+    function loadDetectorPreset(text) {
+      document.getElementById('detectorText').value = text;
+    }
+
+    // Load presets for Summarizer API
+    function loadSummarizerPreset(presetType) {
+      const txtBlog = `We run citability.dev. It scans a site and tells you whether AI search engines can find, parse, and cite it. The free scan checks the infrastructure layer: robots.txt rules, structured data, heading hierarchy, Open Graph tags, sitemap presence. People assume that scan burns API tokens. It does not. Those checks are deterministic parsing, regex and DOM walks, so they already cost us $0 in model spend. The part that costs money is the judgment layer: asking a model "would you cite this page, and for what query." That runs about $0.60 per scan on the server. Chrome 148 shipped the Prompt API to web pages with Gemini Nano built in, and the honest question it raises is not "can the free scan be free" (it already is) but "can the $0.60 judgment layer move into the browser for $0." This post is the real math, with the numbers labeled. The cheap parts were never the expensive parts. A citability scan has two layers. The infrastructure layer is mechanical. Fetch robots.txt, parse it, check whether GPTBot and ClaudeBot and the other AI crawlers are allowed. None of that needs a language model. It is the same class of work a linter does. So it costs effectively nothing today. The judgment layer is different. To answer "does AI actually cite this site," you have to ask a model real questions and read what it says. That is the visibility test (does the model know the brand) and the citation test (does the model link to the page for a relevant query). Each of those runs about $0.60 in API spend on our server. The full four-section audit runs about $2. Those are the numbers that scale with users, and those are the numbers Chrome's Prompt API could in theory zero out.`;
+
+      const txtRoi = `Enterprise generative AI deployment yields direct operational improvements if done right. Historically, businesses have struggled to calculate the ROI of AI pilots due to complex workflows and hidden deployment costs. Let's break down the math. A typical workflow involves 5 engineers costing $150,000/year each. If a custom LLM fine-tuning and retrieval-augmented generation (RAG) system reduces their development time by 40%, the business saves $300,000 annually. The deployment costs include $50,000 in model API tokens, $40,000 in platform subscription, and $30,000 in initial consultant fees, totaling $120,000 in Year 1 expenses. Net savings in Year 1 is $180,000. This represents a 150% ROI and a payback period of just 4.8 months. Enterprise AI strategy should focus on high-impact, low-complexity use cases to maximize early returns, rather than attempting full automation from day one.`;
+
+      document.getElementById('summarizerText').value = presetType === 'blog' ? txtBlog : txtRoi;
+    }
+
+    // Switch Tabs Vertical
+    function switchTab(evt, tabId) {
+      const panes = document.getElementsByClassName('tab-content-pane');
+      for (let pane of panes) {
+        pane.classList.remove('active');
+      }
+      const buttons = document.getElementsByClassName('tab-btn');
+      for (let btn of buttons) {
+        btn.classList.remove('active');
+      }
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // Execute Prompt Demo (Support Live + Simulation fallbacks)
+    async function runPromptDemo() {
+      const systemPromptVal = document.getElementById('promptSystem').value;
+      const tempVal = parseFloat(document.getElementById('promptTemp').value) || 0.7;
+      const topKVal = parseInt(document.getElementById('promptTopK').value) || 40;
+      const promptVal = document.getElementById('promptText').value;
+      const useConstraint = document.getElementById('schemaToggle').checked;
+      const schemaVal = document.getElementById('schemaText').value;
+      
+      const outBox = document.getElementById('promptOutput');
+      const outMeta = document.getElementById('promptMeta');
+      
+      if (!promptVal.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Prompt cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Initializing local session...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.prompt) {
+        try {
+          const sessionOptions = {
+            systemPrompt: systemPromptVal,
+            temperature: tempVal,
+            topK: topKVal
+          };
+          const session = await liveAI.prompt.create(sessionOptions);
+          outMeta.innerText = 'Streaming response...';
+
+          const options = {};
+          if (useConstraint && schemaVal) {
+            try {
+              options.responseConstraint = JSON.parse(schemaVal);
+            } catch (e) {
+              outBox.classList.remove('streaming');
+              outBox.innerHTML = `<span class="status-error">Invalid JSON Schema: ${e.message}</span>`;
+              outMeta.innerText = 'Failed';
+              return;
+            }
+          }
+
+          const stream = await session.promptStreaming(promptVal, options);
+          let fullText = '';
+          for await (const chunk of stream) {
+            fullText += chunk;
+            outBox.innerText = fullText;
+          }
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      outMeta.innerText = 'Inference starting (Simulated)...';
+      setTimeout(() => {
+        outMeta.innerText = 'Streaming (Simulated)...';
+        let responseChunks = [];
+        
+        if (useConstraint) {
+          // Respond matching the chosen schema preset
+          const preset = document.getElementById('schemaPreset').value;
+          if (preset === 'sentiment') {
+            const hasGoodWords = promptVal.toLowerCase().includes('good') || promptVal.toLowerCase().includes('save') || promptVal.toLowerCase().includes('success');
+            const label = hasGoodWords ? 'positive' : 'neutral';
+            responseChunks = [`{\n  "sentiment": "${label}",\n  "confidence": 0.94,\n  "reason": "Input contains vocabulary indicating general ${label} sentiment regarding local AI."\n}`];
+          } else if (preset === 'entities') {
+            responseChunks = [`{\n  "entities": ["Gemini Nano", "Gemini Pro", "Local AI", "Cloud API"],\n  "topic": "Artificial Intelligence Framework comparison"\n}`];
+          } else {
+            responseChunks = [`{\n  "citeEligible": true,\n  "reason": "The content matches high-value buyer search query requirements and has correct metadata.",\n  "matchedConcepts": ["AI implementation costs", "operational savings"]\n}`];
+          }
+        } else {
+          responseChunks = [
+            "Hello! Since the built-in browser Gemini Nano model is not active in your current session, ",
+            "I am running in Offline Simulation Mode.\n\n",
+            `In a configured browser, Gemini Nano would evaluate your prompt: "${promptVal}" locally on your GPU/CPU with 0 token costs.\n\n`,
+            "This capability allows you to offload high-volume tasks such as text classification, summarization, and local semantic auditing from the cloud directly to the browser."
+          ];
+        }
+
+        let currentIdx = 0;
+        const interval = setInterval(() => {
+          if (currentIdx < responseChunks.length) {
+            outBox.innerText += responseChunks[currentIdx];
+            currentIdx++;
+          } else {
+            clearInterval(interval);
+            outBox.classList.remove('streaming');
+            outMeta.innerText = 'Completed (Simulated)';
+          }
+        }, 150);
+      }, 800);
+    }
+
+    // Execute Summarizer Demo
+    async function runSummarizerDemo() {
+      const srcText = document.getElementById('summarizerText').value;
+      const type = document.getElementById('sumType').value;
+      const length = document.getElementById('sumLength').value;
+      const outBox = document.getElementById('summarizerOutput');
+      const outMeta = document.getElementById('sumMeta');
+
+      if (!srcText.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Loading summarization engine...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.summarizer) {
+        try {
+          const summarizer = await liveAI.summarizer.create({
+            type: type,
+            format: 'plain-text',
+            length: length,
+            outputLanguage: 'en'
+          });
+          outMeta.innerText = 'Summarizing...';
+          const summary = await summarizer.summarize(srcText);
+          outBox.innerText = summary;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Processing (Simulated)...';
+        setTimeout(() => {
+          let summary = '';
+          if (type === 'tl;dr') {
+            summary = "TL;DR: On-device models like Gemini Nano in Chrome 148+ allow developers to run the expensive evaluation/judgment layers of AI audits on the user's local machine, reducing marginal server costs to zero.";
+          } else if (type === 'key-points') {
+            summary = "• Chrome 148 enables on-device Prompt and Summarization APIs.\n• Standard infrastructure audits are deterministic and cost nothing on the server.\n• Judgment tasks (e.g., citation quality) cost ~$0.60 per run on cloud models.\n• Client-side inference shifts this compute cost completely to the visitor's hardware.";
+          } else if (type === 'headline') {
+            summary = "Chrome 148 Brings On-Device Gemini Nano to Web Pages to Zero Out AI Costs";
+          } else {
+            summary = "This showcase illustrates how local inference in Chrome replaces cloud dependencies for text classification, enabling zero cost scalability for modern developer tools.";
+          }
+
+          outBox.innerText = summary;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 1000);
+      }, 500);
+    }
+
+    // Execute Translator Demo
+    async function runTranslatorDemo() {
+      const srcText = document.getElementById('translatorText').value;
+      const srcLang = document.getElementById('transSrc').value;
+      const tgtLang = document.getElementById('transTgt').value;
+      const outBox = document.getElementById('translatorOutput');
+      const outMeta = document.getElementById('transMeta');
+
+      if (!srcText.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Initializing translation model...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.translator) {
+        try {
+          const translator = await liveAI.translator.create({
+            sourceLanguage: srcLang,
+            targetLanguage: tgtLang
+          });
+          outMeta.innerText = 'Translating...';
+          const result = await translator.translate(srcText);
+          outBox.innerText = result;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Translating (Simulated)...';
+        setTimeout(() => {
+          // Simple mock translations
+          let translation = "";
+          if (tgtLang === 'es') {
+            translation = "Las herramientas del lado del cliente impulsadas por IA se ejecutan con una huella de nube cero.";
+          } else if (tgtLang === 'fr') {
+            translation = "Les outils côté client basés sur l'IA s'exécutent avec une empreinte cloud nulle.";
+          } else if (tgtLang === 'ja') {
+            translation = "AI搭載のクライアント側ツールは、クラウドフットプリントゼロで実行されます。";
+          } else if (tgtLang === 'de') {
+            translation = "KI-gestützte clientseitige Tools werden ohne Cloud-Footprint ausgeführt.";
+          } else if (tgtLang === 'hi') {
+            translation = "एआई-संचालित क्लाइंट-साइड टूल शून्य क्लाउड फ़ुटप्रिंट के साथ निष्पादित होते हैं।";
+          } else {
+            translation = srcText;
+          }
+
+          outBox.innerText = translation;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 800);
+      }, 400);
+    }
+
+    // Execute Language Detector Demo
+    async function runDetectorDemo() {
+      const srcText = document.getElementById('detectorText').value;
+      const outBox = document.getElementById('detectorOutput');
+      const outMeta = document.getElementById('detectMeta');
+
+      if (!srcText.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Detecting language...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.detector) {
+        try {
+          const detector = await liveAI.detector.create();
+          outMeta.innerText = 'Analyzing...';
+          const results = await detector.detect(srcText);
+
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = '';
+          
+          const grid = document.createElement('div');
+          grid.className = 'detector-result-grid';
+
+          results.forEach(result => {
+            const card = document.createElement('div');
+            card.className = 'detector-badge';
+            
+            const code = document.createElement('span');
+            code.className = 'detector-lang-code';
+            code.innerText = result.detectedLanguage.toUpperCase();
+            
+            const name = document.createElement('span');
+            name.className = 'detector-lang-name';
+            name.innerText = getLangName(result.detectedLanguage);
+
+            const confidence = document.createElement('span');
+            confidence.className = 'detector-confidence';
+            confidence.innerText = `Confidence: ${(result.confidence * 100).toFixed(1)}%`;
+
+            card.appendChild(code);
+            card.appendChild(name);
+            card.appendChild(confidence);
+            grid.appendChild(card);
+          });
+
+          outBox.appendChild(grid);
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Analyzing text (Simulated)...';
+        setTimeout(() => {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = '';
+
+          let detections = [];
+          if (srcText.toLowerCase().includes('bonjour') || srcText.toLowerCase().includes('allez')) {
+            detections = [{ code: 'fr', name: 'French', conf: 0.98 }, { code: 'en', name: 'English', conf: 0.02 }];
+          } else if (srcText.toLowerCase().includes('こんにちは') || srcText.toLowerCase().includes('調子')) {
+            detections = [{ code: 'ja', name: 'Japanese', conf: 0.99 }];
+          } else if (srcText.toLowerCase().includes('नमस्ते') || srcText.toLowerCase().includes('कैसे')) {
+            detections = [{ code: 'hi', name: 'Hindi', conf: 0.97 }, { code: 'en', name: 'English', conf: 0.03 }];
+          } else {
+            detections = [{ code: 'en', name: 'English', conf: 0.94 }, { code: 'de', name: 'German', conf: 0.04 }];
+          }
+
+          const grid = document.createElement('div');
+          grid.className = 'detector-result-grid';
+
+          detections.forEach(d => {
+            const card = document.createElement('div');
+            card.className = 'detector-badge';
+            
+            const code = document.createElement('span');
+            code.className = 'detector-lang-code';
+            code.innerText = d.code.toUpperCase();
+            
+            const name = document.createElement('span');
+            name.className = 'detector-lang-name';
+            name.innerText = d.name;
+
+            const confidence = document.createElement('span');
+            confidence.className = 'detector-confidence';
+            confidence.innerText = `Confidence: ${(d.conf * 100).toFixed(1)}%`;
+
+            card.appendChild(code);
+            card.appendChild(name);
+            card.appendChild(confidence);
+            grid.appendChild(card);
+          });
+
+          outBox.appendChild(grid);
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 1000);
+      }, 400);
+    }
+
+    function getLangName(code) {
+      const names = {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'ja': 'Japanese',
+        'de': 'German',
+        'hi': 'Hindi'
+      };
+      return names[code] || 'Unknown Language';
+    }
+
+    // Execute Writer Demo
+    async function runWriterDemo() {
+      const context = document.getElementById('writerContext').value;
+      const tone = document.getElementById('writerTone').value;
+      const format = document.getElementById('writerFormat').value;
+      const task = document.getElementById('writerText').value;
+
+      const outBox = document.getElementById('writerOutput');
+      const outMeta = document.getElementById('writerMeta');
+
+      if (!task.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Writing prompt details cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Initializing writer engine...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.writer) {
+        try {
+          const writer = await liveAI.writer.create({
+            sharedContext: context,
+            tone: tone,
+            format: format
+          });
+          outMeta.innerText = 'Writing...';
+          const draft = await writer.write(task);
+          outBox.innerText = draft;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Drafting content (Simulated)...';
+        setTimeout(() => {
+          let draftText = "";
+          if (format === 'email') {
+            draftText = `Subject: ACTION REQUIRED: Update access tokens and repository keys before Tuesday
+
+Dear Team,
+
+Please review your GitHub Personal Access Tokens (PATs) and repository keys as soon as possible. We need all credentials updated and validated prior to the upcoming deployment scheduled for next Tuesday.
+
+Let me know if you run into any issues during token configuration.
+
+Best regards,
+Sarvesh Huddedar
+Lead AI Architect`;
+          } else if (format === 'outline') {
+            draftText = `• Objective: Update access tokens & repository keys.
+• Timeline: Complete prior to Tuesday's deployment.
+• Tasks:
+  - Generate GitHub PAT with correct 'repo' scope.
+  - Test validation using local fetch/pull/push.
+  - Report any credential validation blocks immediately.`;
+          } else {
+            draftText = `Prior to our deployment next Tuesday, all development team members are requested to review and renew their personal access tokens and repository validation keys. Ensuring that credentials are up to date prevents authentication lockouts during push phases, maintaining our release velocity and deployment integrity.`;
+          }
+
+          outBox.innerText = draftText;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 1200);
+      }, 500);
+    }
+
+    // Execute Rewriter Demo
+    async function runRewriterDemo() {
+      const tone = document.getElementById('rewriteTone').value;
+      const length = document.getElementById('rewriteLength').value;
+      const srcText = document.getElementById('rewriterText').value;
+
+      const outBox = document.getElementById('rewriterOutput');
+      const outMeta = document.getElementById('rewriterMeta');
+
+      if (!srcText.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Loading rewriting engine...';
+
+      // ─── LIVE MODE EXECUTION ───
+      if (isLiveMode && liveAI.rewriter) {
+        try {
+          const rewriter = await liveAI.rewriter.create({
+            tone: tone,
+            length: length
+          });
+          outMeta.innerText = 'Rewriting...';
+          const rewritten = await rewriter.rewrite(srcText);
+          outBox.innerText = rewritten;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Polishing content (Simulated)...';
+        setTimeout(() => {
+          let polishedText = "";
+          if (tone === 'more-formal') {
+            polishedText = `Hello Team,\n\nPlease verify that your local experimental flags for on-device AI are correctly configured as soon as possible. This configuration is essential to ensure that our new browser-based features load successfully for the upcoming testing phase.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nSarvesh Huddedar`;
+          } else if (tone === 'enthusiastic') {
+            polishedText = `Hey team! Let's get those on-device AI flags turned on right away! We've got awesome new features ready for testing, and we need this done ASAP to make sure everything runs smoothly. Let's go! 🚀`;
+          } else {
+            if (length === 'shorter') {
+              polishedText = "Team, please enable on-device AI browser flags immediately so the new features can load for testing.";
+            } else {
+              polishedText = "Hi everyone, could you please verify your browser flags for on-device AI immediately? We need these configurations in place so that the new local features can load properly for testing. Thanks for your support.";
+            }
+          }
+
+          outBox.innerText = polishedText;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 1100);
+      }, 400);
+    }
+
+    // Execute Zero-Cost Audit Simulation (chudi.dev)
+    async function runAuditDemo() {
+      const url = document.getElementById('auditUrl').value;
+      const query = document.getElementById('auditQuery').value;
+      const logBox = document.getElementById('auditLog');
+      const resultBlock = document.getElementById('auditResult');
+      const verdictEl = document.getElementById('auditVerdict');
+      const reasonEl = document.getElementById('auditReason');
+
+      logBox.innerHTML = '';
+      resultBlock.style.display = 'none';
+
+      // Log Helper
+      const addLog = (msg, type = 'info') => {
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        const typeBadge = document.createElement('span');
+        typeBadge.className = `log-${type}`;
+        typeBadge.innerText = `[${type.toUpperCase()}]`;
+        
+        line.appendChild(typeBadge);
+        const text = document.createElement('span');
+        text.innerText = msg;
+        line.appendChild(text);
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+      };
+
+      addLog(`Initiating audit on ${url}...`, 'info');
+      
+      // Step 1: Infrastructure layer (deterministic - free)
+      setTimeout(() => {
+        addLog("Analyzing robots.txt patterns (deterministic check)...", 'info');
+        setTimeout(() => {
+          addLog("PASS: User-Agent: * allowed, no AI blocks matched.", 'success');
+          addLog("Parsing JSON-LD Structured Data schema templates...", 'info');
+          setTimeout(() => {
+            addLog("PASS: Valid TechArticle schema detected with citation mapping.", 'success');
+            addLog("Evaluating HTML heading hierarchy order...", 'info');
+            setTimeout(() => {
+              addLog("PASS: Clean nested structure (h1 -> h2 -> h3).", 'success');
+              addLog("Infrastructure audit completed. Cost: $0.00", 'success');
+              
+              // Step 2: Judgment layer (local Prompt API - saves token costs)
+              setTimeout(async () => {
+                addLog(`Starting local AI Judgment layer. Query context: "${query}"`, 'info');
+                
+                if (isLiveMode && liveAI.prompt) {
+                  addLog("Calling local Gemini Nano Model...", 'info');
+                  try {
+                    const session = await liveAI.prompt.create({
+                      systemPrompt: "You evaluate if pages are relevant to search queries.",
+                      temperature: 0.1
+                    });
+                    const response = await session.prompt(
+                      `URL: ${url}. Does it answer the intent for search query "${query}"? Answer with "PASS" or "FAIL" and brief reason.`
+                    );
+                    
+                    addLog(`Nano Output received: ${response}`, 'success');
+                    verdictEl.innerText = response.includes('FAIL') ? 'Verdict: FAIL' : 'Verdict: PASS';
+                    reasonEl.innerText = response;
+                    resultBlock.style.display = 'block';
+                  } catch (e) {
+                    addLog(`Nano Local Execution failed, falling back: ${e.message}`, 'warning');
+                  }
+                } else {
+                  addLog("Running local Gemini Nano simulation...", 'info');
+                  setTimeout(() => {
+                    addLog("PASS: Gemini Nano determines high semantic alignment with target query.", 'success');
+                    verdictEl.innerText = 'Verdict: PASS';
+                    verdictEl.style.color = 'var(--accent-green)';
+                    reasonEl.innerText = "The page content explicitly outlines ROI math, consultant cost allocation, and payback cycles matching the intent for 'enterprise AI ROI evaluation tool'. Citability eligibility score: 96%.";
+                    resultBlock.style.display = 'block';
+                    addLog("Audit completed successfully. Total Server cost: $0.00", 'success');
+                  }, 1200);
+                }
+              }, 600);
+            }, 600);
+          }, 600);
+        }, 600);
+      }, 400);
+    }
+  </script>
+</body>
+</html>
