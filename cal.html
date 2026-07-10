@@ -622,9 +622,143 @@
     .sev.high   { background: rgba(250,112,154,0.18); color: #fa709a; border: 1px solid rgba(250,112,154,0.3); }
     .sev.medium { background: rgba(254,202,87,0.15);  color: #feca57; border: 1px solid rgba(254,202,87,0.3);  }
     .sev.low    { background: rgba(67,233,123,0.12);  color: #43e97b; border: 1px solid rgba(67,233,123,0.25); }
+
+    /* ─── ANNOUNCEMENT BANNER ─── */
+    :root {
+      --banner-height: 0px;
+    }
+
+    body.has-banner {
+      --banner-height: 40px;
+    }
+
+    @media (max-width: 768px) {
+      body.has-banner {
+        --banner-height: 56px;
+      }
+    }
+
+    .migration-banner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--banner-height);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(6, 182, 212, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #ffffff;
+      padding: 0 45px 0 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+    }
+
+    body.has-banner .migration-banner {
+      display: flex;
+    }
+
+    .migration-banner .banner-text {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .migration-banner a {
+      color: #ffffff;
+      text-decoration: underline;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+
+    .migration-banner a:hover {
+      opacity: 0.85;
+    }
+
+    .migration-banner .close-btn {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+
+    .migration-banner .close-btn:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    body.has-banner {
+      padding-top: var(--banner-height);
+    }
+
+    body.has-banner nav {
+      top: var(--banner-height);
+    }
+
+    body.has-banner .right-col {
+      top: calc(80px + var(--banner-height));
+    }
+
+    @media (max-width: 768px) {
+      .migration-banner {
+        font-size: 13px;
+        padding: 0 35px 0 15px;
+      }
+    }
   </style>
 </head>
 <body>
+  <script>
+    (function() {
+      if (!localStorage.getItem('domain-banner-dismissed')) {
+        document.body.classList.add('has-banner');
+      }
+    })();
+  </script>
+
+  <!-- ======= Migration Banner ======= -->
+  <div id="migration-banner" class="migration-banner">
+    <span class="banner-text">
+      <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; margin-right:8px; display:inline-block; vertical-align:middle;">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      sarvesh.site will be available on <a href="https://sarvesh.website" target="_blank" rel="noopener">sarvesh.website</a> after July-2026.
+    </span>
+    <button class="close-btn" onclick="dismissBanner()" aria-label="Close Notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; vertical-align:middle;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <script>
+    function dismissBanner() {
+      document.body.classList.remove('has-banner');
+      localStorage.setItem('domain-banner-dismissed', 'true');
+    }
+  </script>
+
 
 <!-- ══════════════════════════════════════
      THREE-STEP MODAL

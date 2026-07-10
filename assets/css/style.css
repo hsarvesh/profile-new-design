@@ -857,3 +857,115 @@ section .container {
 .credits a:hover {
   color: var(--secondary-color);
 }
+
+/*--------------------------------------------------------------
+# Announcement Banner
+--------------------------------------------------------------*/
+:root {
+  --banner-height: 0px;
+}
+
+body.has-banner {
+  --banner-height: 40px;
+}
+
+@media (max-width: 768px) {
+  body.has-banner {
+    --banner-height: 56px;
+  }
+}
+
+.migration-banner {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--banner-height);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(6, 182, 212, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000; /* Higher than headers/modals */
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  padding: 0 45px 0 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+body.has-banner .migration-banner {
+  display: flex;
+}
+
+.migration-banner .banner-text {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.migration-banner a {
+  color: #ffffff;
+  text-decoration: underline;
+  font-weight: 700;
+  transition: opacity 0.2s ease;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.migration-banner a:hover {
+  opacity: 0.85;
+}
+
+.migration-banner .close-btn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.migration-banner .close-btn:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+body.has-banner {
+  padding-top: var(--banner-height);
+}
+
+body.has-banner #header.header-top {
+  top: var(--banner-height);
+}
+
+body.has-banner section.section-show {
+  top: calc(100px + var(--banner-height));
+}
+
+@media (max-width: 768px) {
+  .migration-banner {
+    font-size: 13px;
+    padding: 0 35px 0 15px;
+  }
+  
+  body.has-banner section.section-show {
+    top: calc(90px + var(--banner-height));
+  }
+}
+

@@ -94,6 +94,34 @@
 </head>
 
 <body>
+  <script>
+    (function() {
+      if (!localStorage.getItem('domain-banner-dismissed')) {
+        document.body.classList.add('has-banner');
+      }
+    })();
+  </script>
+
+  <!-- ======= Migration Banner ======= -->
+  <div id="migration-banner" class="migration-banner">
+    <span class="banner-text">
+      <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; margin-right:8px; display:inline-block; vertical-align:middle;">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      sarvesh.site will be available on <a href="https://sarvesh.website" target="_blank" rel="noopener">sarvesh.website</a> after July-2026.
+    </span>
+    <button class="close-btn" onclick="dismissBanner()" aria-label="Close Notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; vertical-align:middle;">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <script>
+    function dismissBanner() {
+      document.body.classList.remove('has-banner');
+      localStorage.setItem('domain-banner-dismissed', 'true');
+    }
+  </script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!-- ======= Header ======= -->
 
