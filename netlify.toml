@@ -20,3 +20,7 @@
   [headers.values]
     Content-Type = "application/json; charset=utf-8"
     Access-Control-Allow-Origin = "*"
+
+[[edge_functions]]
+  path = "/*"
+  function = "markdown-negotiation"
