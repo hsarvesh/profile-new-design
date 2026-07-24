@@ -34,6 +34,10 @@ new_version="$major.$minor.$patch"
 
 printf '{"version":"%s"}\n' "$new_version" > "$VERSION_FILE"
 
+# Generate and stage the sitemap.xml
+node "$REPO_ROOT/scripts/generate_sitemap.js"
+git add "$REPO_ROOT/sitemap.xml" || true
+
 # Stage the file so the commit includes the bumped version (pre-commit path).
 git add "$VERSION_FILE" || true
 

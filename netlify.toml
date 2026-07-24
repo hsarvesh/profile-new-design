@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/"
+  [headers.values]
+    Link = "</sitemap.xml>; rel=\"describedby\"; type=\"application/xml\""
