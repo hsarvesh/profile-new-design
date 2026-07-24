@@ -1,0 +1,9 @@
+; DNS for AI Discovery (DNS-AID) records for sarvesh.website
+; Add these records to your DNS zone editor (e.g., Cloudflare DNS, AWS Route 53, or GoDaddy)
+; Ensure DNSSEC is enabled for your domain (sarvesh.website) to sign these records.
+
+; 1. Well-known entrypoint pointing to the main website agent metadata/service
+_index._agents.sarvesh.website.    3600    IN    HTTPS    1    sarvesh.website. alpn="h2,h3" port=443 mandatory=alpn,port
+
+; 2. Agent-to-Agent (a2a) endpoint if running a direct agentic backend
+_a2a._agents.sarvesh.website.      3600    IN    SVCB     1    sarvesh.website. alpn="a2a" port=443 mandatory=alpn,port
