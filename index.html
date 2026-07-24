@@ -842,6 +842,36 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 
+  <!-- WebMCP Tool Registration -->
+  <script>
+    (async function() {
+      try {
+        const mc = window.document?.modelContext || window.navigator?.modelContext;
+        if (mc && typeof mc.registerTool === 'function') {
+          await mc.registerTool({
+            name: 'getPortfolioSummary',
+            description: 'Get a summary of Sarvesh Huddedar\'s professional background, expertise, and AI services.',
+            inputSchema: {
+              type: 'object',
+              properties: {}
+            },
+            execute: async () => {
+              return {
+                content: [{
+                  type: 'text',
+                  text: "Sarvesh Huddedar is a Lead AI Architect helping organizations build scalable generative AI systems. Services include AI Agent design, custom RAG pipelines, LLM fine-tuning, and enterprise AI consulting."
+                }]
+              };
+            }
+          });
+          console.log('Successfully registered WebMCP tool: getPortfolioSummary');
+        }
+      } catch (e) {
+        console.warn('Failed to register WebMCP tool:', e);
+      }
+    })();
+  </script>
+
 </body>
 
 </html>
