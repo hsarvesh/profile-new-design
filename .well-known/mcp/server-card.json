@@ -1,0 +1,12 @@
+{
+  "serverInfo": {
+    "name": "sarvesh-website-mcp-server",
+    "version": "1.18.232"
+  },
+  "endpoint": "https://sarvesh.website/mcp",
+  "capabilities": {
+    "tools": {},
+    "resources": {},
+    "prompts": {}
+  }
+}

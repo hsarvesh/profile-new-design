@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "get-portfolio",
+      "type": "skill-md",
+      "description": "Retrieve and parse details about Sarvesh Huddedar's work experience, resume, AI showcase project, and contact coordinates.",
+      "url": "https://sarvesh.website/.well-known/agent-skills/get-portfolio/SKILL.md",
+      "digest": "sha256:75b1cc8b64a6313a1fd9521bf6529e867c0e3f96a0b025b249d03140f2c129cc"
+    }
+  ]
+}

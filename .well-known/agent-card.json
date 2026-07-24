@@ -1,0 +1,26 @@
+{
+  "name": "sarvesh-website-agent",
+  "description": "Portfolio agent representing work and AI capabilities of Sarvesh Huddedar",
+  "version": "1.18.232",
+  "supportedInterfaces": [
+    {
+      "url": "https://sarvesh.website/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["application/json"],
+  "skills": [
+    {
+      "id": "get-portfolio-details",
+      "name": "Get Portfolio Details",
+      "description": "Provides details on Sarvesh Huddedar's resume, work experience, and AI architecture skills."
+    }
+  ]
+}
