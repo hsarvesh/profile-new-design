@@ -2,9 +2,16 @@
 
 Welcome to the AI Agent Authentication metadata for sarvesh.website.
 
-## Agent Audience
-This site welcomes AI agents from all compliance-checking registries and search crawlers.
+## Discovery
+You can discover our OAuth Protected Resource Metadata at `/.well-known/oauth-protected-resource`.
+The authorization server is located at `/.well-known/oauth-authorization-server`.
 
-## Registration
-This is a static portfolio and showcase website and does not require agent registration or OAuth credentials to access.
-All public pages can be crawled and parsed freely according to the rules in [robots.txt](https://sarvesh.website/robots.txt).
+## Authentication Flows
+We support the following registration flows for autonomous AI agents:
+
+### Anonymous
+Agents can register anonymously without a user account to obtain an API key.
+
+- **Registration Endpoint**: `https://sarvesh.website/agent/register`
+- **Claim Endpoint**: `https://sarvesh.website/agent/claim`
+- **Credential Type**: `api_key`

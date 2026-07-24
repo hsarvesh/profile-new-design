@@ -1,0 +1,19 @@
+{
+  "issuer": "https://sarvesh.website",
+  "authorization_endpoint": "https://sarvesh.website/oauth/authorize",
+  "token_endpoint": "https://sarvesh.website/oauth/token",
+  "jwks_uri": "https://sarvesh.website/.well-known/http-message-signatures-directory",
+  "agent_auth": {
+    "skill": "https://sarvesh.website/.well-known/agent-skills/index.json",
+    "register_uri": "https://sarvesh.website/agent/register",
+    "identity_types_supported": [
+      "anonymous"
+    ],
+    "anonymous": {
+      "credential_types_supported": [
+        "api_key"
+      ],
+      "claim_uri": "https://sarvesh.website/agent/claim"
+    }
+  }
+}
