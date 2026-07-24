@@ -47,6 +47,14 @@ function htmlToMarkdown(html) {
 
 export async function onRequest(context) {
   const request = context.request;
+  const url = new URL(request.url);
+  
+  // Bypass if requested with no-middleware, or if the path is not a primary HTML route
+  if (url.searchParams.has('no-middleware') || 
+      (url.pathname.includes('.') && !url.pathname.endsWith('.html'))) {
+    return await context.next();
+  }
+  
   const acceptHeader = request.headers.get('accept') || '';
   
   if (acceptHeader.includes('text/markdown')) {
