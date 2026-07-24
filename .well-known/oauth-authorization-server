@@ -4,7 +4,7 @@
   "token_endpoint": "https://sarvesh.website/oauth/token",
   "jwks_uri": "https://sarvesh.website/.well-known/http-message-signatures-directory",
   "agent_auth": {
-    "skill": "https://sarvesh.website/.well-known/agent-skills/index.json",
+    "skill": "https://sarvesh.website/auth.md",
     "register_uri": "https://sarvesh.website/agent/register",
     "identity_types_supported": [
       "anonymous"
