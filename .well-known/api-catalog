@@ -1,0 +1,25 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://sarvesh.website/",
+      "service-desc": [
+        {
+          "href": "https://sarvesh.website/openapi.json",
+          "type": "application/openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://sarvesh.website/chrome-ai.html",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://sarvesh.website/status.json",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,22 @@
 [[headers]]
   for = "/"
   [headers.values]
-    Link = "</sitemap.xml>; rel=\"describedby\"; type=\"application/xml\""
+    Link = "</sitemap.xml>; rel=\"describedby\"; type=\"application/xml\", </.well-known/api-catalog>; rel=\"api-catalog\""
+
+[[headers]]
+  for = "/.well-known/api-catalog"
+  [headers.values]
+    Content-Type = "application/linkset+json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/openapi.json"
+  [headers.values]
+    Content-Type = "application/openapi+json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/status.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
