@@ -1761,39 +1761,59 @@
         let responseChunks = [];
         
         if (useConstraint) {
-          // Respond matching the chosen schema preset
+          // Schema-constrained response: derive sentiment/entities from actual user prompt
           const preset = document.getElementById('schemaPreset').value;
+          const lp = promptVal.toLowerCase();
           if (preset === 'sentiment') {
-            const hasGoodWords = promptVal.toLowerCase().includes('good') || promptVal.toLowerCase().includes('save') || promptVal.toLowerCase().includes('success');
-            const label = hasGoodWords ? 'positive' : 'neutral';
-            responseChunks = [`{\n  "sentiment": "${label}",\n  "confidence": 0.94,\n  "reason": "Input contains vocabulary indicating general ${label} sentiment regarding local AI."\n}`];
+            const positiveWords = ['good', 'great', 'excellent', 'save', 'success', 'love', 'amazing', 'perfect', 'helpful', 'fast', 'efficient', 'free', 'win', 'best', 'awesome'];
+            const negativeWords = ['bad', 'terrible', 'fail', 'broken', 'slow', 'expensive', 'hate', 'wrong', 'poor', 'error', 'problem', 'issue', 'worst'];
+            const posScore = positiveWords.filter(w => lp.includes(w)).length;
+            const negScore = negativeWords.filter(w => lp.includes(w)).length;
+            const label = posScore > negScore ? 'positive' : negScore > posScore ? 'negative' : 'neutral';
+            const conf = (0.78 + Math.random() * 0.18).toFixed(2);
+            responseChunks = [`{\n  "sentiment": "${label}",\n  "confidence": ${conf},\n  "reason": "Input text contained ${posScore} positive and ${negScore} negative signal words."\n}`];
           } else if (preset === 'entities') {
-            responseChunks = [`{\n  "entities": ["Gemini Nano", "Gemini Pro", "Local AI", "Cloud API"],\n  "topic": "Artificial Intelligence Framework comparison"\n}`];
+            // Extract capitalized words as simulated entities from the actual prompt
+            const capitalizedWords = (promptVal.match(/\b[A-Z][a-z]{2,}\b/g) || []).slice(0, 4);
+            const entityList = capitalizedWords.length ? capitalizedWords : ['Gemini Nano', 'Local AI'];
+            const topicWords = promptVal.split(' ').slice(0, 5).join(' ');
+            responseChunks = [`{\n  "entities": ${JSON.stringify(entityList)},\n  "topic": "${topicWords}..."\n}`];
           } else {
-            responseChunks = [`{\n  "citeEligible": true,\n  "reason": "The content matches high-value buyer search query requirements and has correct metadata.",\n  "matchedConcepts": ["AI implementation costs", "operational savings"]\n}`];
+            const hasTech = lp.includes('ai') || lp.includes('model') || lp.includes('chrome') || lp.includes('llm');
+            responseChunks = [`{\n  "citeEligible": ${hasTech},\n  "reason": "${hasTech ? 'Content aligns with technical AI/browser query intent.' : 'Content does not strongly match technical search query signals.'}",\n  "matchedConcepts": ["${promptVal.split(' ').slice(0,3).join(' ')}"]\n}`];
           }
         } else {
+          // Free-form: build a contextual simulated answer from the actual prompt text
           const lowerPrompt = promptVal.toLowerCase();
+          const words = promptVal.trim().split(/\s+/);
           let simAnswer = "";
           
           if (lowerPrompt.includes("who are you") || lowerPrompt.includes("your name") || lowerPrompt.includes("who created")) {
             simAnswer = "I am Gemini Nano, an on-device Large Language Model running locally in your Google Chrome browser. I was developed by Google, and this interactive showcase was built by Sarvesh Huddedar.";
           } else if (lowerPrompt.includes("sarvesh") || lowerPrompt.includes("huddedar")) {
             simAnswer = "Sarvesh Huddedar is a Lead AI Architect specializing in helping organizations build scalable generative AI systems, custom RAG pipelines, LLM fine-tuning, and enterprise-grade AI agents. Check the 'AI Services' or 'Resume' section to learn more!";
-          } else if (lowerPrompt.includes("cost") || lowerPrompt.includes("money") || lowerPrompt.includes("econom") || lowerPrompt.includes("save")) {
+          } else if (lowerPrompt.includes("cost") || lowerPrompt.includes("money") || lowerPrompt.includes("econom") || lowerPrompt.includes("save") || lowerPrompt.includes("budget")) {
             simAnswer = "On-device models like Gemini Nano reduce server API call costs to zero. Because all inference is processed on the visitor's local GPU or CPU, website owners pay zero token fees, unlocking massive scalability.";
-          } else if (lowerPrompt.includes("webgpu") || lowerPrompt.includes("gpu") || lowerPrompt.includes("hardware")) {
+          } else if (lowerPrompt.includes("webgpu") || lowerPrompt.includes("gpu") || lowerPrompt.includes("hardware") || lowerPrompt.includes("wasm")) {
             simAnswer = "WebGPU is a low-level web API that grants browsers direct access to your device's GPU. By using WebGPU, Chrome can run heavy machine learning workloads (like Gemini Nano) locally at hardware-accelerated speeds.";
-          } else if (lowerPrompt.includes("flag") || lowerPrompt.includes("enable") || lowerPrompt.includes("how to use") || lowerPrompt.includes("setup")) {
+          } else if (lowerPrompt.includes("flag") || lowerPrompt.includes("enable") || lowerPrompt.includes("how to") || lowerPrompt.includes("setup") || lowerPrompt.includes("install")) {
             simAnswer = "To run these APIs natively: 1) Use Chrome Dev or Canary (v127+). 2) Enable experimental flags 'Optimization Guide On-Device Model' and 'Prompt API for Gemini Nano'. 3) Relaunch and wait for Chrome to download the model.";
+          } else if (lowerPrompt.includes("differ") || lowerPrompt.includes("compar") || lowerPrompt.includes("vs") || lowerPrompt.includes("versus")) {
+            const subject = words.slice(0, 6).join(' ');
+            simAnswer = `Comparing topics found in "${subject}":\n• On-device (local) models run with zero cloud latency and full privacy.\n• Cloud models offer larger context windows and broader knowledge.\n• On-device is ideal for real-time, offline, or sensitive workloads.\n• Cloud is better for complex multi-step reasoning or large document analysis.`;
+          } else if (lowerPrompt.includes("list") || lowerPrompt.includes("give me") || lowerPrompt.includes("what are") || lowerPrompt.includes("explain")) {
+            const topic = words.slice(2, 7).join(' ') || 'this topic';
+            simAnswer = `Regarding "${topic}":\n1. On-device AI processes data locally — no data leaves the user's machine.\n2. Chrome's Prompt API provides a direct interface to Gemini Nano.\n3. Performance scales with the user's hardware (CPU/GPU/NPU).\n4. Zero per-request API token costs for the website operator.\n5. Works offline after the model is downloaded by Chrome.`;
           } else {
-            simAnswer = `As a simulated agent, I've analyzed your prompt: "${promptVal}". If you had configured Chrome with Gemini Nano, it would evaluate this query locally with zero network overhead.\n\nHere is a simulated response based on the context of your query: "Local processing allows web pages to read, classify, and format unstructured text instantly. Your input is processed entirely in local memory, keeping it 100% private and cost-free."`;
+            // Generic but contextually-framed response using the actual prompt
+            const snippet = promptVal.length > 80 ? promptVal.substring(0, 80) + '...' : promptVal;
+            simAnswer = `I've processed your query: "${snippet}"\n\nHere is my analysis:\nYour request touches on areas where on-device AI can provide immediate value. Running locally, I can respond with zero latency and zero cost to the server operator. In a live Chrome session with Gemini Nano enabled, I would provide a fully contextual answer using the downloaded local model weights.\n\nKey takeaway: Local AI keeps your query private, fast, and free.`;
           }
 
           responseChunks = [
-            "Hello! I am running in Offline Simulation Mode.\n\n",
-            `In a configured browser, Gemini Nano would evaluate your prompt: "${promptVal}" locally on your GPU/CPU with 0 token costs.\n\n`,
-            "Response:\n" + simAnswer
+            `[Simulated Gemini Nano · On-Device Mode]\n\n`,
+            `Prompt received: "${promptVal.length > 60 ? promptVal.substring(0,60)+'...' : promptVal}"\n\n`,
+            simAnswer
           ];
         }
 
@@ -1855,37 +1875,41 @@
         outMeta.innerText = 'Processing (Simulated)...';
         setTimeout(() => {
           let summary = '';
-          const defaultText = "Client-side AI tools are executed with a zero cloud footprint. Chrome 148+ exposes Prompt and Summarization APIs natively, powered by Gemini Nano on the user's CPU or GPU. Standard infrastructure audits are deterministic, costing nothing. However, judgment tasks, like verifying that a citation actually backs up a claim, are expensive. Doing this in the cloud costs ~$0.60 per audit. Moving this evaluation layer to the user's local machine shifts computation entirely to client hardware, saving server resources and costs.";
-          
-          if (srcText.trim().toLowerCase().includes("client-side ai tools") && srcText.trim().toLowerCase().includes("zero cloud footprint")) {
-            if (type === 'tl;dr') {
-              summary = "TL;DR: On-device models like Gemini Nano in Chrome 148+ allow developers to run the expensive evaluation/judgment layers of AI audits on the user's local machine, reducing marginal server costs to zero.";
-            } else if (type === 'key-points') {
-              summary = "• Chrome 148 enables on-device Prompt and Summarization APIs.\n• Standard infrastructure audits are deterministic and cost nothing on the server.\n• Judgment tasks (e.g., citation quality) cost ~$0.60 per run on cloud models.\n• Client-side inference shifts this compute cost completely to the visitor's hardware.";
-            } else if (type === 'headline') {
-              summary = "Chrome 148 Brings On-Device Gemini Nano to Web Pages to Zero Out AI Costs";
+          // Always process the actual user-entered text — no preset matching
+          const sentences = srcText.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 5);
+          const wordCount = srcText.trim().split(/\s+/).length;
+          const charCount = srcText.trim().length;
+
+          if (type === 'tl;dr') {
+            // Pick the most information-dense first two sentences
+            const core = sentences.slice(0, 2).join('. ');
+            summary = `TL;DR: ${core ? core + '.' : srcText.substring(0, 120) + '...'}`;
+          } else if (type === 'key-points') {
+            // Extract up to 5 points from distinct sentences
+            const points = sentences.slice(0, Math.min(5, sentences.length));
+            if (length === 'short') {
+              summary = points.slice(0, 2).map(s => `• ${s}.`).join('\n');
+            } else if (length === 'long') {
+              summary = points.map(s => `• ${s}.`).join('\n');
             } else {
-              summary = "This showcase illustrates how local inference in Chrome replaces cloud dependencies for text classification, enabling zero cost scalability for modern developer tools.";
+              summary = points.slice(0, 3).map(s => `• ${s}.`).join('\n');
             }
+          } else if (type === 'headline') {
+            // Construct a meaningful headline from the opening sentence
+            const opener = sentences[0] || srcText;
+            const headlineWords = opener.split(' ').filter(w => w.length > 3);
+            const headline = headlineWords.slice(0, 7).join(' ') + (headlineWords.length > 7 ? '...' : '');
+            summary = headline.charAt(0).toUpperCase() + headline.slice(1);
           } else {
-            // Dynamic summarization for custom user input
-            const sentences = srcText.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
-            if (type === 'tl;dr') {
-              const firstTwo = sentences.slice(0, 2).join(". ");
-              summary = `TL;DR: ${firstTwo ? firstTwo + "." : srcText}`;
-            } else if (type === 'key-points') {
-              const points = sentences.slice(0, 4).map(s => `• ${s}.`);
-              summary = points.join("\n");
-            } else if (type === 'headline') {
-              if (sentences[0]) {
-                const words = sentences[0].split(' ');
-                summary = words.slice(0, Math.min(8, words.length)).join(' ') + (words.length > 8 ? "..." : "");
-              } else {
-                summary = "Summary Headline";
-              }
-            } else { // plain-text or teaser
-              const firstOne = sentences[0] || srcText;
-              summary = `${firstOne}... [Read full content to see details]`;
+            // teaser / plain-text: first sentence plus word/char stats
+            const firstSentence = sentences[0] ? sentences[0] + '.' : srcText.substring(0, 100) + '...';
+            if (length === 'short') {
+              summary = firstSentence;
+            } else if (length === 'long') {
+              const para = sentences.slice(0, 3).join('. ');
+              summary = `${para}.\n\n[Summary of ${wordCount} words · ${charCount} characters]`;
+            } else {
+              summary = `${firstSentence}\n\n[Processed ${wordCount} words — on-device, zero server cost]`;
             }
           }
 
@@ -1938,24 +1962,8 @@
         outMeta.innerText = 'Translating (Simulated)...';
         setTimeout(() => {
           let translation = "";
-          const lowerText = srcText.trim().toLowerCase();
-          const defaultText = "ai-powered client-side tools execute with a zero cloud footprint.";
-          
-          if (lowerText === defaultText) {
-            if (tgtLang === 'es') {
-              translation = "Las herramientas del lado del cliente impulsadas por IA se ejecutan con una huella de nube cero.";
-            } else if (tgtLang === 'fr') {
-              translation = "Les outils côté client basés sur l'IA s'exécutent avec une empreinte cloud nulle.";
-            } else if (tgtLang === 'ja') {
-              translation = "AI搭載のクライアント側ツールは、クラウドフットプリントゼロで実行されます。";
-            } else if (tgtLang === 'de') {
-              translation = "KI-gestützte clientseitige Tools werden ohne Cloud-Footprint ausgeführt.";
-            } else if (tgtLang === 'hi') {
-              translation = "एआई-संचालित क्लाइंट-साइड टूल शून्य क्लाउड फ़ुटप्रिंट के साथ निष्पादित होते हैं।";
-            } else {
-              translation = srcText;
-            }
-          } else {
+          {
+            // Always apply dictionary + morphological translation to actual user text
             // Dictionary-based mock translation for arbitrary text
             const dict = {
               es: {
@@ -2060,7 +2068,12 @@
             }
           }
 
-          outBox.innerText = translation;
+          // Append a note for transparency
+          if (translation && translation !== srcText) {
+            translation += `\n\n[Simulated ${tgtLang.toUpperCase()} translation · On-device Gemini Nano would provide fully accurate results]`;
+          }
+
+          outBox.innerText = translation || srcText;
           outBox.classList.remove('streaming');
           outMeta.innerText = 'Completed (Simulated)';
         }, 800);
@@ -2233,61 +2246,44 @@
         outMeta.innerText = 'Drafting content (Simulated)...';
         setTimeout(() => {
           let draftText = "";
-          const defaultText = "requesting team members to review their access tokens and repository validation keys before deployment next Tuesday";
-          const defaultContext = "project-timeline";
-          
-          if (task.trim().toLowerCase() === defaultText && context.trim().toLowerCase() === defaultContext) {
-            if (format === 'email') {
-              draftText = `Subject: ACTION REQUIRED: Update access tokens and repository keys before Tuesday
+          // Always build from actual user task + context — no hardcoded preset matching
+          const ctxText = context ? context.trim() : "General operations";
+          const taskCapitalized = task.trim().charAt(0).toUpperCase() + task.trim().slice(1);
+          const taskSnippet = task.length > 50 ? task.substring(0, 50) + '...' : task;
 
-Dear Team,
+          if (format === 'email') {
+            draftText = `Subject: ${tone === 'formal' ? 'ACTION REQUIRED' : 'Quick Request'}: ${taskSnippet}
 
-Please review your GitHub Personal Access Tokens (PATs) and repository keys as soon as possible. We need all credentials updated and validated prior to the upcoming deployment scheduled for next Tuesday.
+${tone === 'formal' ? 'Dear Team,' : 'Hey team,'}
 
-Let me know if you run into any issues during token configuration.
+${tone === 'formal'
+  ? 'I would like to bring the following to your immediate attention:'
+  : 'Just a heads-up — need some help with:'}
 
-Best regards,
-Sarvesh Huddedar
-Lead AI Architect`;
-            } else if (format === 'outline') {
-              draftText = `• Objective: Update access tokens & repository keys.
-• Timeline: Complete prior to Tuesday's deployment.
-• Tasks:
-  - Generate GitHub PAT with correct 'repo' scope.
-  - Test validation using local fetch/pull/push.
-  - Report any credential validation blocks immediately.`;
-            } else {
-              draftText = `Prior to our deployment next Tuesday, all development team members are requested to review and renew their personal access tokens and repository validation keys. Ensuring that credentials are up to date prevents authentication lockouts during push phases, maintaining our release velocity and deployment integrity.`;
-            }
+"${taskCapitalized}"
+
+${ctxText !== 'General operations' ? `Context: ${ctxText}\n\n` : ''}${tone === 'formal'
+  ? 'Please ensure this is completed and verified at your earliest convenience. Do not hesitate to reach out with any queries.'
+  : 'Let me know if you hit any blockers. Thanks!'}
+
+${tone === 'formal' ? 'Best regards,\n[On-Device AI Writer]' : 'Cheers,\n[On-Device AI Writer]'}`;
+          } else if (format === 'outline') {
+            draftText = `• Objective: ${taskCapitalized}
+• Context: ${ctxText}
+• Tone: ${tone}
+• Implementation Steps:
+  - Step 1: Understand scope — "${task.split(' ').slice(0, 5).join(' ')}..."
+  - Step 2: Execute and validate against context requirements.
+  - Step 3: Review outputs and confirm completion.
+• Expected Outcome: Task resolved with full traceability.`;
           } else {
-            // Dynamic draft builder for custom task and context
-            const ctxText = context ? `Context: ${context}` : "General Context";
-            const taskCapitalized = task.charAt(0).toUpperCase() + task.slice(1);
-            
-            if (format === 'email') {
-              draftText = `Subject: ACTION REQUIRED: Request regarding ${task.substring(0, 45)}${task.length > 45 ? "..." : ""}
+            // paragraph / plain
+            const toneAdverb = tone === 'formal' ? 'formally' : tone === 'casual' ? 'in a conversational tone' : 'clearly';
+            draftText = `${toneAdverb.charAt(0).toUpperCase() + toneAdverb.slice(1)} stated: ${taskCapitalized}.
 
-Dear Team / Recipient,
+Context: ${ctxText}.
 
-I am writing to request action on the following task:
-"${taskCapitalized}".
-
-${context ? `Please keep the following context in mind: ${context}.` : ""}
-
-Kindly complete and verify these requirements as soon as possible. Feel free to reach out if you encounter any roadblocks or require clarification.
-
-Best regards,
-[On-Device AI Writer]`;
-            } else if (format === 'outline') {
-              draftText = `• Objective: ${taskCapitalized}
-• Context details: ${context || "Standard Development Scope"}
-• Implementation Checklist:
-  - Phase 1: Review requirements and initial setup.
-  - Phase 2: Execute task verification and local testing.
-  - Phase 3: Submit final results for review.`;
-            } else {
-              draftText = `Under the context of "${context || "general operations"}", the following task details are outlined: ${taskCapitalized}. Please ensure that all aspects of this request are fully verified, executed, and integrated into the active workspace pipeline.`;
-            }
+To move forward, ensure all relevant parties are aligned on the scope and timeline. Completion of this task should be prioritized and tracked accordingly. All outputs should be verified before handoff.`;
           }
 
           outBox.innerText = draftText;
@@ -2340,94 +2336,65 @@ Best regards,
         outMeta.innerText = 'Polishing content (Simulated)...';
         setTimeout(() => {
           let polishedText = "";
-          const defaultText = "hey team, need u to quickly check the flags for on-device AI. we need this done ASAP otherwise the new features won't load for testing. thanks!";
-          
-          if (srcText.trim().toLowerCase() === defaultText.toLowerCase()) {
-            if (tone === 'more-formal') {
-              polishedText = `Hello Team,\n\nPlease verify that your local experimental flags for on-device AI are correctly configured as soon as possible. This configuration is essential to ensure that our new browser-based features load successfully for the upcoming testing phase.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nSarvesh Huddedar`;
-            } else if (tone === 'enthusiastic') {
-              polishedText = `Hey team! Let's get those on-device AI flags turned on right away! We've got awesome new features ready for testing, and we need this done ASAP to make sure everything runs smoothly. Let's go! 🚀`;
-            } else if (tone === 'more-casual') {
-              polishedText = `hey guys, could you check the on-device AI flags real quick? the new features won't work for testing if we don't. thanks!`;
-            } else { // neutral
-              if (length === 'shorter') {
-                polishedText = "Team, please enable on-device AI browser flags immediately so the new features can load for testing.";
-              } else if (length === 'longer') {
-                polishedText = "Hi everyone, could you please verify your browser flags for on-device AI immediately? We need these configurations in place so that the new local features can load properly for testing. Thanks for your support.";
-              } else {
-                polishedText = "Hello team, please verify the browser flags for on-device AI as soon as possible. The new features require these flags to be set in order to load correctly for testing. Thank you.";
+          // Always rewrite from actual user input — no preset matching
+          let text = srcText.trim();
+
+          // Abbreviation expansion dictionary
+          const dictionary = {
+            "\bu\b": "you", "\bur\b": "your", "\br\b": "are",
+            "\basap\b": "as soon as possible", "\bpls\b": "please", "\bplz\b": "please",
+            "\bthx\b": "thanks", "\btks\b": "thanks", "\bwont\b": "will not",
+            "\bdont\b": "do not", "\bim\b": "I am", "\bgotta\b": "have to",
+            "\bgonna\b": "going to", "\bcheck\b": "verify", "\bquick\b": "prompt",
+            "\bquickly\b": "promptly", "\bneed\b": "require", "\bget\b": "obtain"
+          };
+
+          // Apply length change first
+          let workingText = text;
+          if (length === 'shorter') {
+            const sentences = workingText.split(/(?<=[.!?])\s+/);
+            if (sentences.length > 1 && sentences[0].trim().length > 10) {
+              workingText = sentences[0].trim();
+            } else {
+              const words = workingText.split(' ');
+              if (words.length > 12) {
+                workingText = words.slice(0, 10).join(' ') + '...';
               }
             }
+          } else if (length === 'longer') {
+            const wordCount = workingText.split(' ').length;
+            const addons = [
+              ' Additionally, it is critical to ensure that all relevant considerations are thoroughly addressed.',
+              ' Please do not hesitate to reach out should you require further clarification or assistance on this matter.'
+            ];
+            workingText = workingText + addons[0] + (wordCount < 20 ? addons[1] : '');
+          }
+
+          // Apply tone
+          if (tone === 'more-formal') {
+            let tempText = workingText;
+            Object.keys(dictionary).forEach(pattern => {
+              tempText = tempText.replace(new RegExp(pattern, 'gi'), dictionary[pattern]);
+            });
+            tempText = tempText.replace(/(^|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+            polishedText = `Dear Recipient,\n\nI hope this message finds you well. I am writing to convey the following:\n\n${tempText}\n\nI appreciate your prompt attention to this matter.\n\nKind regards,\n[On-Device AI Rewriter]`;
+          } else if (tone === 'more-casual') {
+            let tempText = workingText;
+            tempText = tempText.replace(/\bplease\b/gi, 'pls');
+            tempText = tempText.replace(/\bas soon as possible\b/gi, 'asap');
+            tempText = tempText.replace(/\bthank you\b/gi, 'thanks');
+            tempText = tempText.replace(/\brequire\b/gi, 'need');
+            polishedText = `Hey! Just a quick one: ${tempText.charAt(0).toLowerCase() + tempText.slice(1)} Lmk if that works! 👍`;
+          } else if (tone === 'enthusiastic') {
+            let tempText = workingText.replace(/\.(?!\s*$)/g, '!');
+            if (!tempText.match(/[!?]$/)) tempText += '!';
+            polishedText = `Exciting stuff! 🎉 ${tempText} Absolutely thrilled about this — let's make it happen! 🚀`;
           } else {
-            // Dynamic rewrite helper for custom user input text
-            let text = srcText.trim();
-            // 1. Dictionary for abbreviations
-            const dictionary = {
-              "u": "you",
-              "ur": "your",
-              "r": "are",
-              "asap": "as soon as possible",
-              "pls": "please",
-              "plz": "please",
-              "thx": "thanks",
-              "tks": "thanks",
-              "wont": "will not",
-              "dont": "do not",
-              "im": "I am",
-              "gotta": "have to",
-              "gonna": "going to",
-              "check": "verify",
-              "quick": "prompt",
-              "quickly": "promptly"
-            };
-
-            // 2. Apply length change
-            let workingText = text;
-            if (length === 'shorter') {
-              const sentences = workingText.split(/[.!?]+/);
-              if (sentences.length > 1 && sentences[0].trim().length > 10) {
-                workingText = sentences[0].trim() + ".";
-              } else {
-                const words = workingText.split(' ');
-                if (words.length > 12) {
-                  workingText = words.slice(0, 10).join(' ') + "...";
-                }
-              }
-            } else if (length === 'longer') {
-              const expansionPhrases = [
-                " Additionally, it is critical to ensure that all relevant configurations are thoroughly validated according to standard procedures.",
-                " Please feel free to reach out if you encounter any difficulties or need further clarification regarding this matter."
-              ];
-              workingText = workingText + expansionPhrases[0] + (workingText.split(' ').length < 15 ? expansionPhrases[1] : "");
-            }
-
-            // 3. Apply tone change
-            if (tone === 'more-formal') {
-              let tempText = workingText;
-              Object.keys(dictionary).forEach(key => {
-                const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                tempText = tempText.replace(regex, dictionary[key]);
-              });
-              tempText = tempText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-              polishedText = `Dear Recipient,\n\nI hope this message finds you well. I would like to convey the following:\n\n${tempText}\n\nThank you for your cooperation.\n\nBest regards,\nSarvesh Huddedar`;
-            } else if (tone === 'more-casual') {
-              let tempText = workingText;
-              tempText = tempText.replace(/\bplease\b/gi, "pls");
-              tempText = tempText.replace(/\bas soon as possible\b/gi, "asap");
-              tempText = tempText.replace(/\bthank you\b/gi, "thanks");
-              polishedText = `Hey! Just wanted to share: ${tempText} Let me know if that works! Cheers.`;
-            } else if (tone === 'enthusiastic') {
-              let tempText = workingText;
-              tempText = tempText.replace(/[.]/g, "!");
-              if (!tempText.endsWith("!")) {
-                tempText += "!";
-              }
-              polishedText = `Hey! Super excited to share this! 🎉 ${tempText} Let's make it happen! 🚀`;
-            } else { // neutral
-              let tempText = workingText;
-              tempText = tempText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-              polishedText = tempText;
-            }
+            // neutral — clean up capitalisation and spacing only
+            let tempText = workingText;
+            tempText = tempText.replace(/(^|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+            if (!tempText.match(/[.!?]$/)) tempText += '.';
+            polishedText = tempText;
           }
 
           outBox.innerText = polishedText;
