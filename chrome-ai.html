@@ -1680,11 +1680,27 @@
             responseChunks = [`{\n  "citeEligible": true,\n  "reason": "The content matches high-value buyer search query requirements and has correct metadata.",\n  "matchedConcepts": ["AI implementation costs", "operational savings"]\n}`];
           }
         } else {
+          const lowerPrompt = promptVal.toLowerCase();
+          let simAnswer = "";
+          
+          if (lowerPrompt.includes("who are you") || lowerPrompt.includes("your name") || lowerPrompt.includes("who created")) {
+            simAnswer = "I am Gemini Nano, an on-device Large Language Model running locally in your Google Chrome browser. I was developed by Google, and this interactive showcase was built by Sarvesh Huddedar.";
+          } else if (lowerPrompt.includes("sarvesh") || lowerPrompt.includes("huddedar")) {
+            simAnswer = "Sarvesh Huddedar is a Lead AI Architect specializing in helping organizations build scalable generative AI systems, custom RAG pipelines, LLM fine-tuning, and enterprise-grade AI agents. Check the 'AI Services' or 'Resume' section to learn more!";
+          } else if (lowerPrompt.includes("cost") || lowerPrompt.includes("money") || lowerPrompt.includes("econom") || lowerPrompt.includes("save")) {
+            simAnswer = "On-device models like Gemini Nano reduce server API call costs to zero. Because all inference is processed on the visitor's local GPU or CPU, website owners pay zero token fees, unlocking massive scalability.";
+          } else if (lowerPrompt.includes("webgpu") || lowerPrompt.includes("gpu") || lowerPrompt.includes("hardware")) {
+            simAnswer = "WebGPU is a low-level web API that grants browsers direct access to your device's GPU. By using WebGPU, Chrome can run heavy machine learning workloads (like Gemini Nano) locally at hardware-accelerated speeds.";
+          } else if (lowerPrompt.includes("flag") || lowerPrompt.includes("enable") || lowerPrompt.includes("how to use") || lowerPrompt.includes("setup")) {
+            simAnswer = "To run these APIs natively: 1) Use Chrome Dev or Canary (v127+). 2) Enable experimental flags 'Optimization Guide On-Device Model' and 'Prompt API for Gemini Nano'. 3) Relaunch and wait for Chrome to download the model.";
+          } else {
+            simAnswer = `As a simulated agent, I've analyzed your prompt: "${promptVal}". If you had configured Chrome with Gemini Nano, it would evaluate this query locally with zero network overhead.\n\nHere is a simulated response based on the context of your query: "Local processing allows web pages to read, classify, and format unstructured text instantly. Your input is processed entirely in local memory, keeping it 100% private and cost-free."`;
+          }
+
           responseChunks = [
-            "Hello! Since the built-in browser Gemini Nano model is not active in your current session, ",
-            "I am running in Offline Simulation Mode.\n\n",
+            "Hello! I am running in Offline Simulation Mode.\n\n",
             `In a configured browser, Gemini Nano would evaluate your prompt: "${promptVal}" locally on your GPU/CPU with 0 token costs.\n\n`,
-            "This capability allows you to offload high-volume tasks such as text classification, summarization, and local semantic auditing from the cloud directly to the browser."
+            "Response:\n" + simAnswer
           ];
         }
 
@@ -1746,14 +1762,38 @@
         outMeta.innerText = 'Processing (Simulated)...';
         setTimeout(() => {
           let summary = '';
-          if (type === 'tl;dr') {
-            summary = "TL;DR: On-device models like Gemini Nano in Chrome 148+ allow developers to run the expensive evaluation/judgment layers of AI audits on the user's local machine, reducing marginal server costs to zero.";
-          } else if (type === 'key-points') {
-            summary = "• Chrome 148 enables on-device Prompt and Summarization APIs.\n• Standard infrastructure audits are deterministic and cost nothing on the server.\n• Judgment tasks (e.g., citation quality) cost ~$0.60 per run on cloud models.\n• Client-side inference shifts this compute cost completely to the visitor's hardware.";
-          } else if (type === 'headline') {
-            summary = "Chrome 148 Brings On-Device Gemini Nano to Web Pages to Zero Out AI Costs";
+          const defaultText = "Client-side AI tools are executed with a zero cloud footprint. Chrome 148+ exposes Prompt and Summarization APIs natively, powered by Gemini Nano on the user's CPU or GPU. Standard infrastructure audits are deterministic, costing nothing. However, judgment tasks, like verifying that a citation actually backs up a claim, are expensive. Doing this in the cloud costs ~$0.60 per audit. Moving this evaluation layer to the user's local machine shifts computation entirely to client hardware, saving server resources and costs.";
+          
+          if (srcText.trim().toLowerCase().includes("client-side ai tools") && srcText.trim().toLowerCase().includes("zero cloud footprint")) {
+            if (type === 'tl;dr') {
+              summary = "TL;DR: On-device models like Gemini Nano in Chrome 148+ allow developers to run the expensive evaluation/judgment layers of AI audits on the user's local machine, reducing marginal server costs to zero.";
+            } else if (type === 'key-points') {
+              summary = "• Chrome 148 enables on-device Prompt and Summarization APIs.\n• Standard infrastructure audits are deterministic and cost nothing on the server.\n• Judgment tasks (e.g., citation quality) cost ~$0.60 per run on cloud models.\n• Client-side inference shifts this compute cost completely to the visitor's hardware.";
+            } else if (type === 'headline') {
+              summary = "Chrome 148 Brings On-Device Gemini Nano to Web Pages to Zero Out AI Costs";
+            } else {
+              summary = "This showcase illustrates how local inference in Chrome replaces cloud dependencies for text classification, enabling zero cost scalability for modern developer tools.";
+            }
           } else {
-            summary = "This showcase illustrates how local inference in Chrome replaces cloud dependencies for text classification, enabling zero cost scalability for modern developer tools.";
+            // Dynamic summarization for custom user input
+            const sentences = srcText.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+            if (type === 'tl;dr') {
+              const firstTwo = sentences.slice(0, 2).join(". ");
+              summary = `TL;DR: ${firstTwo ? firstTwo + "." : srcText}`;
+            } else if (type === 'key-points') {
+              const points = sentences.slice(0, 4).map(s => `• ${s}.`);
+              summary = points.join("\n");
+            } else if (type === 'headline') {
+              if (sentences[0]) {
+                const words = sentences[0].split(' ');
+                summary = words.slice(0, Math.min(8, words.length)).join(' ') + (words.length > 8 ? "..." : "");
+              } else {
+                summary = "Summary Headline";
+              }
+            } else { // plain-text or teaser
+              const firstOne = sentences[0] || srcText;
+              summary = `${firstOne}... [Read full content to see details]`;
+            }
           }
 
           outBox.innerText = summary;
@@ -1804,20 +1844,127 @@
       setTimeout(() => {
         outMeta.innerText = 'Translating (Simulated)...';
         setTimeout(() => {
-          // Simple mock translations
           let translation = "";
-          if (tgtLang === 'es') {
-            translation = "Las herramientas del lado del cliente impulsadas por IA se ejecutan con una huella de nube cero.";
-          } else if (tgtLang === 'fr') {
-            translation = "Les outils côté client basés sur l'IA s'exécutent avec une empreinte cloud nulle.";
-          } else if (tgtLang === 'ja') {
-            translation = "AI搭載のクライアント側ツールは、クラウドフットプリントゼロで実行されます。";
-          } else if (tgtLang === 'de') {
-            translation = "KI-gestützte clientseitige Tools werden ohne Cloud-Footprint ausgeführt.";
-          } else if (tgtLang === 'hi') {
-            translation = "एआई-संचालित क्लाइंट-साइड टूल शून्य क्लाउड फ़ुटप्रिंट के साथ निष्पादित होते हैं।";
+          const lowerText = srcText.trim().toLowerCase();
+          const defaultText = "ai-powered client-side tools execute with a zero cloud footprint.";
+          
+          if (lowerText === defaultText) {
+            if (tgtLang === 'es') {
+              translation = "Las herramientas del lado del cliente impulsadas por IA se ejecutan con una huella de nube cero.";
+            } else if (tgtLang === 'fr') {
+              translation = "Les outils côté client basés sur l'IA s'exécutent avec une empreinte cloud nulle.";
+            } else if (tgtLang === 'ja') {
+              translation = "AI搭載のクライアント側ツールは、クラウドフットプリントゼロで実行されます。";
+            } else if (tgtLang === 'de') {
+              translation = "KI-gestützte clientseitige Tools werden ohne Cloud-Footprint ausgeführt.";
+            } else if (tgtLang === 'hi') {
+              translation = "एआई-संचालित क्लाइंट-साइड टूल शून्य क्लाउड फ़ुटप्रिंट के साथ निष्पादित होते हैं।";
+            } else {
+              translation = srcText;
+            }
           } else {
-            translation = srcText;
+            // Dictionary-based mock translation for arbitrary text
+            const dict = {
+              es: {
+                "hello": "hola", "hi": "hola", "welcome": "bienvenido", "good": "bueno", "morning": "mañana",
+                "day": "día", "night": "noche", "thank you": "gracias", "thanks": "gracias", "please": "por favor",
+                "yes": "sí", "no": "no", "love": "amor", "like": "gustar", "i": "yo", "you": "tú/usted", "we": "nosotros",
+                "they": "ellos", "he": "él", "she": "ella", "it": "eso", "is": "es", "are": "son", "am": "soy",
+                "was": "era/fue", "were": "eran", "have": "tener", "has": "tiene", "do": "hacer", "go": "ir",
+                "make": "hacer", "can": "poder", "ai": "IA", "artificial": "artificial", "intelligence": "inteligencia",
+                "browser": "navegador", "chrome": "Chrome", "client": "cliente", "server": "servidor", "cloud": "nube",
+                "zero": "cero", "cost": "costo", "tool": "herramienta", "tools": "herramientas", "code": "código",
+                "web": "web", "site": "sitio", "page": "página", "test": "prueba", "testing": "probando",
+                "fast": "rápido", "slow": "lento", "run": "ejecutar", "running": "ejecutando", "local": "local",
+                "on-device": "en el dispositivo", "project": "proyecto", "team": "equipo", "work": "trabajo"
+              },
+              fr: {
+                "hello": "bonjour", "hi": "salut", "welcome": "bienvenue", "good": "bon", "morning": "matin",
+                "day": "jour", "night": "nuit", "thank you": "merci", "thanks": "merci", "please": "s'il vous plaît",
+                "yes": "oui", "no": "non", "love": "amour", "like": "aimer", "i": "je", "you": "vous", "we": "nous",
+                "they": "ils", "he": "il", "she": "elle", "it": "cela", "is": "est", "are": "sont", "am": "suis",
+                "was": "était", "were": "étaient", "have": "avoir", "has": "a", "do": "faire", "go": "aller",
+                "make": "faire", "can": "pouvoir", "ai": "IA", "artificielle": "artificielle", "intelligence": "intelligence",
+                "browser": "navigateur", "chrome": "Chrome", "client": "client", "server": "serveur", "cloud": "nuage",
+                "zero": "zéro", "cost": "coût", "tool": "outil", "tools": "outils", "code": "code",
+                "web": "web", "site": "site", "page": "page", "test": "test", "testing": "test en cours",
+                "fast": "rapide", "slow": "lent", "run": "exécuter", "running": "en cours d'exécution", "local": "local",
+                "on-device": "sur l'appareil", "project": "projet", "team": "équipe", "work": "travail"
+              },
+              de: {
+                "hello": "hallo", "hi": "hallo", "welcome": "willkommen", "good": "gut", "morning": "morgen",
+                "day": "tag", "night": "nacht", "thank you": "danke", "thanks": "danke", "please": "bitte",
+                "yes": "ja", "no": "nein", "love": "liebe", "like": "mögen", "i": "ich", "you": "du/sie", "we": "wir",
+                "they": "sie", "he": "er", "she": "sie", "it": "es", "is": "ist", "are": "sind", "am": "bin",
+                "was": "war", "were": "waren", "have": "haben", "has": "hat", "do": "tun", "go": "gehen",
+                "make": "machen", "can": "können", "ai": "KI", "artificial": "künstliche", "intelligence": "intelligenz",
+                "browser": "browser", "chrome": "Chrome", "client": "client", "server": "server", "cloud": "cloud",
+                "zero": "null", "cost": "kosten", "tool": "werkzeug", "tools": "werkzeuge", "code": "code",
+                "web": "web", "site": "seite", "page": "seite", "test": "test", "testing": "testen",
+                "fast": "schnell", "slow": "langsam", "run": "ausführen", "running": "laufend", "local": "lokal",
+                "on-device": "auf dem gerät", "project": "projekt", "team": "team", "work": "arbeit"
+              },
+              ja: {
+                "hello": "こんにちは", "hi": "こんにちは", "welcome": "ようこそ", "good": "良い", "morning": "朝",
+                "day": "日", "night": "夜", "thank you": "ありがとう", "thanks": "ありがとう", "please": "お願いします",
+                "yes": "はい", "no": "いいえ", "love": "愛", "like": "好き", "i": "私", "you": "あなた", "we": "私たち",
+                "they": "彼ら", "he": "彼", "she": "彼女", "it": "それ", "is": "です", "are": "です", "am": "です",
+                "was": "でした", "were": "でした", "have": "持っている", "has": "持っている", "do": "する", "go": "行く",
+                "make": "作る", "can": "できる", "ai": "AI", "artificial": "人工", "intelligence": "知能",
+                "browser": "ブラウザ", "chrome": "Chrome", "client": "クライアント", "server": "サーバー", "cloud": "クラウド",
+                "zero": "ゼロ", "cost": "コスト", "tool": "ツール", "tools": "ツール", "code": "コード",
+                "web": "ウェブ", "site": "サイト", "page": "ページ", "test": "テスト", "testing": "テスト中",
+                "fast": "速い", "slow": "遅い", "run": "実行する", "running": "実行中", "local": "ローカル",
+                "on-device": "デバイス上", "project": "プロジェクト", "team": "チーム", "work": "仕事"
+              },
+              hi: {
+                "hello": "नमस्ते", "hi": "नमस्ते", "welcome": "स्वागत हे", "good": "अच्छा", "morning": "सुबह",
+                "day": "दिन", "night": "रात", "thank you": "धन्यवाद", "thanks": "धन्यवाद", "please": "कृपया",
+                "yes": "हाँ", "no": "नहीं", "love": "प्यार", "like": "पसंद", "i": "मैं", "you": "आप", "we": "हम",
+                "they": "वे", "he": "वह", "she": "वह", "it": "यह", "is": "है", "are": "हैं", "am": "हूँ",
+                "was": "था", "were": "थे", "have": "पास होना", "has": "पास होना", "do": "करना", "go": "जाना",
+                "make": "बनाना", "can": "सकना", "ai": "एआई", "artificial": "कृत्रिम", "intelligence": "बुद्धि",
+                "browser": "ब्राउज़र", "chrome": "क्रोम", "client": "क्लाइंट", "server": "सर्वर", "cloud": "क्लाउड",
+                "zero": "शून्य", "cost": "लागत", "tool": "उपकरण", "tools": "उपकरण", "code": "कोड",
+                "web": "वेब", "site": "साइट", "page": "पेज", "test": "परीक्षण", "testing": "परीक्षण चल रहा है",
+                "fast": "तेज़", "slow": "धीमा", "run": "चलाना", "running": "चल रहा है", "local": "स्थानीय",
+                "on-device": "डिवाइस पर", "project": "परियोजना", "team": "टीम", "work": "काम"
+              }
+            };
+
+            const words = srcText.split(/\b/);
+            const transDict = dict[tgtLang];
+            if (!transDict) {
+              translation = srcText;
+            } else {
+              const translatedWords = words.map(word => {
+                const lowerWord = word.toLowerCase();
+                if (transDict[lowerWord]) {
+                  const trans = transDict[lowerWord];
+                  if (word[0] === word[0].toUpperCase() && word.length > 1) {
+                    return trans[0].toUpperCase() + trans.slice(1);
+                  }
+                  return trans;
+                }
+                // Pseudo translation transformation
+                if (/^[a-zA-Z]+$/.test(word) && word.length > 3) {
+                  if (tgtLang === 'es') {
+                    if (word.endsWith('ing')) return word.slice(0, -3) + "ando";
+                    if (word.endsWith('ed')) return word.slice(0, -2) + "ado";
+                    return word + "o";
+                  }
+                  if (tgtLang === 'fr') {
+                    if (word.endsWith('ing')) return word.slice(0, -3) + "ant";
+                    return word + "e";
+                  }
+                  if (tgtLang === 'de') {
+                    return "ge-" + word + "-en";
+                  }
+                }
+                return word;
+              });
+              translation = translatedWords.join('');
+            }
           }
 
           outBox.innerText = translation;
@@ -1993,8 +2140,12 @@
         outMeta.innerText = 'Drafting content (Simulated)...';
         setTimeout(() => {
           let draftText = "";
-          if (format === 'email') {
-            draftText = `Subject: ACTION REQUIRED: Update access tokens and repository keys before Tuesday
+          const defaultText = "requesting team members to review their access tokens and repository validation keys before deployment next Tuesday";
+          const defaultContext = "project-timeline";
+          
+          if (task.trim().toLowerCase() === defaultText && context.trim().toLowerCase() === defaultContext) {
+            if (format === 'email') {
+              draftText = `Subject: ACTION REQUIRED: Update access tokens and repository keys before Tuesday
 
 Dear Team,
 
@@ -2005,15 +2156,45 @@ Let me know if you run into any issues during token configuration.
 Best regards,
 Sarvesh Huddedar
 Lead AI Architect`;
-          } else if (format === 'outline') {
-            draftText = `• Objective: Update access tokens & repository keys.
+            } else if (format === 'outline') {
+              draftText = `• Objective: Update access tokens & repository keys.
 • Timeline: Complete prior to Tuesday's deployment.
 • Tasks:
   - Generate GitHub PAT with correct 'repo' scope.
   - Test validation using local fetch/pull/push.
   - Report any credential validation blocks immediately.`;
+            } else {
+              draftText = `Prior to our deployment next Tuesday, all development team members are requested to review and renew their personal access tokens and repository validation keys. Ensuring that credentials are up to date prevents authentication lockouts during push phases, maintaining our release velocity and deployment integrity.`;
+            }
           } else {
-            draftText = `Prior to our deployment next Tuesday, all development team members are requested to review and renew their personal access tokens and repository validation keys. Ensuring that credentials are up to date prevents authentication lockouts during push phases, maintaining our release velocity and deployment integrity.`;
+            // Dynamic draft builder for custom task and context
+            const ctxText = context ? `Context: ${context}` : "General Context";
+            const taskCapitalized = task.charAt(0).toUpperCase() + task.slice(1);
+            
+            if (format === 'email') {
+              draftText = `Subject: ACTION REQUIRED: Request regarding ${task.substring(0, 45)}${task.length > 45 ? "..." : ""}
+
+Dear Team / Recipient,
+
+I am writing to request action on the following task:
+"${taskCapitalized}".
+
+${context ? `Please keep the following context in mind: ${context}.` : ""}
+
+Kindly complete and verify these requirements as soon as possible. Feel free to reach out if you encounter any roadblocks or require clarification.
+
+Best regards,
+[On-Device AI Writer]`;
+            } else if (format === 'outline') {
+              draftText = `• Objective: ${taskCapitalized}
+• Context details: ${context || "Standard Development Scope"}
+• Implementation Checklist:
+  - Phase 1: Review requirements and initial setup.
+  - Phase 2: Execute task verification and local testing.
+  - Phase 3: Submit final results for review.`;
+            } else {
+              draftText = `Under the context of "${context || "general operations"}", the following task details are outlined: ${taskCapitalized}. Please ensure that all aspects of this request are fully verified, executed, and integrated into the active workspace pipeline.`;
+            }
           }
 
           outBox.innerText = draftText;
