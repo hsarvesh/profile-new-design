@@ -2066,15 +2066,93 @@ Lead AI Architect`;
         outMeta.innerText = 'Polishing content (Simulated)...';
         setTimeout(() => {
           let polishedText = "";
-          if (tone === 'more-formal') {
-            polishedText = `Hello Team,\n\nPlease verify that your local experimental flags for on-device AI are correctly configured as soon as possible. This configuration is essential to ensure that our new browser-based features load successfully for the upcoming testing phase.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nSarvesh Huddedar`;
-          } else if (tone === 'enthusiastic') {
-            polishedText = `Hey team! Let's get those on-device AI flags turned on right away! We've got awesome new features ready for testing, and we need this done ASAP to make sure everything runs smoothly. Let's go! 🚀`;
+          const defaultText = "hey team, need u to quickly check the flags for on-device AI. we need this done ASAP otherwise the new features won't load for testing. thanks!";
+          
+          if (srcText.trim().toLowerCase() === defaultText.toLowerCase()) {
+            if (tone === 'more-formal') {
+              polishedText = `Hello Team,\n\nPlease verify that your local experimental flags for on-device AI are correctly configured as soon as possible. This configuration is essential to ensure that our new browser-based features load successfully for the upcoming testing phase.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nSarvesh Huddedar`;
+            } else if (tone === 'enthusiastic') {
+              polishedText = `Hey team! Let's get those on-device AI flags turned on right away! We've got awesome new features ready for testing, and we need this done ASAP to make sure everything runs smoothly. Let's go! 🚀`;
+            } else if (tone === 'more-casual') {
+              polishedText = `hey guys, could you check the on-device AI flags real quick? the new features won't work for testing if we don't. thanks!`;
+            } else { // neutral
+              if (length === 'shorter') {
+                polishedText = "Team, please enable on-device AI browser flags immediately so the new features can load for testing.";
+              } else if (length === 'longer') {
+                polishedText = "Hi everyone, could you please verify your browser flags for on-device AI immediately? We need these configurations in place so that the new local features can load properly for testing. Thanks for your support.";
+              } else {
+                polishedText = "Hello team, please verify the browser flags for on-device AI as soon as possible. The new features require these flags to be set in order to load correctly for testing. Thank you.";
+              }
+            }
           } else {
+            // Dynamic rewrite helper for custom user input text
+            let text = srcText.trim();
+            // 1. Dictionary for abbreviations
+            const dictionary = {
+              "u": "you",
+              "ur": "your",
+              "r": "are",
+              "asap": "as soon as possible",
+              "pls": "please",
+              "plz": "please",
+              "thx": "thanks",
+              "tks": "thanks",
+              "wont": "will not",
+              "dont": "do not",
+              "im": "I am",
+              "gotta": "have to",
+              "gonna": "going to",
+              "check": "verify",
+              "quick": "prompt",
+              "quickly": "promptly"
+            };
+
+            // 2. Apply length change
+            let workingText = text;
             if (length === 'shorter') {
-              polishedText = "Team, please enable on-device AI browser flags immediately so the new features can load for testing.";
-            } else {
-              polishedText = "Hi everyone, could you please verify your browser flags for on-device AI immediately? We need these configurations in place so that the new local features can load properly for testing. Thanks for your support.";
+              const sentences = workingText.split(/[.!?]+/);
+              if (sentences.length > 1 && sentences[0].trim().length > 10) {
+                workingText = sentences[0].trim() + ".";
+              } else {
+                const words = workingText.split(' ');
+                if (words.length > 12) {
+                  workingText = words.slice(0, 10).join(' ') + "...";
+                }
+              }
+            } else if (length === 'longer') {
+              const expansionPhrases = [
+                " Additionally, it is critical to ensure that all relevant configurations are thoroughly validated according to standard procedures.",
+                " Please feel free to reach out if you encounter any difficulties or need further clarification regarding this matter."
+              ];
+              workingText = workingText + expansionPhrases[0] + (workingText.split(' ').length < 15 ? expansionPhrases[1] : "");
+            }
+
+            // 3. Apply tone change
+            if (tone === 'more-formal') {
+              let tempText = workingText;
+              Object.keys(dictionary).forEach(key => {
+                const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                tempText = tempText.replace(regex, dictionary[key]);
+              });
+              tempText = tempText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+              polishedText = `Dear Recipient,\n\nI hope this message finds you well. I would like to convey the following:\n\n${tempText}\n\nThank you for your cooperation.\n\nBest regards,\nSarvesh Huddedar`;
+            } else if (tone === 'more-casual') {
+              let tempText = workingText;
+              tempText = tempText.replace(/\bplease\b/gi, "pls");
+              tempText = tempText.replace(/\bas soon as possible\b/gi, "asap");
+              tempText = tempText.replace(/\bthank you\b/gi, "thanks");
+              polishedText = `Hey! Just wanted to share: ${tempText} Let me know if that works! Cheers.`;
+            } else if (tone === 'enthusiastic') {
+              let tempText = workingText;
+              tempText = tempText.replace(/[.]/g, "!");
+              if (!tempText.endsWith("!")) {
+                tempText += "!";
+              }
+              polishedText = `Hey! Super excited to share this! 🎉 ${tempText} Let's make it happen! 🚀`;
+            } else { // neutral
+              let tempText = workingText;
+              tempText = tempText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+              polishedText = tempText;
             }
           }
 
