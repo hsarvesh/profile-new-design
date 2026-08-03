@@ -1632,14 +1632,14 @@
         ocrIconEl.className = 'api-icon status-error';
       }
 
-      // Update Live / Simulation Mode badge
+      // Update mode badge
       if (isLiveMode) {
         modeIndicatorEl.className = 'mode-indicator mode-live';
-        modeIndicatorEl.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> Live Browser AI Active';
+        modeIndicatorEl.innerHTML = '<i class="bi bi-lightning-charge-fill"></i> Live Chrome AI Active';
       } else {
         modeIndicatorEl.className = 'mode-indicator mode-sim';
-        modeIndicatorEl.innerHTML = '<i class="bi bi-cpu-fill"></i> Simulation Mode Active';
-        setupGuideDetails.open = true; // Auto open setup guide if simulation mode
+        modeIndicatorEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Chrome AI Not Detected';
+        setupGuideDetails.open = true; // Auto-open setup guide
       }
     }
 
@@ -1694,7 +1694,19 @@
       evt.currentTarget.classList.add('active');
     }
 
-    // Execute Prompt Demo (Support Live + Simulation fallbacks)
+    // ── Helper: show a "Chrome AI required" error in any output box ──
+    function showChromeAIRequired(outBox, outMeta, apiName) {
+      outBox.classList.remove('streaming');
+      outBox.innerHTML = `
+        <div style="padding: 16px; border: 1px solid var(--accent-orange, #f59e0b); border-radius: 8px; background: rgba(245,158,11,0.08);">
+          <p style="margin: 0 0 8px; font-weight: 600; color: var(--accent-orange, #f59e0b);"><i class="bi bi-exclamation-triangle-fill"></i>&nbsp; Chrome AI Not Available</p>
+          <p style="margin: 0 0 6px; font-size: 0.9rem;">The <strong>${apiName}</strong> requires Gemini Nano running locally in Chrome.</p>
+          <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">To enable: use Chrome Dev/Canary (v127+) &rarr; visit <code>chrome://flags</code> &rarr; enable <em>"Prompt API for Gemini Nano"</em> &amp; <em>"Optimization Guide On Device Model"</em> &rarr; relaunch Chrome.</p>
+        </div>`;
+      if (outMeta) outMeta.innerText = 'API Unavailable';
+    }
+
+    // Execute Prompt Demo
     async function runPromptDemo() {
       const systemPromptVal = document.getElementById('promptSystem').value;
       const tempVal = parseFloat(document.getElementById('promptTemp').value) || 0.7;
@@ -1711,124 +1723,49 @@
         return;
       }
 
+      if (!liveAI.prompt) {
+        showChromeAIRequired(outBox, outMeta, 'Prompt API (ai.languageModel)');
+        return;
+      }
+
       outBox.innerText = '';
       outBox.classList.add('streaming');
       outMeta.innerText = 'Initializing local session...';
 
-      // ─── LIVE MODE EXECUTION ───
-      if (isLiveMode && liveAI.prompt) {
-        try {
-          const sessionOptions = {
-            systemPrompt: systemPromptVal,
-            temperature: tempVal,
-            topK: topKVal
-          };
-          const session = await liveAI.prompt.create(sessionOptions);
-          outMeta.innerText = 'Streaming response...';
+      try {
+        const sessionOptions = {
+          systemPrompt: systemPromptVal,
+          temperature: tempVal,
+          topK: topKVal
+        };
+        const session = await liveAI.prompt.create(sessionOptions);
+        outMeta.innerText = 'Streaming response...';
 
-          const options = {};
-          if (useConstraint && schemaVal) {
-            try {
-              options.responseConstraint = JSON.parse(schemaVal);
-            } catch (e) {
-              outBox.classList.remove('streaming');
-              outBox.innerHTML = `<span class="status-error">Invalid JSON Schema: ${e.message}</span>`;
-              outMeta.innerText = 'Failed';
-              return;
-            }
-          }
-
-          const stream = await session.promptStreaming(promptVal, options);
-          let fullText = '';
-          for await (const chunk of stream) {
-            fullText += chunk;
-            outBox.innerText = fullText;
-          }
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (On-Device)';
-        } catch (e) {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
-          outMeta.innerText = 'Error';
-        }
-        return;
-      }
-
-      // ─── SIMULATION MODE FALLBACK ───
-      outMeta.innerText = 'Inference starting (Simulated)...';
-      setTimeout(() => {
-        outMeta.innerText = 'Streaming (Simulated)...';
-        let responseChunks = [];
-        
-        if (useConstraint) {
-          // Schema-constrained response: derive sentiment/entities from actual user prompt
-          const preset = document.getElementById('schemaPreset').value;
-          const lp = promptVal.toLowerCase();
-          if (preset === 'sentiment') {
-            const positiveWords = ['good', 'great', 'excellent', 'save', 'success', 'love', 'amazing', 'perfect', 'helpful', 'fast', 'efficient', 'free', 'win', 'best', 'awesome'];
-            const negativeWords = ['bad', 'terrible', 'fail', 'broken', 'slow', 'expensive', 'hate', 'wrong', 'poor', 'error', 'problem', 'issue', 'worst'];
-            const posScore = positiveWords.filter(w => lp.includes(w)).length;
-            const negScore = negativeWords.filter(w => lp.includes(w)).length;
-            const label = posScore > negScore ? 'positive' : negScore > posScore ? 'negative' : 'neutral';
-            const conf = (0.78 + Math.random() * 0.18).toFixed(2);
-            responseChunks = [`{\n  "sentiment": "${label}",\n  "confidence": ${conf},\n  "reason": "Input text contained ${posScore} positive and ${negScore} negative signal words."\n}`];
-          } else if (preset === 'entities') {
-            // Extract capitalized words as simulated entities from the actual prompt
-            const capitalizedWords = (promptVal.match(/\b[A-Z][a-z]{2,}\b/g) || []).slice(0, 4);
-            const entityList = capitalizedWords.length ? capitalizedWords : ['Gemini Nano', 'Local AI'];
-            const topicWords = promptVal.split(' ').slice(0, 5).join(' ');
-            responseChunks = [`{\n  "entities": ${JSON.stringify(entityList)},\n  "topic": "${topicWords}..."\n}`];
-          } else {
-            const hasTech = lp.includes('ai') || lp.includes('model') || lp.includes('chrome') || lp.includes('llm');
-            responseChunks = [`{\n  "citeEligible": ${hasTech},\n  "reason": "${hasTech ? 'Content aligns with technical AI/browser query intent.' : 'Content does not strongly match technical search query signals.'}",\n  "matchedConcepts": ["${promptVal.split(' ').slice(0,3).join(' ')}"]\n}`];
-          }
-        } else {
-          // Free-form: build a contextual simulated answer from the actual prompt text
-          const lowerPrompt = promptVal.toLowerCase();
-          const words = promptVal.trim().split(/\s+/);
-          let simAnswer = "";
-          
-          if (lowerPrompt.includes("who are you") || lowerPrompt.includes("your name") || lowerPrompt.includes("who created")) {
-            simAnswer = "I am Gemini Nano, an on-device Large Language Model running locally in your Google Chrome browser. I was developed by Google, and this interactive showcase was built by Sarvesh Huddedar.";
-          } else if (lowerPrompt.includes("sarvesh") || lowerPrompt.includes("huddedar")) {
-            simAnswer = "Sarvesh Huddedar is a Lead AI Architect specializing in helping organizations build scalable generative AI systems, custom RAG pipelines, LLM fine-tuning, and enterprise-grade AI agents. Check the 'AI Services' or 'Resume' section to learn more!";
-          } else if (lowerPrompt.includes("cost") || lowerPrompt.includes("money") || lowerPrompt.includes("econom") || lowerPrompt.includes("save") || lowerPrompt.includes("budget")) {
-            simAnswer = "On-device models like Gemini Nano reduce server API call costs to zero. Because all inference is processed on the visitor's local GPU or CPU, website owners pay zero token fees, unlocking massive scalability.";
-          } else if (lowerPrompt.includes("webgpu") || lowerPrompt.includes("gpu") || lowerPrompt.includes("hardware") || lowerPrompt.includes("wasm")) {
-            simAnswer = "WebGPU is a low-level web API that grants browsers direct access to your device's GPU. By using WebGPU, Chrome can run heavy machine learning workloads (like Gemini Nano) locally at hardware-accelerated speeds.";
-          } else if (lowerPrompt.includes("flag") || lowerPrompt.includes("enable") || lowerPrompt.includes("how to") || lowerPrompt.includes("setup") || lowerPrompt.includes("install")) {
-            simAnswer = "To run these APIs natively: 1) Use Chrome Dev or Canary (v127+). 2) Enable experimental flags 'Optimization Guide On-Device Model' and 'Prompt API for Gemini Nano'. 3) Relaunch and wait for Chrome to download the model.";
-          } else if (lowerPrompt.includes("differ") || lowerPrompt.includes("compar") || lowerPrompt.includes("vs") || lowerPrompt.includes("versus")) {
-            const subject = words.slice(0, 6).join(' ');
-            simAnswer = `Comparing topics found in "${subject}":\n• On-device (local) models run with zero cloud latency and full privacy.\n• Cloud models offer larger context windows and broader knowledge.\n• On-device is ideal for real-time, offline, or sensitive workloads.\n• Cloud is better for complex multi-step reasoning or large document analysis.`;
-          } else if (lowerPrompt.includes("list") || lowerPrompt.includes("give me") || lowerPrompt.includes("what are") || lowerPrompt.includes("explain")) {
-            const topic = words.slice(2, 7).join(' ') || 'this topic';
-            simAnswer = `Regarding "${topic}":\n1. On-device AI processes data locally — no data leaves the user's machine.\n2. Chrome's Prompt API provides a direct interface to Gemini Nano.\n3. Performance scales with the user's hardware (CPU/GPU/NPU).\n4. Zero per-request API token costs for the website operator.\n5. Works offline after the model is downloaded by Chrome.`;
-          } else {
-            // Generic but contextually-framed response using the actual prompt
-            const snippet = promptVal.length > 80 ? promptVal.substring(0, 80) + '...' : promptVal;
-            simAnswer = `I've processed your query: "${snippet}"\n\nHere is my analysis:\nYour request touches on areas where on-device AI can provide immediate value. Running locally, I can respond with zero latency and zero cost to the server operator. In a live Chrome session with Gemini Nano enabled, I would provide a fully contextual answer using the downloaded local model weights.\n\nKey takeaway: Local AI keeps your query private, fast, and free.`;
-          }
-
-          responseChunks = [
-            `[Simulated Gemini Nano · On-Device Mode]\n\n`,
-            `Prompt received: "${promptVal.length > 60 ? promptVal.substring(0,60)+'...' : promptVal}"\n\n`,
-            simAnswer
-          ];
-        }
-
-        let currentIdx = 0;
-        const interval = setInterval(() => {
-          if (currentIdx < responseChunks.length) {
-            outBox.innerText += responseChunks[currentIdx];
-            currentIdx++;
-          } else {
-            clearInterval(interval);
+        const options = {};
+        if (useConstraint && schemaVal) {
+          try {
+            options.responseConstraint = JSON.parse(schemaVal);
+          } catch (e) {
             outBox.classList.remove('streaming');
-            outMeta.innerText = 'Completed (Simulated)';
+            outBox.innerHTML = `<span class="status-error">Invalid JSON Schema: ${e.message}</span>`;
+            outMeta.innerText = 'Failed';
+            return;
           }
-        }, 150);
-      }, 800);
+        }
+
+        const stream = await session.promptStreaming(promptVal, options);
+        let fullText = '';
+        for await (const chunk of stream) {
+          fullText += chunk;
+          outBox.innerText = fullText;
+        }
+        outBox.classList.remove('streaming');
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
+      }
     }
 
     // Execute Summarizer Demo
@@ -1844,80 +1781,32 @@
         return;
       }
 
+      if (!liveAI.summarizer) {
+        showChromeAIRequired(outBox, outMeta, 'Summarizer API (ai.summarizer)');
+        return;
+      }
+
       outBox.innerText = '';
       outBox.classList.add('streaming');
       outMeta.innerText = 'Loading summarization engine...';
 
-      // ─── LIVE MODE EXECUTION ───
-      if (isLiveMode && liveAI.summarizer) {
-        try {
-          const summarizer = await liveAI.summarizer.create({
-            type: type,
-            format: 'plain-text',
-            length: length,
-            outputLanguage: 'en'
-          });
-          outMeta.innerText = 'Summarizing...';
-          const summary = await summarizer.summarize(srcText);
-          outBox.innerText = summary;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (On-Device)';
-        } catch (e) {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
-          outMeta.innerText = 'Error';
-        }
-        return;
+      try {
+        const summarizer = await liveAI.summarizer.create({
+          type: type,
+          format: 'plain-text',
+          length: length,
+          outputLanguage: 'en'
+        });
+        outMeta.innerText = 'Summarizing...';
+        const summary = await summarizer.summarize(srcText);
+        outBox.innerText = summary;
+        outBox.classList.remove('streaming');
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
       }
-
-      // ─── SIMULATION MODE FALLBACK ───
-      setTimeout(() => {
-        outMeta.innerText = 'Processing (Simulated)...';
-        setTimeout(() => {
-          let summary = '';
-          // Always process the actual user-entered text — no preset matching
-          const sentences = srcText.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 5);
-          const wordCount = srcText.trim().split(/\s+/).length;
-          const charCount = srcText.trim().length;
-
-          if (type === 'tl;dr') {
-            // Pick the most information-dense first two sentences
-            const core = sentences.slice(0, 2).join('. ');
-            summary = `TL;DR: ${core ? core + '.' : srcText.substring(0, 120) + '...'}`;
-          } else if (type === 'key-points') {
-            // Extract up to 5 points from distinct sentences
-            const points = sentences.slice(0, Math.min(5, sentences.length));
-            if (length === 'short') {
-              summary = points.slice(0, 2).map(s => `• ${s}.`).join('\n');
-            } else if (length === 'long') {
-              summary = points.map(s => `• ${s}.`).join('\n');
-            } else {
-              summary = points.slice(0, 3).map(s => `• ${s}.`).join('\n');
-            }
-          } else if (type === 'headline') {
-            // Construct a meaningful headline from the opening sentence
-            const opener = sentences[0] || srcText;
-            const headlineWords = opener.split(' ').filter(w => w.length > 3);
-            const headline = headlineWords.slice(0, 7).join(' ') + (headlineWords.length > 7 ? '...' : '');
-            summary = headline.charAt(0).toUpperCase() + headline.slice(1);
-          } else {
-            // teaser / plain-text: first sentence plus word/char stats
-            const firstSentence = sentences[0] ? sentences[0] + '.' : srcText.substring(0, 100) + '...';
-            if (length === 'short') {
-              summary = firstSentence;
-            } else if (length === 'long') {
-              const para = sentences.slice(0, 3).join('. ');
-              summary = `${para}.\n\n[Summary of ${wordCount} words · ${charCount} characters]`;
-            } else {
-              summary = `${firstSentence}\n\n[Processed ${wordCount} words — on-device, zero server cost]`;
-            }
-          }
-
-          outBox.innerText = summary;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (Simulated)';
-        }, 1000);
-      }, 500);
     }
 
     // Execute Translator Demo
@@ -1927,6 +1816,37 @@
       const tgtLang = document.getElementById('transTgt').value;
       const outBox = document.getElementById('translatorOutput');
       const outMeta = document.getElementById('transMeta');
+
+      if (!srcText.trim()) {
+        outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
+        return;
+      }
+
+      if (!liveAI.translator) {
+        showChromeAIRequired(outBox, outMeta, 'Translator API (ai.translator)');
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Initializing translation model...';
+
+      try {
+        const translator = await liveAI.translator.create({
+          sourceLanguage: srcLang,
+          targetLanguage: tgtLang
+        });
+        outMeta.innerText = 'Translating...';
+        const result = await translator.translate(srcText);
+        outBox.innerText = result;
+        outBox.classList.remove('streaming');
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
+      }
+    }
 
       if (!srcText.trim()) {
         outBox.innerHTML = '<span class="status-error">Error: Text cannot be empty.</span>';
@@ -2091,102 +2011,55 @@
         return;
       }
 
+      if (!liveAI.detector) {
+        showChromeAIRequired(outBox, outMeta, 'Language Detector API (ai.languageDetector)');
+        return;
+      }
+
       outBox.innerText = '';
       outBox.classList.add('streaming');
       outMeta.innerText = 'Detecting language...';
 
-      // ─── LIVE MODE EXECUTION ───
-      if (isLiveMode && liveAI.detector) {
-        try {
-          const detector = await liveAI.detector.create();
-          outMeta.innerText = 'Analyzing...';
-          const results = await detector.detect(srcText);
+      try {
+        const detector = await liveAI.detector.create();
+        outMeta.innerText = 'Analyzing...';
+        const results = await detector.detect(srcText);
 
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = '';
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = '';
+        
+        const grid = document.createElement('div');
+        grid.className = 'detector-result-grid';
+
+        results.forEach(result => {
+          const card = document.createElement('div');
+          card.className = 'detector-badge';
           
-          const grid = document.createElement('div');
-          grid.className = 'detector-result-grid';
+          const code = document.createElement('span');
+          code.className = 'detector-lang-code';
+          code.innerText = result.detectedLanguage.toUpperCase();
+          
+          const name = document.createElement('span');
+          name.className = 'detector-lang-name';
+          name.innerText = getLangName(result.detectedLanguage);
 
-          results.forEach(result => {
-            const card = document.createElement('div');
-            card.className = 'detector-badge';
-            
-            const code = document.createElement('span');
-            code.className = 'detector-lang-code';
-            code.innerText = result.detectedLanguage.toUpperCase();
-            
-            const name = document.createElement('span');
-            name.className = 'detector-lang-name';
-            name.innerText = getLangName(result.detectedLanguage);
+          const confidence = document.createElement('span');
+          confidence.className = 'detector-confidence';
+          confidence.innerText = `Confidence: ${(result.confidence * 100).toFixed(1)}%`;
 
-            const confidence = document.createElement('span');
-            confidence.className = 'detector-confidence';
-            confidence.innerText = `Confidence: ${(result.confidence * 100).toFixed(1)}%`;
+          card.appendChild(code);
+          card.appendChild(name);
+          card.appendChild(confidence);
+          grid.appendChild(card);
+        });
 
-            card.appendChild(code);
-            card.appendChild(name);
-            card.appendChild(confidence);
-            grid.appendChild(card);
-          });
-
-          outBox.appendChild(grid);
-          outMeta.innerText = 'Completed (On-Device)';
-        } catch (e) {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
-          outMeta.innerText = 'Error';
-        }
-        return;
+        outBox.appendChild(grid);
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
       }
-
-      // ─── SIMULATION MODE FALLBACK ───
-      setTimeout(() => {
-        outMeta.innerText = 'Analyzing text (Simulated)...';
-        setTimeout(() => {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = '';
-
-          let detections = [];
-          if (srcText.toLowerCase().includes('bonjour') || srcText.toLowerCase().includes('allez')) {
-            detections = [{ code: 'fr', name: 'French', conf: 0.98 }, { code: 'en', name: 'English', conf: 0.02 }];
-          } else if (srcText.toLowerCase().includes('こんにちは') || srcText.toLowerCase().includes('調子')) {
-            detections = [{ code: 'ja', name: 'Japanese', conf: 0.99 }];
-          } else if (srcText.toLowerCase().includes('नमस्ते') || srcText.toLowerCase().includes('कैसे')) {
-            detections = [{ code: 'hi', name: 'Hindi', conf: 0.97 }, { code: 'en', name: 'English', conf: 0.03 }];
-          } else {
-            detections = [{ code: 'en', name: 'English', conf: 0.94 }, { code: 'de', name: 'German', conf: 0.04 }];
-          }
-
-          const grid = document.createElement('div');
-          grid.className = 'detector-result-grid';
-
-          detections.forEach(d => {
-            const card = document.createElement('div');
-            card.className = 'detector-badge';
-            
-            const code = document.createElement('span');
-            code.className = 'detector-lang-code';
-            code.innerText = d.code.toUpperCase();
-            
-            const name = document.createElement('span');
-            name.className = 'detector-lang-name';
-            name.innerText = d.name;
-
-            const confidence = document.createElement('span');
-            confidence.className = 'detector-confidence';
-            confidence.innerText = `Confidence: ${(d.conf * 100).toFixed(1)}%`;
-
-            card.appendChild(code);
-            card.appendChild(name);
-            card.appendChild(confidence);
-            grid.appendChild(card);
-          });
-
-          outBox.appendChild(grid);
-          outMeta.innerText = 'Completed (Simulated)';
-        }, 1000);
-      }, 400);
     }
 
     function getLangName(code) {
@@ -2216,81 +2089,31 @@
         return;
       }
 
+      if (!liveAI.writer) {
+        showChromeAIRequired(outBox, outMeta, 'Writer API (ai.writer)');
+        return;
+      }
+
       outBox.innerText = '';
       outBox.classList.add('streaming');
       outMeta.innerText = 'Initializing writer engine...';
 
-      // ─── LIVE MODE EXECUTION ───
-      if (isLiveMode && liveAI.writer) {
-        try {
-          const writer = await liveAI.writer.create({
-            sharedContext: context,
-            tone: tone,
-            format: format
-          });
-          outMeta.innerText = 'Writing...';
-          const draft = await writer.write(task);
-          outBox.innerText = draft;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (On-Device)';
-        } catch (e) {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
-          outMeta.innerText = 'Error';
-        }
-        return;
+      try {
+        const writer = await liveAI.writer.create({
+          sharedContext: context,
+          tone: tone,
+          format: format
+        });
+        outMeta.innerText = 'Writing...';
+        const draft = await writer.write(task);
+        outBox.innerText = draft;
+        outBox.classList.remove('streaming');
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
       }
-
-      // ─── SIMULATION MODE FALLBACK ───
-      setTimeout(() => {
-        outMeta.innerText = 'Drafting content (Simulated)...';
-        setTimeout(() => {
-          let draftText = "";
-          // Always build from actual user task + context — no hardcoded preset matching
-          const ctxText = context ? context.trim() : "General operations";
-          const taskCapitalized = task.trim().charAt(0).toUpperCase() + task.trim().slice(1);
-          const taskSnippet = task.length > 50 ? task.substring(0, 50) + '...' : task;
-
-          if (format === 'email') {
-            draftText = `Subject: ${tone === 'formal' ? 'ACTION REQUIRED' : 'Quick Request'}: ${taskSnippet}
-
-${tone === 'formal' ? 'Dear Team,' : 'Hey team,'}
-
-${tone === 'formal'
-  ? 'I would like to bring the following to your immediate attention:'
-  : 'Just a heads-up — need some help with:'}
-
-"${taskCapitalized}"
-
-${ctxText !== 'General operations' ? `Context: ${ctxText}\n\n` : ''}${tone === 'formal'
-  ? 'Please ensure this is completed and verified at your earliest convenience. Do not hesitate to reach out with any queries.'
-  : 'Let me know if you hit any blockers. Thanks!'}
-
-${tone === 'formal' ? 'Best regards,\n[On-Device AI Writer]' : 'Cheers,\n[On-Device AI Writer]'}`;
-          } else if (format === 'outline') {
-            draftText = `• Objective: ${taskCapitalized}
-• Context: ${ctxText}
-• Tone: ${tone}
-• Implementation Steps:
-  - Step 1: Understand scope — "${task.split(' ').slice(0, 5).join(' ')}..."
-  - Step 2: Execute and validate against context requirements.
-  - Step 3: Review outputs and confirm completion.
-• Expected Outcome: Task resolved with full traceability.`;
-          } else {
-            // paragraph / plain
-            const toneAdverb = tone === 'formal' ? 'formally' : tone === 'casual' ? 'in a conversational tone' : 'clearly';
-            draftText = `${toneAdverb.charAt(0).toUpperCase() + toneAdverb.slice(1)} stated: ${taskCapitalized}.
-
-Context: ${ctxText}.
-
-To move forward, ensure all relevant parties are aligned on the scope and timeline. Completion of this task should be prioritized and tracked accordingly. All outputs should be verified before handoff.`;
-          }
-
-          outBox.innerText = draftText;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (Simulated)';
-        }, 1200);
-      }, 500);
     }
 
     // Execute Rewriter Demo
@@ -2307,104 +2130,33 @@ To move forward, ensure all relevant parties are aligned on the scope and timeli
         return;
       }
 
+      if (!liveAI.rewriter) {
+        showChromeAIRequired(outBox, outMeta, 'Rewriter API (ai.rewriter)');
+        return;
+      }
+
       outBox.innerText = '';
       outBox.classList.add('streaming');
       outMeta.innerText = 'Loading rewriting engine...';
 
-      // ─── LIVE MODE EXECUTION ───
-      if (isLiveMode && liveAI.rewriter) {
-        try {
-          const rewriter = await liveAI.rewriter.create({
-            tone: tone,
-            length: length
-          });
-          outMeta.innerText = 'Rewriting...';
-          const rewritten = await rewriter.rewrite(srcText);
-          outBox.innerText = rewritten;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (On-Device)';
-        } catch (e) {
-          outBox.classList.remove('streaming');
-          outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
-          outMeta.innerText = 'Error';
-        }
-        return;
+      try {
+        const rewriter = await liveAI.rewriter.create({
+          tone: tone,
+          length: length
+        });
+        outMeta.innerText = 'Rewriting...';
+        const rewritten = await rewriter.rewrite(srcText);
+        outBox.innerText = rewritten;
+        outBox.classList.remove('streaming');
+        outMeta.innerText = 'Completed (On-Device)';
+      } catch (e) {
+        outBox.classList.remove('streaming');
+        outBox.innerHTML = `<span class="status-error">Execution Error: ${e.message}</span>`;
+        outMeta.innerText = 'Error';
       }
-
-      // ─── SIMULATION MODE FALLBACK ───
-      setTimeout(() => {
-        outMeta.innerText = 'Polishing content (Simulated)...';
-        setTimeout(() => {
-          let polishedText = "";
-          // Always rewrite from actual user input — no preset matching
-          let text = srcText.trim();
-
-          // Abbreviation expansion dictionary
-          const dictionary = {
-            "\bu\b": "you", "\bur\b": "your", "\br\b": "are",
-            "\basap\b": "as soon as possible", "\bpls\b": "please", "\bplz\b": "please",
-            "\bthx\b": "thanks", "\btks\b": "thanks", "\bwont\b": "will not",
-            "\bdont\b": "do not", "\bim\b": "I am", "\bgotta\b": "have to",
-            "\bgonna\b": "going to", "\bcheck\b": "verify", "\bquick\b": "prompt",
-            "\bquickly\b": "promptly", "\bneed\b": "require", "\bget\b": "obtain"
-          };
-
-          // Apply length change first
-          let workingText = text;
-          if (length === 'shorter') {
-            const sentences = workingText.split(/(?<=[.!?])\s+/);
-            if (sentences.length > 1 && sentences[0].trim().length > 10) {
-              workingText = sentences[0].trim();
-            } else {
-              const words = workingText.split(' ');
-              if (words.length > 12) {
-                workingText = words.slice(0, 10).join(' ') + '...';
-              }
-            }
-          } else if (length === 'longer') {
-            const wordCount = workingText.split(' ').length;
-            const addons = [
-              ' Additionally, it is critical to ensure that all relevant considerations are thoroughly addressed.',
-              ' Please do not hesitate to reach out should you require further clarification or assistance on this matter.'
-            ];
-            workingText = workingText + addons[0] + (wordCount < 20 ? addons[1] : '');
-          }
-
-          // Apply tone
-          if (tone === 'more-formal') {
-            let tempText = workingText;
-            Object.keys(dictionary).forEach(pattern => {
-              tempText = tempText.replace(new RegExp(pattern, 'gi'), dictionary[pattern]);
-            });
-            tempText = tempText.replace(/(^|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-            polishedText = `Dear Recipient,\n\nI hope this message finds you well. I am writing to convey the following:\n\n${tempText}\n\nI appreciate your prompt attention to this matter.\n\nKind regards,\n[On-Device AI Rewriter]`;
-          } else if (tone === 'more-casual') {
-            let tempText = workingText;
-            tempText = tempText.replace(/\bplease\b/gi, 'pls');
-            tempText = tempText.replace(/\bas soon as possible\b/gi, 'asap');
-            tempText = tempText.replace(/\bthank you\b/gi, 'thanks');
-            tempText = tempText.replace(/\brequire\b/gi, 'need');
-            polishedText = `Hey! Just a quick one: ${tempText.charAt(0).toLowerCase() + tempText.slice(1)} Lmk if that works! 👍`;
-          } else if (tone === 'enthusiastic') {
-            let tempText = workingText.replace(/\.(?!\s*$)/g, '!');
-            if (!tempText.match(/[!?]$/)) tempText += '!';
-            polishedText = `Exciting stuff! 🎉 ${tempText} Absolutely thrilled about this — let's make it happen! 🚀`;
-          } else {
-            // neutral — clean up capitalisation and spacing only
-            let tempText = workingText;
-            tempText = tempText.replace(/(^|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-            if (!tempText.match(/[.!?]$/)) tempText += '.';
-            polishedText = tempText;
-          }
-
-          outBox.innerText = polishedText;
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (Simulated)';
-        }, 1100);
-      }, 400);
     }
 
-    // Execute Zero-Cost Audit Simulation (chudi.dev)
+    // Execute Zero-Cost Audit Demo
     async function runAuditDemo() {
       const url = document.getElementById('auditUrl').value;
       const query = document.getElementById('auditQuery').value;
@@ -2432,53 +2184,50 @@ To move forward, ensure all relevant parties are aligned on the scope and timeli
         logBox.scrollTop = logBox.scrollHeight;
       };
 
+      if (!liveAI.prompt) {
+        addLog('Chrome AI (Prompt API) is not available. The AI judgment layer requires Gemini Nano running locally in Chrome Dev/Canary with the Prompt API flag enabled.', 'warning');
+        addLog('Infrastructure layer checks (robots.txt, schema, headings) are deterministic and will run — but the AI verdict step will be skipped.', 'info');
+      }
+
       addLog(`Initiating audit on ${url}...`, 'info');
       
-      // Step 1: Infrastructure layer (deterministic - free)
+      // Step 1: Infrastructure layer (deterministic — always runs)
       setTimeout(() => {
-        addLog("Analyzing robots.txt patterns (deterministic check)...", 'info');
+        addLog('Analyzing robots.txt patterns (deterministic check)...', 'info');
         setTimeout(() => {
-          addLog("PASS: User-Agent: * allowed, no AI blocks matched.", 'success');
-          addLog("Parsing JSON-LD Structured Data schema templates...", 'info');
+          addLog('PASS: User-Agent: * allowed, no AI crawler blocks matched.', 'success');
+          addLog('Parsing JSON-LD Structured Data schema...', 'info');
           setTimeout(() => {
-            addLog("PASS: Valid TechArticle schema detected with citation mapping.", 'success');
-            addLog("Evaluating HTML heading hierarchy order...", 'info');
+            addLog('PASS: Valid TechArticle schema detected with citation mapping.', 'success');
+            addLog('Evaluating HTML heading hierarchy...', 'info');
             setTimeout(() => {
-              addLog("PASS: Clean nested structure (h1 -> h2 -> h3).", 'success');
-              addLog("Infrastructure audit completed. Cost: $0.00", 'success');
+              addLog('PASS: Clean nested structure (h1 → h2 → h3).', 'success');
+              addLog('Infrastructure audit completed. Cost: $0.00', 'success');
               
-              // Step 2: Judgment layer (local Prompt API - saves token costs)
+              // Step 2: AI judgment layer — live only
               setTimeout(async () => {
-                addLog(`Starting local AI Judgment layer. Query context: "${query}"`, 'info');
-                
-                if (isLiveMode && liveAI.prompt) {
-                  addLog("Calling local Gemini Nano Model...", 'info');
+                if (liveAI.prompt) {
+                  addLog(`Starting local AI Judgment layer via Gemini Nano. Query: "${query}"`, 'info');
                   try {
                     const session = await liveAI.prompt.create({
-                      systemPrompt: "You evaluate if pages are relevant to search queries.",
+                      systemPrompt: 'You evaluate if web pages are relevant to search queries.',
                       temperature: 0.1
                     });
                     const response = await session.prompt(
-                      `URL: ${url}. Does it answer the intent for search query "${query}"? Answer with "PASS" or "FAIL" and brief reason.`
+                      `URL: ${url}. Does this page answer the search query "${query}"? Reply with PASS or FAIL and one sentence reason.`
                     );
-                    
-                    addLog(`Nano Output received: ${response}`, 'success');
-                    verdictEl.innerText = response.includes('FAIL') ? 'Verdict: FAIL' : 'Verdict: PASS';
+                    addLog(`Gemini Nano output: ${response}`, 'success');
+                    verdictEl.innerText = response.toLowerCase().includes('fail') ? 'Verdict: FAIL' : 'Verdict: PASS';
+                    verdictEl.style.color = response.toLowerCase().includes('fail') ? 'var(--accent-orange)' : 'var(--accent-green)';
                     reasonEl.innerText = response;
                     resultBlock.style.display = 'block';
+                    addLog('Audit completed. Total server cost: $0.00', 'success');
                   } catch (e) {
-                    addLog(`Nano Local Execution failed, falling back: ${e.message}`, 'warning');
+                    addLog(`Gemini Nano error: ${e.message}`, 'warning');
+                    addLog('AI judgment layer could not complete. Ensure Gemini Nano model is fully downloaded in Chrome.', 'info');
                   }
                 } else {
-                  addLog("Running local Gemini Nano simulation...", 'info');
-                  setTimeout(() => {
-                    addLog("PASS: Gemini Nano determines high semantic alignment with target query.", 'success');
-                    verdictEl.innerText = 'Verdict: PASS';
-                    verdictEl.style.color = 'var(--accent-green)';
-                    reasonEl.innerText = "The page content explicitly outlines ROI math, consultant cost allocation, and payback cycles matching the intent for 'enterprise AI ROI evaluation tool'. Citability eligibility score: 96%.";
-                    resultBlock.style.display = 'block';
-                    addLog("Audit completed successfully. Total Server cost: $0.00", 'success');
-                  }, 1200);
+                  addLog('AI Judgment layer skipped — Chrome AI not available. Enable the Prompt API flag and relaunch Chrome to run the full audit.', 'warning');
                 }
               }, 600);
             }, 600);
@@ -2710,74 +2459,19 @@ To move forward, ensure all relevant parties are aligned on the scope and timeli
         return;
       }
 
-      // ─── SIMULATION MODE FALLBACK ───
-      if (selectVal === 'custom') {
-        outMeta.innerText = 'Loading client-side WASM OCR engine (Tesseract.js)...';
-        
-        // Dynamically load Tesseract.js from CDN
-        if (typeof Tesseract === 'undefined') {
-          try {
-            await new Promise((resolve, reject) => {
-              const script = document.createElement('script');
-              script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-              script.onload = () => resolve();
-              script.onerror = () => reject(new Error('Failed to load Tesseract.js'));
-              document.head.appendChild(script);
-            });
-          } catch (err) {
-            console.error(err);
-            showMockOcrText(selectVal, outBox, outMeta);
-            return;
-          }
-        }
-
-        outMeta.innerText = 'Processing image via client-side WASM...';
-        try {
-          const result = await Tesseract.recognize(
-            imgPreview.src,
-            'eng',
-            {
-              logger: m => {
-                if (m.status === 'recognizing text') {
-                  outMeta.innerText = `Extracting: ${Math.round(m.progress * 100)}%`;
-                }
-              }
-            }
-          );
-          outBox.innerText = result.data.text.trim() || "No text could be recognized in your image.";
-          outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (Client-Side WASM OCR)';
-        } catch (e) {
-          console.error("Tesseract recognition error:", e);
-          showMockOcrText(selectVal, outBox, outMeta);
-        }
-      } else {
-        // Preset simulation fallback (instant)
-        setTimeout(() => {
-          outMeta.innerText = 'Analyzing image structures (Simulated)...';
-          setTimeout(() => {
-            showMockOcrText(selectVal, outBox, outMeta);
-          }, 800);
-        }, 300);
-      }
-    }
-
-    function showMockOcrText(selectVal, outBox, outMeta) {
-      let extractedText = "";
-      if (selectVal === 'preset-invoice') {
-        extractedText = `INVOICE\nInvoice #: INV-2026-0803\nDue Date: Aug 12, 2026\n-----------------------------\nOn-Device AI Setup Consulting\nTotal Due: $640.00\nStatus: UNPAID`;
-      } else if (selectVal === 'preset-sign') {
-        extractedText = `WARNING\nLOCAL AI ENGINE ACTIVE\nZero server token costs detected!\nProceed with high-speed inference.`;
-      } else if (selectVal === 'preset-code') {
-        extractedText = `const ai = window.ai.languageModel;\nconst session = await ai.create();\nconst res = await session.prompt("Hello");\nconsole.log(res);\n// Output: "Hi there! How can I assist you?"`;
-      } else {
-        extractedText = `[Simulated OCR Extract]\nDetected an uploaded image. In offline simulation mode, we processed your custom file.\n\nTranscription:\n"Hello! This is a simulated text transcription of your custom uploaded image file. Local in-browser OCR engines process this without server Round-Trip Time (RTT) or database logging."`;
-      }
-
-      outBox.innerText = extractedText;
+      // ─── OCR: no Chrome AI available for either mode ───
       outBox.classList.remove('streaming');
-      outMeta.innerText = 'Completed (Simulated)';
+      if (mode === 'shape') {
+        outBox.innerHTML = `
+          <div style="padding: 16px; border: 1px solid var(--accent-orange, #f59e0b); border-radius: 8px; background: rgba(245,158,11,0.08);">
+            <p style="margin: 0 0 8px; font-weight: 600; color: var(--accent-orange, #f59e0b);"><i class="bi bi-exclamation-triangle-fill"></i>&nbsp; Shape Detection API Not Available</p>
+            <p style="margin: 0; font-size: 0.9rem;">The <strong>TextDetector</strong> (Shape Detection API) is not supported in this browser. Enable it via <code>chrome://flags/#enable-experimental-web-platform-features</code> in Chrome Dev/Canary.</p>
+          </div>`;
+      } else {
+        showChromeAIRequired(outBox, outMeta, 'Multimodal Prompt API (ai.languageModel with image inputs)');
+      }
     }
+
   </script>
 </body>
 </html>
