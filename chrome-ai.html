@@ -2744,26 +2744,72 @@ Best regards,
       }
 
       // ─── SIMULATION MODE FALLBACK ───
-      setTimeout(() => {
-        outMeta.innerText = 'Analyzing image structures (Simulated)...';
-        setTimeout(() => {
-          let extractedText = "";
-
-          if (selectVal === 'preset-invoice') {
-            extractedText = `INVOICE\nInvoice #: INV-2026-0803\nDue Date: Aug 12, 2026\n-----------------------------\nOn-Device AI Setup Consulting\nTotal Due: $640.00\nStatus: UNPAID`;
-          } else if (selectVal === 'preset-sign') {
-            extractedText = `WARNING\nLOCAL AI ENGINE ACTIVE\nZero server token costs detected!\nProceed with high-speed inference.`;
-          } else if (selectVal === 'preset-code') {
-            extractedText = `const ai = window.ai.languageModel;\nconst session = await ai.create();\nconst res = await session.prompt("Hello");\nconsole.log(res);\n// Output: "Hi there! How can I assist you?"`;
-          } else {
-            extractedText = `[Simulated OCR Extract]\nDetected an uploaded image. In offline simulation mode, we processed your custom file.\n\nTranscription:\n"Hello! This is a simulated text transcription of your custom uploaded image file. Local in-browser OCR engines process this without server Round-Trip Time (RTT) or database logging."`;
+      if (selectVal === 'custom') {
+        outMeta.innerText = 'Loading client-side WASM OCR engine (Tesseract.js)...';
+        
+        // Dynamically load Tesseract.js from CDN
+        if (typeof Tesseract === 'undefined') {
+          try {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+              script.onload = () => resolve();
+              script.onerror = () => reject(new Error('Failed to load Tesseract.js'));
+              document.head.appendChild(script);
+            });
+          } catch (err) {
+            console.error(err);
+            showMockOcrText(selectVal, outBox, outMeta);
+            return;
           }
+        }
 
-          outBox.innerText = extractedText;
+        outMeta.innerText = 'Processing image via client-side WASM...';
+        try {
+          const result = await Tesseract.recognize(
+            imgPreview.src,
+            'eng',
+            {
+              logger: m => {
+                if (m.status === 'recognizing text') {
+                  outMeta.innerText = `Extracting: ${Math.round(m.progress * 100)}%`;
+                }
+              }
+            }
+          );
+          outBox.innerText = result.data.text.trim() || "No text could be recognized in your image.";
           outBox.classList.remove('streaming');
-          outMeta.innerText = 'Completed (Simulated)';
-        }, 1200);
-      }, 500);
+          outMeta.innerText = 'Completed (Client-Side WASM OCR)';
+        } catch (e) {
+          console.error("Tesseract recognition error:", e);
+          showMockOcrText(selectVal, outBox, outMeta);
+        }
+      } else {
+        // Preset simulation fallback (instant)
+        setTimeout(() => {
+          outMeta.innerText = 'Analyzing image structures (Simulated)...';
+          setTimeout(() => {
+            showMockOcrText(selectVal, outBox, outMeta);
+          }, 800);
+        }, 300);
+      }
+    }
+
+    function showMockOcrText(selectVal, outBox, outMeta) {
+      let extractedText = "";
+      if (selectVal === 'preset-invoice') {
+        extractedText = `INVOICE\nInvoice #: INV-2026-0803\nDue Date: Aug 12, 2026\n-----------------------------\nOn-Device AI Setup Consulting\nTotal Due: $640.00\nStatus: UNPAID`;
+      } else if (selectVal === 'preset-sign') {
+        extractedText = `WARNING\nLOCAL AI ENGINE ACTIVE\nZero server token costs detected!\nProceed with high-speed inference.`;
+      } else if (selectVal === 'preset-code') {
+        extractedText = `const ai = window.ai.languageModel;\nconst session = await ai.create();\nconst res = await session.prompt("Hello");\nconsole.log(res);\n// Output: "Hi there! How can I assist you?"`;
+      } else {
+        extractedText = `[Simulated OCR Extract]\nDetected an uploaded image. In offline simulation mode, we processed your custom file.\n\nTranscription:\n"Hello! This is a simulated text transcription of your custom uploaded image file. Local in-browser OCR engines process this without server Round-Trip Time (RTT) or database logging."`;
+      }
+
+      outBox.innerText = extractedText;
+      outBox.classList.remove('streaming');
+      outMeta.innerText = 'Completed (Simulated)';
     }
   </script>
 </body>
