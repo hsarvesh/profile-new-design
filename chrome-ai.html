@@ -719,20 +719,26 @@
     footer a { color: var(--accent-cyan); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-    }
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* OCR styles */
+    .ocr-preview-box {
+      border: 1px dashed var(--glass-border);
+      border-radius: 8px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+    .ocr-preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
   </style>
 </head>
@@ -837,6 +843,16 @@
               <span id="rewriteStatus" class="api-availability">Checking...</span>
             </div>
           </div>
+          <!-- OCR & Vision -->
+          <div class="api-status-card">
+            <div id="ocrIcon" class="api-icon status-error">
+              <i class="bi bi-eye"></i>
+            </div>
+            <div class="api-details">
+              <span class="api-name">OCR & Vision</span>
+              <span id="ocrStatus" class="api-availability">Checking...</span>
+            </div>
+          </div>
         </div>
 
         <!-- Setup instructions dropdown -->
@@ -887,6 +903,10 @@
         <button class="tab-btn" onclick="switchTab(event, 'auditTab')">
           <i class="bi bi-piggy-bank"></i>
           Zero-Cost AI Audit
+        </button>
+        <button class="tab-btn" onclick="switchTab(event, 'ocrTab')">
+          <i class="bi bi-eye"></i>
+          OCR & Vision API
         </button>
       </div>
 
@@ -1245,6 +1265,66 @@
           </button>
         </div>
 
+        <!-- ─── OCR & Vision API Playground ─── -->
+        <div id="ocrTab" class="tab-content-pane">
+          <h2 class="pane-title">OCR & Vision API Playground</h2>
+          <p class="pane-desc">Extract text from images using on-device browser intelligence. Upload an image or select a preset to analyze visual text locally.</p>
+
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="ocrImageSelect">Preset Image</label>
+              <select id="ocrImageSelect" class="form-select" onchange="loadPresetOcrImage()">
+                <option value="preset-invoice">Preset 1: Sample Invoice Text</option>
+                <option value="preset-sign">Preset 2: Street Warning Sign</option>
+                <option value="preset-code">Preset 3: Terminal Code Screenshot</option>
+                <option value="custom">-- Upload Custom Image --</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="ocrInputFile">Upload Custom Image</label>
+              <input type="file" id="ocrInputFile" class="form-input" accept="image/*" onchange="handleOcrFileUpload()" disabled>
+            </div>
+          </div>
+
+          <div class="form-group" style="display: flex; gap: 20px; align-items: flex-start; margin-top: 16px; flex-wrap: wrap;">
+            <!-- Image Preview Box -->
+            <div style="flex: 1; min-width: 250px;">
+              <label class="form-label">Source Image Preview</label>
+              <div class="ocr-preview-box" id="ocrPreviewContainer">
+                <img id="ocrPreviewImg" style="display: none;" src="" alt="OCR Preview">
+                <span id="ocrPreviewPlaceholder" class="placeholder-text">No image loaded</span>
+              </div>
+            </div>
+            
+            <!-- Output Bounding Box / Stats -->
+            <div style="flex: 1; min-width: 250px;">
+              <label class="form-label">OCR Mode</label>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="radio" id="modeOcrAI" name="ocrMode" value="ai" checked style="cursor: pointer;">
+                  <label for="modeOcrAI" style="margin: 0; cursor: pointer; font-size: 0.9rem;">Multimodal Prompt API (Nano)</label>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="radio" id="modeOcrShape" name="ocrMode" value="shape" style="cursor: pointer;">
+                  <label for="modeOcrShape" style="margin: 0; cursor: pointer; font-size: 0.9rem;">Shape Detection API (TextDetector)</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button id="btnOcrRun" class="btn-ai" style="margin-top: 20px;" onclick="runOcrDemo()">
+            <i class="bi bi-eye"></i> Extract Text from Image
+          </button>
+
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-title"><i class="bi bi-terminal"></i> Extracted Text Output</span>
+              <span class="output-meta" id="ocrMeta">Idle</span>
+            </div>
+            <div class="output-box" id="ocrOutput"><span class="placeholder-text">Extracted text results will populate here...</span></div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1307,6 +1387,7 @@
     // Load initial diagnostics on page load
     window.addEventListener('DOMContentLoaded', async () => {
       loadSchemaPreset();
+      initOcrPlayground();
       await runDiagnostics();
     });
 
@@ -1537,6 +1618,18 @@
       } else {
         rewriteStatusEl.innerText = 'Not Supported';
         rewriteIconEl.className = 'api-icon status-error';
+      }
+
+      // 7. Check OCR & Vision API
+      const ocrStatusEl = document.getElementById('ocrStatus');
+      const ocrIconEl = document.getElementById('ocrIcon');
+      const hasShapeDetection = 'TextDetector' in window;
+      if (hasShapeDetection) {
+        ocrStatusEl.innerText = 'Readily Available';
+        ocrIconEl.className = 'api-icon status-ok';
+      } else {
+        ocrStatusEl.innerText = 'Not Supported';
+        ocrIconEl.className = 'api-icon status-error';
       }
 
       // Update Live / Simulation Mode badge
@@ -2425,6 +2518,252 @@ Best regards,
           }, 600);
         }, 600);
       }, 400);
+    }
+
+    // Initialize OCR/Vision Playground
+    let customOcrImageBase64 = null;
+
+    function initOcrPlayground() {
+      document.getElementById('ocrImageSelect').value = 'preset-invoice';
+      loadPresetOcrImage();
+    }
+
+    // Load or generate preset images using canvas
+    function loadPresetOcrImage() {
+      const selectVal = document.getElementById('ocrImageSelect').value;
+      const fileInput = document.getElementById('ocrInputFile');
+      const imgPreview = document.getElementById('ocrPreviewImg');
+      const placeholder = document.getElementById('ocrPreviewPlaceholder');
+
+      if (selectVal === 'custom') {
+        fileInput.disabled = false;
+        imgPreview.src = "";
+        imgPreview.style.display = 'none';
+        placeholder.style.display = 'block';
+        placeholder.innerText = 'Upload a custom file (PNG, JPG) to preview';
+      } else {
+        fileInput.disabled = true;
+        fileInput.value = '';
+        imgPreview.style.display = 'block';
+        placeholder.style.display = 'none';
+
+        // Draw preset on canvas to generate a data URL
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 200;
+        const ctx = canvas.getContext('2d');
+
+        if (selectVal === 'preset-invoice') {
+          ctx.fillStyle = '#0f172a'; // slate 900
+          ctx.fillRect(0, 0, 400, 200);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+          ctx.fillRect(10, 10, 380, 180);
+
+          ctx.fillStyle = '#38bdf8'; // light blue
+          ctx.font = 'bold 20px monospace';
+          ctx.fillText('INVOICE', 30, 45);
+
+          ctx.fillStyle = '#94a3b8'; // grey
+          ctx.font = '12px monospace';
+          ctx.fillText('Invoice #: INV-2026-0803', 30, 70);
+          ctx.fillText('Due Date: Aug 12, 2026', 30, 90);
+
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(30, 105);
+          ctx.lineTo(370, 105);
+          ctx.stroke();
+
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = '14px monospace';
+          ctx.fillText('On-Device AI Setup Consulting', 30, 130);
+          ctx.fillText('Total Due: $640.00', 30, 155);
+
+          ctx.fillStyle = '#4ade80'; // accent green
+          ctx.fillText('Status: UNPAID', 30, 175);
+
+        } else if (selectVal === 'preset-sign') {
+          ctx.fillStyle = '#fbbf24'; // yellow 400
+          ctx.fillRect(0, 0, 400, 200);
+
+          ctx.strokeStyle = '#78350f';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(10, 10, 380, 180);
+
+          ctx.fillStyle = '#78350f';
+          ctx.font = 'bold 36px sans-serif';
+          ctx.fillText('⚠️ WARNING', 90, 70);
+
+          ctx.font = 'bold 16px sans-serif';
+          ctx.fillText('LOCAL AI ENGINE ACTIVE', 100, 115);
+          ctx.font = '14px sans-serif';
+          ctx.fillText('Zero server token costs detected!', 95, 145);
+          ctx.fillText('Proceed with high-speed inference.', 92, 165);
+
+        } else if (selectVal === 'preset-code') {
+          ctx.fillStyle = '#090d16'; // deep dark
+          ctx.fillRect(0, 0, 400, 200);
+
+          // Title bar
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, 400, 25);
+          ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(15, 12, 5, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = '#eab308'; ctx.beginPath(); ctx.arc(30, 12, 5, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = '#22c55e'; ctx.beginPath(); ctx.arc(45, 12, 5, 0, Math.PI*2); ctx.fill();
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '11px monospace';
+          ctx.fillText('terminal - ocr_runner.js', 140, 16);
+
+          ctx.fillStyle = '#a855f7'; // purple
+          ctx.font = '13px monospace';
+          ctx.fillText('const', 20, 55);
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillText(' ai = window.ai.languageModel;', 60, 55);
+
+          ctx.fillStyle = '#a855f7';
+          ctx.fillText('const', 20, 80);
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillText(' session = await ai.create();', 60, 80);
+
+          ctx.fillStyle = '#a855f7';
+          ctx.fillText('const', 20, 105);
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillText(' res = await session.prompt(', 60, 105);
+          ctx.fillStyle = '#e2e8f0';
+          ctx.fillText('"Hello"');
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillText(');', 255, 105);
+
+          ctx.fillStyle = '#22c55e';
+          ctx.font = '13px monospace';
+          ctx.fillText('console.log(res);', 20, 135);
+
+          ctx.fillStyle = '#64748b';
+          ctx.fillText('// Output: "Hi there! How can I assist you?"', 20, 165);
+        }
+
+        imgPreview.src = canvas.toDataURL('image/png');
+      }
+    }
+
+    // Handle custom image file upload
+    function handleOcrFileUpload() {
+      const fileInput = document.getElementById('ocrInputFile');
+      const imgPreview = document.getElementById('ocrPreviewImg');
+      const placeholder = document.getElementById('ocrPreviewPlaceholder');
+      const file = fileInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imgPreview.src = e.target.result;
+          imgPreview.style.display = 'block';
+          placeholder.style.display = 'none';
+          customOcrImageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Run OCR / Vision Extraction
+    async function runOcrDemo() {
+      const mode = document.querySelector('input[name="ocrMode"]:checked').value;
+      const selectVal = document.getElementById('ocrImageSelect').value;
+      const imgPreview = document.getElementById('ocrPreviewImg');
+      const outBox = document.getElementById('ocrOutput');
+      const outMeta = document.getElementById('ocrMeta');
+
+      if (selectVal === 'custom' && !imgPreview.src) {
+        outBox.innerHTML = '<span class="status-error">Error: Please select or upload an image first.</span>';
+        return;
+      }
+
+      outBox.innerText = '';
+      outBox.classList.add('streaming');
+      outMeta.innerText = 'Initializing OCR engine...';
+
+      // ─── LIVE MODE EXECUTION ───
+      const hasShapeDetection = 'TextDetector' in window;
+      const hasMultimodalAI = typeof ai !== 'undefined' && ai.languageModel;
+
+      if (mode === 'shape' && hasShapeDetection) {
+        outMeta.innerText = 'Running TextDetector...';
+        try {
+          const detector = new TextDetector();
+          const detected = await detector.detect(imgPreview);
+          
+          outBox.classList.remove('streaming');
+          if (detected.length === 0) {
+            outBox.innerText = "No text detected in this image.";
+          } else {
+            outBox.innerText = detected.map(t => t.rawValue).join('\n');
+          }
+          outMeta.innerText = 'Completed (On-Device Shape API)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">TextDetector Error: ${e.message}</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      if (mode === 'ai' && hasMultimodalAI) {
+        outMeta.innerText = 'Initializing local multimodal Gemini Nano session...';
+        try {
+          const session = await ai.languageModel.create({
+            expectedInputs: [{ type: 'image' }, { type: 'text' }]
+          });
+          
+          outMeta.innerText = 'Analyzing Image...';
+          
+          let imageBlob = null;
+          if (selectVal === 'custom') {
+            imageBlob = document.getElementById('ocrInputFile').files[0];
+          } else {
+            const res = await fetch(imgPreview.src);
+            imageBlob = await res.blob();
+          }
+
+          const response = await session.prompt([
+            { type: 'image', data: imageBlob },
+            { type: 'text', data: "Extract and write down all readable text visible in this image. Do not summarize; write the text exactly as it appears." }
+          ]);
+
+          outBox.innerText = response;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (On-Device Gemini Nano)';
+        } catch (e) {
+          outBox.classList.remove('streaming');
+          outBox.innerHTML = `<span class="status-error">Multimodal Prompt Error: ${e.message}. (Note: Local model might not support image modality in this session).</span>`;
+          outMeta.innerText = 'Error';
+        }
+        return;
+      }
+
+      // ─── SIMULATION MODE FALLBACK ───
+      setTimeout(() => {
+        outMeta.innerText = 'Analyzing image structures (Simulated)...';
+        setTimeout(() => {
+          let extractedText = "";
+
+          if (selectVal === 'preset-invoice') {
+            extractedText = `INVOICE\nInvoice #: INV-2026-0803\nDue Date: Aug 12, 2026\n-----------------------------\nOn-Device AI Setup Consulting\nTotal Due: $640.00\nStatus: UNPAID`;
+          } else if (selectVal === 'preset-sign') {
+            extractedText = `WARNING\nLOCAL AI ENGINE ACTIVE\nZero server token costs detected!\nProceed with high-speed inference.`;
+          } else if (selectVal === 'preset-code') {
+            extractedText = `const ai = window.ai.languageModel;\nconst session = await ai.create();\nconst res = await session.prompt("Hello");\nconsole.log(res);\n// Output: "Hi there! How can I assist you?"`;
+          } else {
+            extractedText = `[Simulated OCR Extract]\nDetected an uploaded image. In offline simulation mode, we processed your custom file.\n\nTranscription:\n"Hello! This is a simulated text transcription of your custom uploaded image file. Local in-browser OCR engines process this without server Round-Trip Time (RTT) or database logging."`;
+          }
+
+          outBox.innerText = extractedText;
+          outBox.classList.remove('streaming');
+          outMeta.innerText = 'Completed (Simulated)';
+        }, 1200);
+      }, 500);
     }
   </script>
 </body>
