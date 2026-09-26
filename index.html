@@ -16,6 +16,7 @@
   <meta name="author" content="Sarvesh Huddedar">
   
   <link rel="canonical" href="https://sarvesh.website/">
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Context">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -36,31 +37,133 @@
   <meta name="language" content="English">
   <meta name="revisit-after" content="1 days">
   
-  <!-- JSON-LD Schema -->
+  <!-- JSON-LD Schema (Multi-Entity Knowledge Graph) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Sarvesh Huddedar",
-    "jobTitle": "Lead AI Architect & Generative AI Specialist",
-    "url": "https://sarvesh.website",
-    "sameAs": [
-      "https://www.linkedin.com/in/hsarvesh/",
-      "https://twitter.com/hsarvesh",
-      "https://github.com/hsarvesh"
-    ],
-    "knowsAbout": [
-      "Generative AI",
-      "AI Strategy",
-      "LLM Implementation",
-      "Digital Transformation",
-      "Agentic AI Workflow",
-      "AI ROI"
-    ],
-    "worksFor": {
-      "@type": "Organization",
-      "name": "Yash Technologies"
-    }
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://sarvesh.website/#person",
+        "name": "Sarvesh Huddedar",
+        "jobTitle": "Lead AI Architect & Generative AI Specialist",
+        "description": "Global AI Advisor and Enterprise Transformation Architect with 20+ years of technology leadership experience. Specializes in Enterprise Generative AI Strategy, Autonomous Agentic Workflows, Production RAG Architectures, and AI ROI.",
+        "url": "https://sarvesh.website/",
+        "image": "https://sarvesh.website/assets/img/me.png",
+        "sameAs": [
+          "https://www.linkedin.com/in/hsarvesh/",
+          "https://github.com/hsarvesh",
+          "https://twitter.com/hsarvesh",
+          "https://www.facebook.com/hsarvesh",
+          "https://www.youtube.com/hsarvesh"
+        ],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Yash Technologies",
+          "url": "https://www.yash.com/"
+        },
+        "alumniOf": [
+          {
+            "@type": "EducationalOrganization",
+            "name": "Savitribai Phule Pune University (University of Pune)"
+          },
+          {
+            "@type": "EducationalOrganization",
+            "name": "Willingdon College, Sangli (Shivaji University)"
+          },
+          {
+            "@type": "EducationalOrganization",
+            "name": "Centre for Development of Advanced Computing (C-DAC)"
+          }
+        ],
+        "hasCredential": [
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Azure Artificial Intelligence Fundamentals (AI-900)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Azure Administrator Associate (AZ-104)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Azure Fundamentals (AZ-900)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Azure Data Fundamentals (DP-900)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Microsoft Certified: Power Platform Fundamentals (PL-900)"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "name": "Zscaler Certified Cloud Administrator (ZIA, ZPA, ZDX)"
+          }
+        ],
+        "knowsAbout": [
+          {
+            "@type": "Thing",
+            "name": "Generative Artificial Intelligence",
+            "sameAs": "https://en.wikipedia.org/wiki/Generative_artificial_intelligence"
+          },
+          {
+            "@type": "Thing",
+            "name": "Large Language Models",
+            "sameAs": "https://en.wikipedia.org/wiki/Large_language_model"
+          },
+          {
+            "@type": "Thing",
+            "name": "Artificial Intelligence Strategy",
+            "sameAs": "https://en.wikipedia.org/wiki/Artificial_intelligence"
+          },
+          {
+            "@type": "Thing",
+            "name": "Retrieval-Augmented Generation",
+            "sameAs": "https://en.wikipedia.org/wiki/Prompt_engineering"
+          },
+          {
+            "@type": "Thing",
+            "name": "MLOps",
+            "sameAs": "https://en.wikipedia.org/wiki/MLOps"
+          },
+          {
+            "@type": "Thing",
+            "name": "Agentic Workflows"
+          },
+          {
+            "@type": "Thing",
+            "name": "AI ROI Frameworks"
+          }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://sarvesh.website/#website",
+        "url": "https://sarvesh.website/",
+        "name": "Sarvesh Huddedar | Lead AI Architect & Generative AI Specialist",
+        "publisher": {
+          "@id": "https://sarvesh.website/#person"
+        }
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": "https://sarvesh.website/#webpage",
+        "url": "https://sarvesh.website/",
+        "name": "Sarvesh Huddedar Portfolio & AI Advisory",
+        "isPartOf": {
+          "@id": "https://sarvesh.website/#website"
+        },
+        "mainEntity": {
+          "@id": "https://sarvesh.website/#person"
+        }
+      }
+    ]
   }
   </script>
 
@@ -96,34 +199,6 @@
 </head>
 
 <body>
-  <script>
-    (function() {
-      if (!localStorage.getItem('domain-banner-dismissed')) {
-        document.body.classList.add('has-banner');
-      }
-    })();
-  </script>
-
-  <!-- ======= Migration Banner ======= -->
-  <div id="migration-banner" class="migration-banner">
-    <span class="banner-text">
-      <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; margin-right:8px; display:inline-block; vertical-align:middle;">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      Welcome to the new domain: <a href="https://sarvesh.website" target="_blank" rel="noopener">sarvesh.website</a>!
-    </span>
-    <button class="close-btn" onclick="dismissBanner()" aria-label="Close Notice">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; vertical-align:middle;">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-  </div>
-  <script>
-    function dismissBanner() {
-      document.body.classList.remove('has-banner');
-      localStorage.setItem('domain-banner-dismissed', 'true');
-    }
-  </script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!-- ======= Header ======= -->
 
@@ -148,12 +223,12 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
       <div class="social-links">
-        <a href="https://www.linkedin.com/in/hsarvesh/" class="linkedin" target="_blank"><i class="bi bi-linkedin"></i></a>
-        <a href="sip:sarvesh_huddedar@hotmail.com" class="chat-text" target="_blank"><i class="bi bi-chat-text"></i></a>
-        <a href="https://twitter.com/hsarvesh" class="twitter" target="_blank"><i class="bi bi-twitter"></i></a>
-        <a href="https://www.facebook.com/hsarvesh" class="facebook" target="_blank"><i class="bi bi-facebook"></i></a>
-        <a href="https://www.youtube.com/hsarvesh" class="youtube"><i class="bi bi-youtube"></i></a>
-        <a href="https://www.instagram.com/sarveshhuddedar" class="instagram"><i class="bi bi-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/hsarvesh/" class="linkedin" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        <a href="https://github.com/hsarvesh" class="github" target="_blank" title="GitHub"><i class="bi bi-github"></i></a>
+        <a href="https://twitter.com/hsarvesh" class="twitter" target="_blank" title="Twitter / X"><i class="bi bi-twitter"></i></a>
+        <a href="https://www.facebook.com/hsarvesh" class="facebook" target="_blank" title="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="https://www.youtube.com/hsarvesh" class="youtube" title="YouTube"><i class="bi bi-youtube"></i></a>
+        <a href="https://www.instagram.com/sarveshhuddedar" class="instagram" title="Instagram"><i class="bi bi-instagram"></i></a>
       </div>
     </div>
   </header>
@@ -179,19 +254,17 @@
           <div class="row">
             <div class="col-lg-6">
               <ul>
-                <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>Confidential</span></li>
-                <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong> <span>https://sarvesh.website</span>
-                </li>
-                <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+91-****-***-*33</span></li>
-                <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>Bangalore, KA, IND</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Experience:</strong> <span>20+ Years Enterprise Tech Leadership</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong> <span>https://sarvesh.website</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Specialization:</strong> <span>Generative AI, Agents, Enterprise RAG</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Location:</strong> <span>Bengaluru, KA, IND</span></li>
               </ul>
             </div>
             <div class="col-lg-6">
               <ul>
-                <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span>44</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Advisory:</strong> <span>Strategic AI Roadmapping & Consulting</span></li>
                 <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Masters in Instrumentation Science</span></li>
-                <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong>
-                  <span>admin@sarvesh.website</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>admin@sarvesh.website</span></li>
                 <li><i class="bi bi-chevron-right"></i> <strong>Employer:</strong> <span>Yash Technologies</span></li>
               </ul>
             </div>
@@ -585,9 +658,9 @@
             <p><em>With 20+ years of experience, a deadline-oriented and innovative AI business transformation specialist, equipped to lead with passion, and adept at designing and executing AI initiatives with measurable ROI.</em></p>
             <p>
             <ul>
-              <li>Sarjapur Main Road, Bangalore, KA, IND</li>
-              <li>****-***-*33</li>
-              <li>Admin@sarvesh.website</li>
+              <li>Bengaluru, Karnataka, India</li>
+              <li>admin@sarvesh.website</li>
+              <li>Lead AI Architect &amp; Transformation Advisory</li>
             </ul>
             </p>
           </div>
@@ -716,12 +789,10 @@
             <i class="bi bi-share"></i>
             <h3>Social Profiles</h3>
             <div class="social-links">
-              <a href="https://twitter.com/hsarvesh" class="twitter" target="_blank"><i class="bi bi-twitter"></i></a>
-              <a href="https://www.facebook.com/hsarvesh" class="facebook" target="_blank"><i
-                  class="bi bi-facebook"></i></a>
-              <a href="https://www.linkedin.com/in/hsarvesh/" class="linkedin" target="_blank"><i
-                  class="bi bi-linkedin"></i></a>
-              
+              <a href="https://www.linkedin.com/in/hsarvesh/" class="linkedin" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+              <a href="https://github.com/hsarvesh" class="github" target="_blank" title="GitHub"><i class="bi bi-github"></i></a>
+              <a href="https://twitter.com/hsarvesh" class="twitter" target="_blank" title="Twitter / X"><i class="bi bi-twitter"></i></a>
+              <a href="https://www.facebook.com/hsarvesh" class="facebook" target="_blank" title="Facebook"><i class="bi bi-facebook"></i></a>
             </div>
           </div>
         </div>
@@ -730,14 +801,14 @@
           <div class="info-box">
             <i class="bi bi-envelope"></i>
             <h3>Email Me</h3>
-            <p>admin@sarvesh.website</p>
+            <p><a href="mailto:admin@sarvesh.website" style="color: inherit;">admin@sarvesh.website</a></p>
           </div>
         </div>
         <div class="col-md-6 mt-4 d-flex align-items-stretch">
           <div class="info-box">
-            <i class="bi bi-telephone"></i>
-            <h3>Call Me</h3>
-            <p>+91-********33</p>
+            <i class="bi bi-calendar-check"></i>
+            <h3>Advisory &amp; Keynotes</h3>
+            <p>Available for Enterprise AI Roadmapping &amp; Advisory</p>
           </div>
         </div>
       </div>
@@ -853,16 +924,37 @@
         if (mc && typeof mc.registerTool === 'function') {
           await mc.registerTool({
             name: 'getPortfolioSummary',
-            description: 'Get a summary of Sarvesh Huddedar\'s professional background, expertise, and AI services.',
+            description: 'Get structured information about Sarvesh Huddedar\'s enterprise AI architecture background, services, tools, experience, and publications.',
             inputSchema: {
               type: 'object',
-              properties: {}
+              properties: {
+                section: {
+                  type: 'string',
+                  enum: ['overview', 'services', 'experience', 'projects', 'certifications', 'contact', 'all'],
+                  description: 'The specific portfolio section to retrieve. Defaults to "overview".'
+                }
+              }
             },
-            execute: async () => {
+            execute: async (params) => {
+              const sec = params?.section || 'overview';
+              const data = {
+                overview: "Sarvesh Huddedar is a Lead AI Architect and Global AI Advisor with 20+ years of tech leadership experience. Specializes in Enterprise Generative AI, Autonomous Agentic Workflows, Production RAG, and AI ROI Frameworks. Learn more at https://sarvesh.website/llms.txt",
+                services: "AI Services Offered:\n1. Generative AI Strategy & Governance (Readiness assessments, use case discovery, risk controls)\n2. Agentic Workflows & Enterprise RAG (Multi-agent systems, custom LLMs, hybrid search)\n3. AI ROI & Performance Metrics (Mathematical ROI models, cost optimization, MLOps)\n4. AI Enablement & Change Management (Workforce upskilling, executive alignment)",
+                experience: "Experience Summary:\n- Sr. Manager (AI & Transformation Advisory), Yash Technologies (2023–Present): Governed enterprise GenAI strategies yielding 40%+ productivity gains.\n- Sr. Delivery Manager, Microland Limited (2018–2023): Led global infrastructure and digital operations with 100% SLA compliance.\n- Transition Delivery Management, NTT Data (2010–2018): Governed multi-portfolio enterprise transitions.",
+                projects: "Interactive Tools & Playgrounds:\n1. AI Strategy ROI Calculator (https://sarvesh.website/cal.html): Instant enterprise AI ROI modeler.\n2. Chrome On-Device AI Showcase (https://sarvesh.website/chrome-ai.html): Live offline Gemini Nano browser playground.\n3. Intelligent Document Processing (https://ocr.sarvesh.website): AI-powered OCR.\n4. Nomophobia (https://nomophobia.website): AI digital wellness application.",
+                certifications: "Certifications: Microsoft Azure AI Fundamentals (AI-900), Azure Administrator (AZ-104), Azure Fundamentals (AZ-900), Security (SC-900), Data (DP-900), Power Platform (PL-900), Zscaler Cloud Administrator (ZIA, ZPA, ZDX).",
+                contact: "Contact: Email admin@sarvesh.website | Website https://sarvesh.website | Location Bengaluru, India | LinkedIn https://www.linkedin.com/in/hsarvesh/ | GitHub https://github.com/hsarvesh"
+              };
+
+              let responseText = data[sec] || data.overview;
+              if (sec === 'all') {
+                responseText = Object.values(data).join("\n\n");
+              }
+
               return {
                 content: [{
                   type: 'text',
-                  text: "Sarvesh Huddedar is a Lead AI Architect helping organizations build scalable generative AI systems. Services include AI Agent design, custom RAG pipelines, LLM fine-tuning, and enterprise AI consulting."
+                  text: responseText
                 }]
               };
             }

@@ -1,6 +1,14 @@
 # Custom headers for Cloudflare Pages and Netlify
 /
-  Link: </sitemap.xml>; rel="describedby"; type="application/xml", </.well-known/api-catalog>; rel="api-catalog"
+  Link: </sitemap.xml>; rel="describedby"; type="application/xml", </llms.txt>; rel="alternate"; type="text/markdown", </.well-known/api-catalog>; rel="api-catalog"
+
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json; charset=utf-8

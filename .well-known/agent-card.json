@@ -1,7 +1,7 @@
 {
   "name": "sarvesh-website-agent",
   "description": "Portfolio agent representing work and AI capabilities of Sarvesh Huddedar",
-  "version": "1.18.232",
+  "version": "1.18.247",
   "supportedInterfaces": [
     {
       "url": "https://sarvesh.website/a2a",

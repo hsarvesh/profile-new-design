@@ -1,0 +1,47 @@
+# Sarvesh Huddedar — Lead AI Architect & Generative AI Specialist
+
+> Global AI Advisor and Enterprise Transformation Architect with 20+ years of technology leadership experience. Specializes in Enterprise Generative AI Strategy, Autonomous Agentic Workflows, Production RAG Architectures, and AI Return on Investment (ROI) Frameworks. Based in Bengaluru, India.
+
+## Core Information
+- **Full Name**: Sarvesh Huddedar
+- **Current Role**: Sr. Manager (AI & Transformation Advisory), Yash Technologies
+- **Location**: Bengaluru, Karnataka, India
+- **Primary Website**: https://sarvesh.website
+- **Email**: admin@sarvesh.website
+- **Profiles**:
+  - LinkedIn: https://www.linkedin.com/in/hsarvesh/
+  - GitHub: https://github.com/hsarvesh
+  - Twitter/X: https://twitter.com/hsarvesh
+
+## Areas of Expertise
+- **Generative AI Strategy & Governance**: Enterprise readiness assessment, LLM use case discovery, AI safety, and compliance.
+- **Agentic Workflows & Multi-Agent Systems**: Autonomous reasoning agents, tool use, WebMCP, and multi-step cognitive automation.
+- **Enterprise Retrieval-Augmented Generation (RAG)**: High-precision semantic search, vector stores, chunking strategies, and hybrid search.
+- **AI ROI & Financial Modeling**: Quantifying productivity gains, computing token/inference costs, and establishing value measurement frameworks.
+- **On-Device / Client-Side AI**: Private, zero-cost, zero-latency inference using Chrome Built-in AI (Gemini Nano) and WebAssembly.
+- **MLOps & Engineering Best Practices**: Evaluation pipelines, prompt optimization, guardrails, and model lifecycle governance.
+
+## Featured Tools & Playgrounds
+- [AI Strategy ROI Calculator](https://sarvesh.website/cal.html): Interactive client-side tool to calculate ROI, payback period, and operational savings from enterprise AI deployments.
+- [Chrome Built-in On-Device AI Showcase](https://sarvesh.website/chrome-ai.html): Live browser-based playground demonstrating Chrome's 6 native AI APIs (Prompt API / Gemini Nano, Summarizer, Translator, Language Detector, Writer, Rewriter).
+- [Intelligent Document Processing (OCR)](https://ocr.sarvesh.website): AI-powered document digitization and structured data extraction.
+- [Nomophobia](https://nomophobia.website): AI-guided digital wellness platform helping users balance screen time.
+
+## Key Publications & Articles
+- [The Architecture of Intentionality](https://www.linkedin.com/posts/hsarvesh_the-architecture-of-intentionality-ugcPost-7489572555721392128-5IrI/): Designing purposeful, autonomous cognitive systems.
+- [AI ROI Calculator — How the Math Works](https://www.linkedin.com/pulse/ai-roi-calculator-sarvesh-huddedar-q49ef/): Mathematical models for measuring enterprise AI ROI.
+- [The End of SaaS: How AI Agents Are Redefining Software](https://www.linkedin.com/pulse/end-saas-how-ai-agents-redefining-software-sarvesh-huddedar-1n32c/): Shift from static subscription software to autonomous goal-directed agents.
+- [Technology Trends 2026-2030: Business Survival Guide](https://www.linkedin.com/pulse/technology-trends-2026-2030-business-survival-guide-sarvesh-huddedar-ovdmc): Strategic roadmap for navigating the next wave of compute and AI disruption.
+- [The Normalization of the Extreme: Navigating the Digital Attention Economy](https://www.linkedin.com/pulse/normalization-extreme-navigating-digital-attention-economy-huddedar-zsdyf/): Human-centric technology ethics.
+
+## Professional Certifications
+- Microsoft Certified: Azure Artificial Intelligence Fundamentals (AI-900)
+- Microsoft Certified: Azure Administrator Associate (AZ-104)
+- Microsoft Certified: Azure Cloud Fundamentals (AZ-900)
+- Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900)
+- Microsoft Certified: Azure Data Fundamentals (DP-900)
+- Microsoft Certified: Power Platform Fundamentals (PL-900)
+- Zscaler Certified Cloud Administrator: ZIA, ZPA, and ZDX
+
+## Full Context File
+- For full resume, deep technical methodologies, and architectural details, see: https://sarvesh.website/llms-full.txt

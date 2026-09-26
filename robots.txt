@@ -2,18 +2,32 @@ User-agent: *
 Allow: /
 Content-Signal: search=yes,ai-input=yes,ai-train=yes,use=full
 
+# OpenAI Crawlers & Search
 User-agent: GPTBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic Crawlers & Search
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity AI Search
+User-agent: PerplexityBot
+Allow: /
+
+# Google & Apple AI Crawlers
 User-agent: Google-Extended
 Allow: /
 
 User-agent: Applebot-Extended
 Allow: /
 
+# Other Major AI Engines & Crawlers
 User-agent: Amazonbot
 Allow: /
 
@@ -26,4 +40,13 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
+User-agent: Diffbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Sitemaps & Machine-Readable Context
 Sitemap: https://sarvesh.website/sitemap.xml
+# LLM Context: https://sarvesh.website/llms.txt
+# Full LLM Dossier: https://sarvesh.website/llms-full.txt

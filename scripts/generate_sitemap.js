@@ -34,6 +34,16 @@ function generateSitemap() {
       xml += '  </url>\n';
     }
   });
+
+  // Add llms.txt for AI agents and search engines
+  if (fs.existsSync(path.join(rootDir, 'llms.txt'))) {
+    xml += '  <url>\n';
+    xml += `    <loc>${domain}/llms.txt</loc>\n`;
+    xml += `    <lastmod>${today}</lastmod>\n`;
+    xml += '    <changefreq>weekly</changefreq>\n';
+    xml += '    <priority>0.7</priority>\n';
+    xml += '  </url>\n';
+  }
   
   xml += '</urlset>\n';
   
